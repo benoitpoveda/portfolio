@@ -19,6 +19,7 @@ const PHI0 = 14 * RAD;
 const SINP0 = Math.sin(PHI0);
 const COSP0 = Math.cos(PHI0);
 const INK = '238,243,255';
+const HORIZON_Z = -0.012;
 
 /** Orbites : rx, ry (fraction de S), rot (deg), sp (vitesse rad/s), ph (phase). */
 interface Orbit {
@@ -46,6 +47,20 @@ interface Box {
   minY: number;
   maxX: number;
   maxY: number;
+}
+interface ProjectedPoint {
+  x: number;
+  y: number;
+  v: boolean;
+  z: number;
+}
+interface VisiblePath {
+  pts: Point[];
+  clipped: boolean;
+}
+interface ProjectedPoly {
+  paths: VisiblePath[];
+  allVisible: boolean;
 }
 
 export function initPortail(): void {
@@ -229,25 +244,114 @@ export function initPortail(): void {
   }
 
   /* =========================================================
-     Projection orthographique (VERBATIM prototype)
+     Projection orthographique + clipping horizon
      ========================================================= */
-  function proj(lat: number, lon: number): { x: number; y: number; v: boolean; z: number } {
+  function proj(lat: number, lon: number): ProjectedPoint {
     const lam = (lon - lon0) * RAD;
     const phi = lat * RAD;
     const cp = Math.cos(phi);
     const cosc = SINP0 * Math.sin(phi) + COSP0 * cp * Math.cos(lam);
     const x = cp * Math.sin(lam);
     const y = COSP0 * Math.sin(phi) - SINP0 * cp * Math.cos(lam);
-    return { x: x * R, y: -y * R, v: cosc > -0.012, z: cosc };
+    return { x: x * R, y: -y * R, v: cosc > HORIZON_Z, z: cosc };
   }
 
-  function projectPoly(poly: ReadonlyArray<readonly number[]>): Point[] {
-    const pts: Point[] = [];
-    for (const p of poly) {
-      const q = proj(p[1], p[0]);
-      if (q.v) pts.push([q.x, q.y, q.z]);
+  function asPoint(q: ProjectedPoint): Point {
+    return [q.x, q.y, q.z];
+  }
+
+  function pushPoint(pts: Point[], p: Point): void {
+    const lastPt = pts[pts.length - 1];
+    if (lastPt && Math.hypot(lastPt[0] - p[0], lastPt[1] - p[1]) < 0.35) return;
+    pts.push(p);
+  }
+
+  function horizonIntersection(a: ProjectedPoint, b: ProjectedPoint): Point {
+    const denom = a.z - b.z;
+    const rawT = Math.abs(denom) < 1e-6 ? 0.5 : (a.z - HORIZON_Z) / denom;
+    const t = Math.max(0, Math.min(1, rawT));
+    let x = a.x + (b.x - a.x) * t;
+    let y = a.y + (b.y - a.y) * t;
+
+    // Snap to the visible limb. Without this, tiny numeric drift leaves hairline chords
+    // between clipped continent paths and the globe edge during rotation.
+    const mag = Math.hypot(x, y);
+    if (mag > 1e-6) {
+      x = (x / mag) * R;
+      y = (y / mag) * R;
     }
-    return pts;
+    return [x, y, HORIZON_Z];
+  }
+
+  function projectPoly(poly: ReadonlyArray<readonly number[]>): ProjectedPoly {
+    const samples = poly.map((p) => proj(p[1], p[0]));
+    if (samples.length < 2) return { paths: [], allVisible: false };
+
+    const allVisible = samples.every((p) => p.v);
+    if (allVisible) return { paths: [{ pts: samples.map(asPoint), clipped: false }], allVisible: true };
+
+    const paths: VisiblePath[] = [];
+    let current: Point[] = [];
+    const n = samples.length;
+
+    for (let i = 0; i < n; i++) {
+      const a = samples[i];
+      const b = samples[(i + 1) % n];
+
+      if (a.v && current.length === 0) pushPoint(current, asPoint(a));
+
+      if (a.v && b.v) {
+        pushPoint(current, asPoint(b));
+      } else if (a.v && !b.v) {
+        pushPoint(current, horizonIntersection(a, b));
+        if (current.length >= 2) paths.push({ pts: current, clipped: true });
+        current = [];
+      } else if (!a.v && b.v) {
+        current = [];
+        pushPoint(current, horizonIntersection(a, b));
+        pushPoint(current, asPoint(b));
+      }
+    }
+
+    if (current.length >= 2) paths.push({ pts: current, clipped: true });
+
+    // If a visible segment wraps across the array boundary, merge the tail and head.
+    if (paths.length > 1 && samples[0].v && samples[n - 1].v) {
+      const tail = paths.pop();
+      const head = paths.shift();
+      if (tail && head) paths.unshift({ pts: [...tail.pts, ...head.pts.slice(1)], clipped: true });
+    }
+
+    return { paths, allVisible: false };
+  }
+
+  function addShortestHorizonArc(c: CanvasRenderingContext2D, from: Point, to: Point): void {
+    const start = Math.atan2(from[1], from[0]);
+    const end = Math.atan2(to[1], to[0]);
+    let delta = end - start;
+    while (delta > Math.PI) delta -= Math.PI * 2;
+    while (delta < -Math.PI) delta += Math.PI * 2;
+    c.arc(0, 0, R, start, start + delta, delta < 0);
+  }
+
+  function closedVisiblePath(c: CanvasRenderingContext2D, path: VisiblePath): void {
+    c.beginPath();
+    c.moveTo(path.pts[0][0], path.pts[0][1]);
+    for (let i = 1; i < path.pts.length; i++) c.lineTo(path.pts[i][0], path.pts[i][1]);
+    if (path.clipped) addShortestHorizonArc(c, path.pts[path.pts.length - 1], path.pts[0]);
+    c.closePath();
+  }
+
+  function boxFromPoints(pts: Point[]): Box {
+    return pts.reduce<Box>(
+      (b, p) => ({
+        minX: Math.min(b.minX, p[0]),
+        minY: Math.min(b.minY, p[1]),
+        maxX: Math.max(b.maxX, p[0]),
+        maxY: Math.max(b.maxY, p[1]),
+      }),
+      { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity },
+    );
   }
 
   function strokeProjected(c: CanvasRenderingContext2D, pts: Point[], close = false): void {
@@ -306,59 +410,59 @@ export function initPortail(): void {
   }
 
   /* =========================================================
-     Continents : continents pleins par hachures (VERBATIM)
+     Continents : hachures gravees clippees sur hemisphere visible
      ========================================================= */
   function drawLandMass(c: CanvasRenderingContext2D, poly: ReadonlyArray<readonly number[]>, index: number): void {
-    const pts = projectPoly(poly);
-    if (pts.length < 3) return;
-    const box = pts.reduce<Box>(
-      (b, p) => ({
-        minX: Math.min(b.minX, p[0]),
-        minY: Math.min(b.minY, p[1]),
-        maxX: Math.max(b.maxX, p[0]),
-        maxY: Math.max(b.maxY, p[1]),
-      }),
-      { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity },
-    );
+    const projected = projectPoly(poly);
+    if (!projected.paths.length) return;
 
-    c.save();
-    c.beginPath();
-    c.moveTo(pts[0][0], pts[0][1]);
-    for (let i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]);
-    c.closePath();
-    c.fillStyle = `rgba(${INK},0.050)`;
-    c.fill();
-    c.clip();
+    for (let pi = 0; pi < projected.paths.length; pi++) {
+      const path = projected.paths[pi];
+      if (path.pts.length < 3) continue;
+      const box = boxFromPoints(path.pts);
 
-    // Direction #1: continents pleins par hachures blanches denses.
-    hatchBox(c, box, -18 + index * 4, Math.max(5.5, R * 0.03), 0.78, Math.max(0.85, R * 0.0042));
-    hatchBox(c, box, 34 - index * 3, Math.max(9, R * 0.052), 0.24, Math.max(0.65, R * 0.0026), true);
+      c.save();
+      closedVisiblePath(c, path);
+      c.fillStyle = `rgba(${INK},0.050)`;
+      c.fill();
+      c.clip();
 
-    // Fine inner contour strokes: old scientific plate / taille-douce noise.
-    c.strokeStyle = `rgba(${INK},0.18)`;
-    c.lineWidth = Math.max(0.55, R * 0.0022);
-    for (let k = 0; k < 4; k++) {
-      const inset = 1 + k * R * 0.009;
-      c.beginPath();
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        const n = Math.hypot(p[0], p[1]) || 1;
-        const x = p[0] - (p[0] / n) * inset;
-        const y = p[1] - (p[1] / n) * inset;
-        if (i === 0) c.moveTo(x, y);
-        else c.lineTo(x, y);
+      // Direction #1: continents pleins par hachures blanches denses.
+      // The path is clipped to the visible hemisphere before hatching; this prevents
+      // the old diagonal chords when a continent rotates behind the globe.
+      const hatchIndex = index + pi * 0.37;
+      hatchBox(c, box, -18 + hatchIndex * 4, Math.max(5.5, R * 0.03), 0.78, Math.max(0.85, R * 0.0042));
+      hatchBox(c, box, 34 - hatchIndex * 3, Math.max(9, R * 0.052), 0.24, Math.max(0.65, R * 0.0026), true);
+
+      // Fine inner contour strokes: only on fully visible polygons. On clipped paths,
+      // fake inset contours would reintroduce horizon-crossing artifacts.
+      if (!path.clipped && projected.allVisible) {
+        c.strokeStyle = `rgba(${INK},0.18)`;
+        c.lineWidth = Math.max(0.55, R * 0.0022);
+        for (let k = 0; k < 4; k++) {
+          const inset = 1 + k * R * 0.009;
+          c.beginPath();
+          for (let i = 0; i < path.pts.length; i++) {
+            const p = path.pts[i];
+            const n = Math.hypot(p[0], p[1]) || 1;
+            const x = p[0] - (p[0] / n) * inset;
+            const y = p[1] - (p[1] / n) * inset;
+            if (i === 0) c.moveTo(x, y);
+            else c.lineTo(x, y);
+          }
+          c.closePath();
+          c.stroke();
+        }
       }
-      c.closePath();
-      c.stroke();
+      c.restore();
     }
-    c.restore();
 
     c.save();
     c.strokeStyle = `rgba(${INK},0.98)`;
     c.lineWidth = Math.max(1.25, R * 0.006);
     c.lineJoin = 'round';
     c.lineCap = 'round';
-    strokeProjected(c, pts, true);
+    for (const path of projected.paths) strokeProjected(c, path.pts, !path.clipped && projected.allVisible);
     c.restore();
   }
 
