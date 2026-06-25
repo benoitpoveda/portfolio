@@ -266,8 +266,10 @@ const portfolioHref = site.routes.portfolio;
 
   <script>
     import { initPortail } from '../scripts/portail';
-    import { initPortalMelt } from '../scripts/portal-melt';
-    initPortalMelt();
+    import { initPortalMelt, MELT_SETTINGS } from '../scripts/portal-melt';
+    import { mountMeltPanel } from '../scripts/portal-melt-panel'; // TEMP : panneau de réglage — à retirer
+    const meltFx = initPortalMelt();
+    if (meltFx) mountMeltPanel(meltFx, MELT_SETTINGS); // TEMP : panneau de réglage — à retirer
     initPortail();
   </script>
 </BaseLayout>

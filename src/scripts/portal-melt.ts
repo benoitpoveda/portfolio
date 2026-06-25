@@ -88,6 +88,14 @@ const drawPortalDecor: MeltDecor = (ctx, w, h) => {
   try { ctxAny.letterSpacing = '0px'; } catch { /* noop */ }
 };
 
+/** Réglages courants de l'effet (mémoire courte, déplacement marqué, pinceau serré, grain fin). */
+export const MELT_SETTINGS = {
+  decay: 0.85,
+  amp: 0.16,
+  radius: 0.13,
+  scale: 8,
+};
+
 export function initPortalMelt(): MeltBackground | null {
   const mount = document.querySelector<HTMLElement>('[data-portal-root]');
   if (!mount) return null;
@@ -96,11 +104,7 @@ export function initPortalMelt(): MeltBackground | null {
     mount,
     zIndex: '0', // sous le stage (globe/nav, z-index 5+) et sous ::before/::after
     draw: drawPortalDecor,
-    // Réglages : mémoire courte, déplacement marqué, pinceau serré, grain fin.
-    decay: 0.85,
-    amp: 0.16,
-    radius: 0.13,
-    scale: 8,
+    ...MELT_SETTINGS,
   });
 
   // La police web (Cormorant Garamond) peut arriver après le 1er rendu :
