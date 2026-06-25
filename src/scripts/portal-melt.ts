@@ -104,6 +104,7 @@ export function initPortalMelt(): MeltBackground | null {
     mount,
     zIndex: '0', // sous le stage (globe/nav, z-index 5+) et sous ::before/::after
     draw: drawPortalDecor,
+    idle: false, // pas de souris virtuelle : l'effet ne joue qu'au survol réel
     ...MELT_SETTINGS,
   });
 
