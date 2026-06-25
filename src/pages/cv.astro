@@ -1,0 +1,307 @@
+---
+/**
+ * CV imprimable A4 — page autonome (pas de BaseLayout : on isole la mise en page
+ * print du reste du site). Contact centralise via site.ts.
+ * Pour ajouter une vraie photo : remplacer <span>BP</span> par
+ * <img src="/photo.jpg" alt="Benoît Poveda"> (un filtre N&B/duotone est applique).
+ */
+import { site } from '../data/site';
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CV — {site.name}</title>
+    <meta name="description" content={`CV de ${site.name} — ${site.role}.`} />
+    <meta name="robots" content="index,follow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="toolbar">
+      <span>
+        <a class="tb-back" href={site.routes.portfolio}>← Portfolio</a>
+        &nbsp;·&nbsp; CV imprimable — Imprimer / PDF (marges « Aucune », arrière-plans activés).
+      </span>
+      <button onclick="window.print()">Imprimer / PDF</button>
+    </div>
+
+    <div class="page">
+      <aside class="side">
+        <div class="ph"><span>{site.monogram}</span></div>
+
+        <div>
+          <div class="s-h">Contact</div>
+          {site.phone && <div class="ci">{site.phone}</div>}
+          <a class="ci link" href={`mailto:${site.email}`}>{site.email}</a>
+          <a class="ci link" href={site.links.github} target="_blank" rel="noopener">{site.links.githubLabel}</a>
+          <a class="ci link" href={site.links.linkedin} target="_blank" rel="noopener">{site.links.linkedinLabel}</a>
+        </div>
+
+        <div>
+          <div class="s-h">Compétences</div>
+          <div class="sg"><b>Linux &amp; conteneurs</b><span>Linux (Debian, Fedora) · Docker (multi-conteneurs, reverse proxy, TLS)</span></div>
+          <div class="sg"><b>Virtu. &amp; stockage</b><span>Proxmox (VM/LXC), VMware · ZFS, TrueNAS</span></div>
+          <div class="sg"><b>Windows &amp; annuaire</b><span>Windows Server, Active Directory, DHCP/DNS · Microsoft 365, Azure AD</span></div>
+          <div class="sg"><b>Scripts &amp; automatisation</b><span>Bash, PowerShell · Git</span></div>
+          <div class="sg"><b>Bases de données</b><span>MariaDB/MySQL, SQL Server</span></div>
+          <div class="sg"><b>Méthode &amp; outils</b><span>ITIL v4, Zendesk, GLPI</span></div>
+          <div class="sg wip"><b>En cours</b><span>Prometheus/Grafana, réseau (Cisco, pfSense, VLAN)</span></div>
+        </div>
+
+        <div>
+          <div class="s-h">Langues</div>
+          <div class="lr"><span>Français</span><em>natif</em></div>
+          <div class="lr"><span>Anglais</span><em>B1</em></div>
+        </div>
+
+        <div>
+          <div class="s-h">Centres d'intérêt</div>
+          <div class="ints">Escalade · Randonnée · Veille technologique</div>
+        </div>
+
+        <div class="stamp">
+          <b>STATUT</b> // ouvert aux opportunités<br />
+          <b>MOBILITÉ</b> // {site.locationLong}
+        </div>
+      </aside>
+
+      <main class="main">
+        <div>
+          <div class="eyebrow"><span class="hl">Systèmes · Infrastructure · Automatisation</span></div>
+          <div class="name">Benoît Poveda</div>
+          <div class="role">Technicien Systèmes &amp; Infrastructure</div>
+        </div>
+
+        <p class="profil">Technicien systèmes &amp; réseaux qui conçoit et déploie ses propres outils pour automatiser l'exploitation. Je mène actuellement la refonte du centre d'aide de mon employeur via une application web assistée par IA, aujourd'hui en production. Avant l'IT, 7 ans à cofonder et diriger une entreprise : autonomie, sens du résultat et goût du concret. Titre pro TSSR (niveau 5, bac+2). Je vise un poste d'administrateur systèmes / infrastructure.</p>
+
+        <div>
+          <div class="sh"><span class="t">Expérience</span></div>
+          <div class="en">
+            <div class="en-hd"><h4>Tech. Systèmes &amp; Réseaux · Support N2/N3</h4><span class="yr">2024 — auj.</span></div>
+            <div class="org">Clyo Systems · Éditeur de logiciels de caisse · Nice</div>
+            <ul>
+              <li>Support N2/N3 (caisse, terminaux Sunmi/PAX, TPE) via Zendesk.</li>
+              <li class="impact">Conception, développement et déploiement d'une application web interne, assistée par IA, qui automatise la production et la mise en forme des articles du centre d'aide : reformatage ~20× plus rapide, <span class="hl">~150 h économisées sur la refonte (230 articles)</span> — en production, adoptée par l'équipe.</li>
+              <li>Déploiement du matériel et des applications métier ; développement d'outils internes (script atelier, générateur d'étiquettes en remplacement de Zebra Designer) et automatisation (PowerShell, Bash).</li>
+            </ul>
+          </div>
+          <div class="en">
+            <div class="en-hd"><h4>Tech. Sup. Systèmes &amp; Réseaux — Stage</h4><span class="yr">2024</span></div>
+            <div class="org">Régie Ligne d'Azur · Nice</div>
+            <ul><li>Routeurs industriels (InHand, HP 5140), switch Cisco 9200L ; migration Outlook → Microsoft 365 (PowerShell).</li></ul>
+          </div>
+          <div class="en">
+            <div class="en-hd"><h4>Cofondateur &amp; gérant</h4><span class="yr">2017 — 2024</span></div>
+            <div class="org">Lympia Lunetier · Magasin d'optique · Nice</div>
+            <ul><li>Création et gestion complète d'un point de vente (commercial, achats, gestion) et de toute l'informatique de la boutique — postes, réseau, logiciel métier — avec mon associée.</li></ul>
+          </div>
+          <div class="en">
+            <div class="en-hd"><h4>Opticien-lunetier — Collaborateur</h4><span class="yr">2007 — 2016</span></div>
+            <div class="org">Afflelou · Marc Le Bihan · Les Opticiens Mutualistes · Optique Garnier — Nice &amp; Paris</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sh"><span class="t">Projets personnels</span></div>
+          <ul>
+            <li><b>Homelab Proxmox</b> — virtualisation (VM/LXC), TrueNAS (ZFS), Docker, reverse proxy, sauvegardes automatisées (PBS), VPS Linux en production.</li>
+            <li><b>Refonte du site web Lympia Lunetier</b> — conception et intégration.</li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="sh"><span class="t">Formation</span></div>
+          <ul>
+            <li><b>Titre pro niveau 5</b> · Tech. Sup. Systèmes &amp; Réseaux — ENI École Informatique (2024).</li>
+            <li><b>BTS Opticien-lunetier</b> — GRETA Côte d'Azur (2010).</li>
+          </ul>
+        </div>
+      </main>
+    </div>
+
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        --bg: #e5ebed;
+        --sheet: #fbfcfc;
+        --panel: #e9f0f1;
+        --ink: #11161c;
+        --blue: #1f5ea6;
+        --navy: #16334e;
+        --aqua: #aad2ca;
+        --aqua-edge: #73b3a8;
+        --muted: #5c6770;
+        --line: #d6dde0;
+        --body: #39414a;
+      }
+      html, body { background: var(--bg); }
+      body {
+        font-family: 'Archivo', sans-serif;
+        color: var(--ink);
+        line-height: 1.5;
+        padding: 26px 16px 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .toolbar {
+        width: 210mm;
+        max-width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        background: var(--ink);
+        color: #cfe9e2;
+        padding: 11px 12px 11px 18px;
+        margin-bottom: 16px;
+        border-radius: 10px;
+        font-family: 'Space Mono', monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.01em;
+        line-height: 1.4;
+      }
+      .toolbar .tb-back { color: var(--aqua); text-decoration: none; font-weight: 700; }
+      .toolbar .tb-back:hover { color: #fff; }
+      .toolbar button {
+        font-family: 'Space Mono', monospace;
+        background: var(--aqua);
+        color: var(--ink);
+        border: none;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 9px 16px;
+        border-radius: 7px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .toolbar button:hover { background: #fff; }
+
+      .page {
+        width: 210mm;
+        max-width: 100%;
+        min-height: 297mm;
+        background: var(--sheet);
+        overflow: hidden;
+        box-shadow: 0 24px 60px -26px rgba(17, 22, 28, 0.35);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        display: grid;
+        grid-template-columns: 64mm 1fr;
+      }
+
+      /* SIDEBAR */
+      .side {
+        background: var(--panel);
+        padding: 30px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        border-right: 1px solid var(--line);
+      }
+      .ph {
+        width: 96px;
+        height: 96px;
+        align-self: center;
+        border-radius: 14px;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #cfe6f2;
+        font-weight: 900;
+        font-size: 34px;
+        letter-spacing: 0.04em;
+        box-shadow: 0 0 0 5px var(--sheet), 0 0 0 6px var(--line);
+        overflow: hidden;
+      }
+      .ph img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.05) brightness(1.02); }
+
+      .s-h {
+        font-family: 'Space Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--blue);
+        margin-bottom: 11px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .s-h::before { content: ''; width: 8px; height: 8px; background: var(--aqua); box-shadow: inset 0 0 0 1px var(--aqua-edge); flex: none; }
+
+      .ci { font-size: 12px; color: var(--ink); margin-bottom: 8px; line-height: 1.4; word-break: break-word; display: block; text-decoration: none; }
+      .ci.link { color: var(--blue); }
+      .ci.link::before { content: '\2192\00a0'; font-family: 'Space Mono', monospace; font-weight: 700; color: var(--blue); }
+      a.ci.link:hover { text-decoration: underline; }
+
+      .sg { margin-bottom: 10px; }
+      .sg b { display: block; font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+      .sg span { font-size: 11.5px; color: var(--ink); line-height: 1.45; }
+      .sg.wip b { color: var(--blue); }
+      .sg.wip span { color: var(--muted); }
+
+      .lr { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+      .lr em { font-family: 'Space Mono', monospace; font-style: normal; color: var(--blue); font-size: 11px; }
+
+      .ints { font-size: 11.5px; color: var(--ink); line-height: 1.5; }
+
+      .stamp { margin-top: auto; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.03em; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 12px; }
+      .stamp b { color: var(--blue); font-weight: 700; }
+
+      /* MAIN */
+      .main { padding: 34px 34px; display: flex; flex-direction: column; gap: 22px; }
+      .eyebrow { font-family: 'Space Mono', monospace; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-bottom: 13px; display: inline-block; white-space: nowrap; }
+      .hl { background: linear-gradient(180deg, transparent 52%, var(--aqua) 52%); padding: 0 2px; }
+      .name { font-weight: 900; font-size: 46px; line-height: 0.96; letter-spacing: -0.02em; text-transform: uppercase; color: var(--ink); }
+      .role { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 400; letter-spacing: 0.02em; text-transform: uppercase; color: var(--blue); margin-top: 9px; }
+      .profil { font-size: 12.5px; color: var(--body); max-width: 66ch; line-height: 1.6; margin-top: 4px; }
+
+      .sh { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+      .sh::before { content: ''; width: 9px; height: 9px; background: var(--blue); flex: none; }
+      .sh .t { font-weight: 900; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+      .sh::after { content: ''; height: 2px; background: var(--line); flex: 1; }
+
+      .en { margin-bottom: 14px; }
+      .en:last-child { margin-bottom: 0; }
+      .en-hd { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+      .en-hd h4 { font-weight: 700; font-size: 14.5px; color: var(--ink); }
+      .yr { font-family: 'Space Mono', monospace; font-size: 10.5px; font-weight: 700; color: var(--blue); white-space: nowrap; letter-spacing: 0.02em; }
+      .org { font-size: 12px; font-weight: 600; color: var(--muted); margin: 3px 0 7px; }
+
+      ul { list-style: none; }
+      li { font-size: 12px; color: var(--body); padding-left: 16px; position: relative; line-height: 1.5; margin-bottom: 3px; }
+      li:last-child { margin-bottom: 0; }
+      li::before { content: ''; position: absolute; left: 2px; top: 6px; width: 5px; height: 5px; background: var(--blue); }
+      li b { color: var(--ink); font-weight: 700; }
+      li.impact::before { background: var(--aqua-edge); }
+
+      @media print {
+        * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        html, body { background: #fff; }
+        body { padding: 0; }
+        .toolbar { display: none; }
+        .page { box-shadow: none; width: 210mm; max-width: none; min-height: 0; border-radius: 0; }
+        @page { size: A4; margin: 0; }
+      }
+      @media (max-width: 720px) {
+        .page { grid-template-columns: 1fr; }
+        .side { border-right: none; border-bottom: 1px solid var(--line); }
+        .eyebrow { white-space: normal; }
+      }
+    </style>
+  </body>
+</html>

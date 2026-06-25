@@ -1,0 +1,908 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { sections, hero, profil, parcours, labo, stack, contact, footer } from '../data/content';
+
+/** Enveloppe une sous-chaine dans le surlignage signature turquoise. */
+function mark(text: string, phrase: string): string {
+  return text.includes(phrase)
+    ? text.replace(phrase, `<span class="mark">${phrase}</span>`)
+    : text;
+}
+
+/** Met une sous-chaine en gras (encre). */
+function strong(text: string, phrase: string): string {
+  return text.includes(phrase) ? text.replace(phrase, `<b>${phrase}</b>`) : text;
+}
+
+const lede = hero.ledeLines.join(' ');
+const coords = site.showPhoneOnSite
+  ? `${site.email}<br>${site.phone} · ${site.locationLong}`
+  : `${site.email}<br>${site.locationLong}`;
+---
+
+<BaseLayout
+  title={`Portfolio — ${site.name}`}
+  description={site.meta.description}
+  path="/portfolio"
+  bodyClass="pf-body"
+>
+  <div class="pf">
+    <!-- ============ NAV ============ -->
+    <nav class="pf-nav">
+      <span class="pf-nav-brand">
+        <span class="pf-sq" aria-hidden="true"></span>
+        B.POVEDA — INFRASTRUCTURE
+      </span>
+      <span class="pf-nav-links">
+        {sections.map((s) => (
+          <a href={`#${s.id}`}>// {s.nav}</a>
+        ))}
+      </span>
+      <a class="pf-nav-cv" href={site.routes.cv}>↓ CV</a>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <header class="pf-hero">
+      <div class="pf-grid-texture" aria-hidden="true"></div>
+      <div class="pf-hero-inner container">
+        <div class="pf-hero-main">
+          <div class="pf-eyebrow" data-reveal>{hero.eyebrow}</div>
+          <h1 class="pf-title" data-reveal>Benoît<br />Poveda</h1>
+          <p class="pf-lede" data-reveal>{lede}</p>
+          <p class="pf-sub" data-reveal set:html={mark(hero.sub, '~150 h')}></p>
+
+          <div class="pf-cta" data-reveal>
+            <a class="pf-btn pf-btn--solid" href="#labo">→ Mes projets</a>
+            <a class="pf-btn pf-btn--ghost" href={site.links.github} target="_blank" rel="noopener">→ GitHub</a>
+            <a class="pf-btn pf-btn--ghost" href={site.routes.cv}>↓ Télécharger le CV</a>
+          </div>
+        </div>
+
+        <div class="pf-hero-aside" data-reveal>
+          <div class="pf-monogram">
+            <div class="pf-monogram-tex" aria-hidden="true"></div>
+            <span class="pf-monogram-bp">{site.monogram}</span>
+            <span class="pf-monogram-cap">
+              <span>[ PORTRAIT ]</span><span>FIG.01</span>
+            </span>
+          </div>
+          <div class="pf-releve">
+            <div><span class="pf-releve-k">DISPO</span>&nbsp;&nbsp;// ouvert aux opportunités · Nice, FR · mobile</div>
+            <div><span class="pf-releve-k">FOCUS</span>&nbsp;&nbsp;// infrastructure · automatisation · Linux</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============ PROFIL ============ -->
+    <section id="profil" class="pf-section">
+      <div class="container">
+        <div class="pf-shead" data-reveal>
+          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-label">{profil.mono}</span>
+          <span class="pf-shead-rule" aria-hidden="true"></span>
+        </div>
+        <div class="pf-profil">
+          <div class="pf-profil-text">
+            <p class="pf-profil-lead" data-reveal set:html={strong(profil.paragraphs[0], 'je le construis.')}></p>
+            <p data-reveal set:html={mark(profil.paragraphs[1], '~150 h économisées sur 230 articles')}></p>
+            <p data-reveal>{profil.paragraphs[2]}</p>
+            <p data-reveal set:html={strong(profil.paragraphs[4], 'administrateur systèmes / infrastructure')}></p>
+          </div>
+          <div class="pf-stats" data-reveal>
+            {profil.stats.map((s) => (
+              <div class="pf-stat">
+                <div class="pf-stat-v">{s.value}</div>
+                <div class="pf-stat-l">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PARCOURS ============ -->
+    <section id="parcours" class="pf-section pf-section--alt">
+      <div class="container">
+        <div class="pf-shead" data-reveal>
+          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-label">{parcours.mono}</span>
+          <span class="pf-shead-rule" aria-hidden="true"></span>
+        </div>
+        {parcours.jobs.map((job, i) => (
+          <div class={`pf-job${i === parcours.jobs.length - 1 ? ' is-last' : ''}`} data-reveal>
+            <div class="pf-job-period">{job.period}</div>
+            <div class="pf-job-body">
+              <h3 class="pf-job-role">{job.role}</h3>
+              <div class="pf-job-org">{job.org} · {job.meta}</div>
+              {job.bullets.length > 0 && (
+                <ul class="pf-job-bullets">
+                  {job.bullets.map((b, bi) => (
+                    <li>
+                      <span class={`pf-dot${bi === 1 && i === 0 ? ' is-aqua' : ''}`} aria-hidden="true"></span>
+                      <span set:html={mark(b, '~150 h économisées sur la refonte (230 articles)')}></span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ============ LABO & PROJETS (section reine) ============ -->
+    <section id="labo" class="pf-section">
+      <div class="container">
+        <div class="pf-shead" data-reveal>
+          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-label">{labo.mono}</span>
+          <span class="pf-shead-rule" aria-hidden="true"></span>
+        </div>
+        <p class="pf-labo-intro" data-reveal>{labo.intro}</p>
+        <div class="pf-cards">
+          {labo.cards.map((card, i) => (
+            <article class="pf-card" data-reveal>
+              <div class={`pf-card-head ${i % 2 === 0 ? 'is-navy' : 'is-cyan'}`}>
+                <div class="pf-card-tex" aria-hidden="true"></div>
+                <span class="pf-card-cat">{card.cat}</span>
+              </div>
+              <div class="pf-card-body">
+                <h3 class="pf-card-title">{card.title}</h3>
+                <p class="pf-card-desc">{card.desc}</p>
+                <div class="pf-card-meta">
+                  <div><span class="pf-k">STACK&nbsp;//</span> <span class="pf-v">{card.stack}</span></div>
+                  <div><span class="pf-k">PREUVE //</span> <span class="pf-v">{card.preuve}</span></div>
+                  {card.nodes && (
+                    <div><span class="pf-k">NODES //</span> <span class="pf-v" set:html={mark(card.nodes, '~12 VM & conteneurs')}></span></div>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STACK ============ -->
+    <section id="stack" class="pf-section pf-section--alt">
+      <div class="container">
+        <div class="pf-shead" data-reveal>
+          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-label">{stack.mono}</span>
+          <span class="pf-shead-rule" aria-hidden="true"></span>
+        </div>
+        <div class="pf-stack-grid" data-reveal>
+          {stack.groups.map((g) => (
+            <div class="pf-stack-cell">
+              <div class="pf-stack-cat">{g.name}</div>
+              <p class="pf-stack-items">{g.items.join(' · ')}</p>
+            </div>
+          ))}
+        </div>
+        <div class="pf-encours" data-reveal>
+          <span class="pf-encours-k">{stack.enCours.name} →</span>
+          <span class="pf-encours-v">{stack.enCours.items.join(', ')}</span>
+        </div>
+        <div class="pf-formation" data-reveal>
+          <span class="pf-formation-k">FORMATION //</span> {parcours.formation}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="pf-contact">
+      <div class="container pf-contact-inner">
+        <div class="pf-contact-eyebrow" data-reveal>{contact.mono}</div>
+        <h2 class="pf-contact-title" data-reveal>Travaillons<br />ensemble</h2>
+        <p class="pf-contact-accroche" data-reveal>{contact.accroche}</p>
+        <div class="pf-contact-cta" data-reveal>
+          <a class="pf-cbtn pf-cbtn--solid" href={`mailto:${site.email}`}>✉ Email</a>
+          <a class="pf-cbtn pf-cbtn--ghost" href={site.links.linkedin} target="_blank" rel="noopener">→ LinkedIn</a>
+          <a class="pf-cbtn pf-cbtn--ghost" href={site.links.github} target="_blank" rel="noopener">→ GitHub</a>
+          <a class="pf-cbtn pf-cbtn--ghost" href={site.routes.cv}>↓ CV (PDF)</a>
+        </div>
+        <div class="pf-contact-coords" data-reveal set:html={coords}></div>
+      </div>
+      <div class="pf-contact-tex" aria-hidden="true"></div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="pf-footer">
+      <span>© 2026 {site.name}</span>
+      {footer.interets.length > 0 && (
+        <span class="pf-footer-interets">Centres d'intérêt // {footer.interets.join(' · ')}</span>
+      )}
+      <a href="#profil">↑ Haut</a>
+    </footer>
+  </div>
+
+  <script>
+    import { initReveal } from '../scripts/reveal';
+    initReveal();
+  </script>
+</BaseLayout>
+
+<style>
+  .pf {
+    position: relative;
+    font-family: var(--font-sans);
+    color: var(--c-ink);
+    background: var(--c-surface);
+    overflow-x: hidden;
+  }
+  .pf ::selection {
+    background: var(--c-turquoise);
+    color: var(--c-ink);
+  }
+
+  /* ---------- NAV ---------- */
+  .pf-nav {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 50px;
+    padding: 0 20px;
+    background: var(--c-ink);
+    color: var(--c-turquoise-soft);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .pf-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-transform: uppercase;
+  }
+  .pf-sq {
+    width: 7px;
+    height: 7px;
+    background: var(--c-turquoise);
+    box-shadow: inset 0 0 0 1px var(--c-turquoise-edge);
+    flex: none;
+  }
+  .pf-nav-links {
+    display: flex;
+    gap: 22px;
+    text-transform: uppercase;
+  }
+  .pf-nav-links a {
+    color: var(--c-turquoise-soft);
+    opacity: 0.8;
+    text-decoration: none;
+  }
+  .pf-nav-links a:hover {
+    opacity: 1;
+    color: var(--c-turquoise);
+  }
+  .pf-nav-cv {
+    background: var(--c-turquoise);
+    color: var(--c-ink);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: var(--r-sm);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .pf-nav-cv:hover {
+    background: #fff;
+    text-decoration: none;
+  }
+  @media (max-width: 760px) {
+    .pf-nav-links {
+      display: none;
+    }
+  }
+
+  /* ---------- HERO ---------- */
+  .pf-hero {
+    position: relative;
+    padding: 64px 0 56px;
+    border-bottom: 1px solid var(--c-rule);
+    overflow: hidden;
+  }
+  .pf-grid-texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: radial-gradient(circle, rgba(31, 94, 166, 0.16) 1px, transparent 1.4px);
+    background-size: 22px 22px;
+    -webkit-mask-image: linear-gradient(105deg, #000 0%, transparent 62%);
+    mask-image: linear-gradient(105deg, #000 0%, transparent 62%);
+  }
+  .pf-hero-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.55fr 0.95fr;
+    gap: 54px;
+    align-items: center;
+  }
+  .pf-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-ink);
+    margin-bottom: 20px;
+  }
+  .pf-title {
+    font-weight: 900;
+    font-size: var(--fs-hero);
+    line-height: var(--lh-hero);
+    letter-spacing: var(--ls-hero);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .pf-lede {
+    font-weight: 500;
+    font-size: clamp(21px, 2.5vw, 31px);
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+    max-width: 600px;
+    margin-bottom: 18px;
+  }
+  .pf-sub {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--c-text);
+    max-width: 540px;
+  }
+  .pf-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-top: 30px;
+  }
+  .pf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 12px 18px;
+    border-radius: 7px;
+    text-decoration: none;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+  .pf-btn--solid {
+    background: var(--c-cyanotype);
+    color: var(--c-surface);
+  }
+  .pf-btn--solid:hover {
+    background: var(--c-ink);
+    text-decoration: none;
+  }
+  .pf-btn--ghost {
+    background: transparent;
+    color: var(--c-cyanotype);
+    border: 1.5px solid var(--c-cyanotype);
+    padding: 11px 18px;
+  }
+  .pf-btn--ghost:hover {
+    background: var(--c-cyanotype);
+    color: var(--c-surface);
+    text-decoration: none;
+  }
+
+  .pf-hero-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .pf-monogram {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--c-navy);
+    border-radius: 16px;
+    box-shadow: 0 0 0 6px var(--c-surface), 0 0 0 7px var(--c-rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .pf-monogram-tex {
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+    background-image: radial-gradient(circle, var(--c-turquoise-soft2) 1.4px, transparent 1.8px);
+    background-size: 9px 9px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 72%);
+  }
+  .pf-monogram-bp {
+    position: relative;
+    font-weight: 900;
+    font-size: 64px;
+    letter-spacing: 0.04em;
+    color: var(--c-turquoise-soft2);
+  }
+  .pf-monogram-cap {
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(207, 230, 242, 0.7);
+  }
+  .pf-releve {
+    border: 1px solid var(--c-rule);
+    border-radius: 12px;
+    padding: 16px;
+    background: var(--c-panel-cool);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .pf-releve div + div {
+    margin-top: 8px;
+  }
+  .pf-releve-k {
+    color: var(--c-cyanotype);
+    font-weight: 700;
+  }
+
+  /* ---------- SECTIONS ---------- */
+  .pf-section {
+    padding: var(--section-pad-y) 0;
+  }
+  .pf-section--alt {
+    background: var(--c-panel-cool);
+    border-top: 1px solid var(--c-rule);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .pf-shead {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 30px;
+  }
+  .pf-shead-sq {
+    width: 9px;
+    height: 9px;
+    background: var(--c-cyanotype);
+    flex: none;
+  }
+  .pf-shead-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-ink);
+    white-space: nowrap;
+  }
+  .pf-shead-rule {
+    height: 2px;
+    background: var(--c-rule);
+    flex: 1;
+  }
+
+  /* ---------- PROFIL ---------- */
+  .pf-profil {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 54px;
+    align-items: start;
+  }
+  .pf-profil-text p {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--c-text);
+    margin-bottom: 14px;
+  }
+  .pf-profil-text p:last-child {
+    margin-bottom: 0;
+  }
+  .pf-profil-lead {
+    font-size: 18px !important;
+    line-height: 1.65 !important;
+    margin-bottom: 16px !important;
+  }
+  .pf-profil-text b {
+    color: var(--c-ink);
+    font-weight: 700;
+  }
+  .pf-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--c-rule);
+    border: 1px solid var(--c-rule);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .pf-stat {
+    background: var(--c-surface);
+    padding: 22px 18px;
+  }
+  .pf-stat-v {
+    font-weight: 900;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--c-cyanotype);
+  }
+  .pf-stat-l {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-text-2);
+    margin-top: 9px;
+  }
+
+  /* ---------- PARCOURS ---------- */
+  .pf-job {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px dashed var(--c-rule-dotted);
+  }
+  .pf-job.is-last {
+    border-bottom: none;
+  }
+  .pf-job-period {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--c-cyanotype);
+  }
+  .pf-job-role {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--c-ink);
+  }
+  .pf-job-org {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-text-2);
+    margin: 4px 0 12px;
+  }
+  .pf-job-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pf-job-bullets li {
+    display: flex;
+    gap: 11px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--c-text);
+  }
+  .pf-job-bullets b {
+    color: var(--c-ink);
+    font-weight: 700;
+  }
+  .pf-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--c-cyanotype);
+    flex: none;
+    margin-top: 6px;
+  }
+  .pf-dot.is-aqua {
+    background: var(--c-turquoise-edge);
+  }
+
+  /* ---------- LABO ---------- */
+  .pf-labo-intro {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--c-text-2);
+    max-width: 620px;
+    margin: -8px 0 34px;
+  }
+  .pf-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .pf-card {
+    border: 1px solid var(--c-rule);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--c-surface);
+    display: flex;
+    flex-direction: column;
+  }
+  .pf-card-head {
+    position: relative;
+    padding: 13px 16px;
+    overflow: hidden;
+  }
+  .pf-card-head.is-navy {
+    background: var(--c-navy);
+  }
+  .pf-card-head.is-cyan {
+    background: var(--c-cyanotype);
+  }
+  .pf-card-tex {
+    position: absolute;
+    inset: 0;
+    background-size: 9px 9px;
+    -webkit-mask-image: linear-gradient(110deg, #000 0%, transparent 78%);
+    mask-image: linear-gradient(110deg, #000 0%, transparent 78%);
+  }
+  .is-navy .pf-card-tex {
+    opacity: 0.18;
+    background-image: radial-gradient(circle, var(--c-turquoise-soft2) 1.3px, transparent 1.7px);
+  }
+  .is-cyan .pf-card-tex {
+    opacity: 0.2;
+    background-image: radial-gradient(circle, var(--c-surface) 1.3px, transparent 1.7px);
+  }
+  .pf-card-cat {
+    position: relative;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .is-navy .pf-card-cat {
+    color: #8fb9d6;
+  }
+  .is-cyan .pf-card-cat {
+    color: var(--c-turquoise-soft2);
+  }
+  .pf-card-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .pf-card-title {
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    color: var(--c-ink);
+  }
+  .pf-card-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--c-text);
+  }
+  .pf-card-meta {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    padding-top: 14px;
+    border-top: 1px dashed var(--c-rule);
+  }
+  .pf-k {
+    color: var(--c-cyanotype);
+    font-weight: 700;
+  }
+  .pf-v {
+    color: var(--c-text-2);
+  }
+
+  /* ---------- STACK ---------- */
+  .pf-stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--c-rule);
+    border: 1px solid var(--c-rule);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .pf-stack-cell {
+    background: var(--c-surface);
+    padding: 22px;
+  }
+  .pf-stack-cat {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-cyanotype);
+    margin-bottom: 12px;
+  }
+  .pf-stack-items {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--c-text);
+  }
+  .pf-encours {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-top: 22px;
+  }
+  .pf-encours-k {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-turquoise-edge);
+  }
+  .pf-encours-v {
+    font-size: 13.5px;
+    color: var(--c-text-2);
+  }
+  .pf-formation {
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--c-rule-dotted);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: var(--c-text-2);
+  }
+  .pf-formation-k {
+    color: var(--c-cyanotype);
+    font-weight: 700;
+  }
+
+  /* ---------- CONTACT ---------- */
+  .pf-contact {
+    position: relative;
+    background: var(--c-ink);
+    color: var(--c-turquoise-soft);
+    padding: 96px 0;
+    overflow: hidden;
+  }
+  .pf-contact-inner {
+    position: relative;
+    z-index: 2;
+  }
+  .pf-contact-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-turquoise);
+    margin-bottom: 24px;
+  }
+  .pf-contact-title {
+    font-weight: 900;
+    font-size: clamp(34px, 5.5vw, 68px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: var(--c-surface);
+  }
+  .pf-contact-accroche {
+    font-size: 17px;
+    line-height: 1.5;
+    color: #9fb3b0;
+    max-width: 520px;
+    margin-bottom: 36px;
+  }
+  .pf-contact-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-bottom: 40px;
+  }
+  .pf-cbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 13px 20px;
+    border-radius: 7px;
+    text-decoration: none;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+  .pf-cbtn--solid {
+    background: var(--c-turquoise);
+    color: var(--c-ink);
+  }
+  .pf-cbtn--solid:hover {
+    background: var(--c-surface);
+    text-decoration: none;
+  }
+  .pf-cbtn--ghost {
+    background: transparent;
+    color: var(--c-turquoise-soft);
+    border: 1.5px solid #39504c;
+    padding: 12px 20px;
+  }
+  .pf-cbtn--ghost:hover {
+    border-color: var(--c-turquoise);
+    color: var(--c-turquoise);
+    text-decoration: none;
+  }
+  .pf-contact-coords {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.9;
+    color: #9fb3b0;
+  }
+  .pf-contact-tex {
+    position: absolute;
+    right: -4%;
+    bottom: -28%;
+    width: 48%;
+    height: 130%;
+    pointer-events: none;
+    opacity: 0.1;
+    background-image: radial-gradient(circle, var(--c-turquoise) 1.4px, transparent 1.8px);
+    background-size: 11px 11px;
+    -webkit-mask-image: radial-gradient(ellipse at 60% 50%, #000 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 60% 50%, #000 0%, transparent 70%);
+  }
+
+  /* ---------- FOOTER ---------- */
+  .pf-footer {
+    background: var(--c-footer);
+    color: #6e7c7a;
+    padding: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pf-footer-interets {
+    color: #9fb3b0;
+  }
+  .pf-footer a {
+    color: var(--c-turquoise);
+    text-decoration: none;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    .pf-hero-inner,
+    .pf-profil {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .pf-cards,
+    .pf-stack-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .pf-job {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .pf-stats {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,1241 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { profil, parcours, labo, stack } from '../data/content';
+
+/** Enveloppe une sous-chaine dans le surlignage signature turquoise (UN seul par ecran). */
+function mark(text: string, phrase: string): string {
+  return text.includes(phrase)
+    ? text.replace(phrase, `<span class="po-mark">${phrase}</span>`)
+    : text;
+}
+/** Met une sous-chaine en gras (encre). */
+function strong(text: string, phrase: string): string {
+  return text.includes(phrase) ? text.replace(phrase, `<strong>${phrase}</strong>`) : text;
+}
+
+/* Numero + intitule (cohelper avec META cote script) — utilises pour les satellites & le menu. */
+const SAT_META = [
+  { id: 'profil', num: '01', label: '// PROFIL' },
+  { id: 'parcours', num: '02', label: '// PARCOURS' },
+  { id: 'labo', num: '03', label: '// LABO' },
+  { id: 'stack', num: '04', label: '// STACK' },
+  { id: 'contact', num: '05', label: '// CONTACT' },
+];
+
+const cvHref = site.routes.cv;
+const portfolioHref = site.routes.portfolio;
+---
+
+<BaseLayout
+  title={`${site.name} — Portail`}
+  description={site.meta.description}
+  path="/"
+  bodyClass="po-body"
+>
+  <div class="po-root" data-portal-root>
+    <!-- ============ FILIGRANE ============ -->
+    <div class="po-watermark" aria-hidden="true">
+      <span class="po-wm-name">Benoît</span>
+      <span class="po-wm-name">Poveda</span>
+    </div>
+
+    <!-- ============ STAGE (globe + orbites + satellites) ============ -->
+    <div class="po-stage" data-portal-stage>
+      <canvas class="po-canvas" aria-hidden="true" data-portal-canvas></canvas>
+
+      {SAT_META.map((s) => (
+        <button
+          class="po-sat"
+          type="button"
+          data-sat={s.id}
+          aria-label={`Ouvrir la section ${s.label.replace('// ', '')}`}
+        >
+          <span class="po-sat-glyph">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.4">
+              <ellipse cx="17" cy="17" rx="13" ry="5" transform="rotate(-26 17 17)"></ellipse>
+              <circle cx="17" cy="17" r="5.6"></circle>
+              <circle cx="17" cy="17" r="1.5" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </span>
+          <span class="po-sat-leader" data-sat-leader aria-hidden="true"></span>
+          <span class="po-sat-node" data-sat-node aria-hidden="true"></span>
+          <span class="po-sat-label" data-sat-label>{s.label}</span>
+        </button>
+      ))}
+    </div>
+
+    <!-- ============ HEADER ============ -->
+    <header class="po-header">
+      <span class="po-badge">
+        <span class="po-dot"></span>B.Poveda · Portail orbital
+      </span>
+      <div class="po-actions">
+        <a class="po-link-read" href={portfolioHref}>Vue lecture / classique →</a>
+        <button class="po-menu-btn" type="button" data-menu-toggle aria-label="Ouvrir le menu des sections">
+          // Menu
+        </button>
+        <a class="po-cv-btn" href={cvHref}>Télécharger le CV →</a>
+      </div>
+    </header>
+
+    <!-- ============ INDICE 1er chargement ============ -->
+    <div class="po-hint" data-hint>→ Cliquez sur un satellite · ou ouvrez le menu</div>
+
+    <!-- ============ IDENTITÉ ============ -->
+    <div class="po-identity">
+      <div class="po-name">{site.name}</div>
+      <div class="po-subtitle">{site.role}</div>
+      <div class="po-status">
+        DISPO&nbsp;&nbsp;// {site.status.dispo}<br />
+        FOCUS&nbsp;&nbsp;// {site.status.focus}
+      </div>
+    </div>
+
+    <div class="po-coords">
+      LAT 43.70°N · LON 7.27°E<br />// RELEVÉ ORBITAL · {site.location}
+    </div>
+
+    <!-- ============ MENU DE REPLI ============ -->
+    <div class="po-menu" data-menu hidden>
+      <div class="po-menu-card" role="menu" aria-label="Sections du portfolio">
+        <div class="po-menu-head">
+          <span class="po-menu-title">// SECTIONS</span>
+          <button class="po-menu-x" type="button" data-menu-close aria-label="Fermer le menu">✕</button>
+        </div>
+        <div class="po-menu-list">
+          {SAT_META.map((s) => (
+            <button class="po-menu-item" type="button" data-menu-item={s.id}>
+              <span class="po-menu-num">{s.num}</span>
+              <span class="po-menu-sq"></span>
+              <span class="po-menu-label">{s.label}</span>
+              <span class="po-menu-arrow">→</span>
+            </button>
+          ))}
+          <a class="po-menu-read" href={portfolioHref} data-menu-cv>
+            <span class="po-menu-read-label">↳ VUE LECTURE / CLASSIQUE</span>
+            <span class="po-menu-read-arrow">→</span>
+          </a>
+          <a class="po-menu-cv" href={cvHref} data-menu-cv>
+            <span class="po-menu-cv-label">↓ TÉLÉCHARGER LE CV (PDF)</span>
+            <span class="po-menu-cv-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ MODALE ============ -->
+    <div class="po-modal" data-modal hidden>
+      <div class="po-modal-card" role="dialog" aria-modal="true" data-modal-card data-modal-arialabel>
+        <span class="po-corner po-corner--tl" aria-hidden="true"></span>
+        <span class="po-corner po-corner--tr" aria-hidden="true"></span>
+        <span class="po-corner po-corner--bl" aria-hidden="true"></span>
+        <span class="po-corner po-corner--br" aria-hidden="true"></span>
+
+        <div class="po-strip" aria-hidden="true">
+          <span class="po-strip-top">DOSSIER · B.POVEDA</span>
+          <span class="po-strip-bottom">RELEVÉ ORBITAL · NICE</span>
+        </div>
+
+        <div class="po-modal-main">
+          <div class="po-modal-head">
+            <div>
+              <div class="po-modal-section">SECTION <span data-modal-num></span> / 05</div>
+              <h2 class="po-modal-title" data-modal-title></h2>
+              <div class="po-modal-desc" data-modal-desc></div>
+            </div>
+            <button class="po-modal-x" type="button" data-modal-close aria-label="Fermer">✕</button>
+          </div>
+
+          <div class="po-modal-body">
+            <!-- PROFIL -->
+            <div data-section-body="profil" hidden>
+              <h2 class="po-profil-h">Je n'attends pas qu'un outil existe pour gagner du temps.</h2>
+              <p class="po-p" set:html={strong(profil.paragraphs[0], 'je le construis')}></p>
+              <p class="po-p" set:html={mark(profil.paragraphs[1], '~150 h économisées sur 230 articles')}></p>
+              <p class="po-p">{profil.paragraphs[2]}</p>
+              <p class="po-p">{profil.paragraphs[3]}</p>
+              <p class="po-p po-p--last">{profil.paragraphs[4]}</p>
+            </div>
+
+            <!-- PARCOURS -->
+            <div data-section-body="parcours" hidden>
+              <div class="po-jobs">
+                {parcours.jobs.map((job, i) => (
+                  <div class={`po-job${i === 0 ? ' is-active' : ''}`}>
+                    <div class="po-job-top">
+                      <h3 class="po-job-role">{job.role}</h3>
+                      <span class={`po-job-period${i === 0 ? ' is-active' : ''}`}>{job.period.toUpperCase()}</span>
+                    </div>
+                    <div class="po-job-org">{job.org} · {job.meta}</div>
+                    {job.bullets.length > 1 ? (
+                      <ul class="po-job-bullets">
+                        {job.bullets.map((b) => (
+                          <li class="po-job-bullet">
+                            <span class="po-job-sq"></span>
+                            <span set:html={strong(b, '~150 h économisées sur la refonte (230 articles)')}></span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : job.bullets.length === 1 ? (
+                      <p class="po-job-text">{job.bullets[0]}</p>
+                    ) : null}
+                  </div>
+                ))}
+                <div class="po-formation">FORMATION // {parcours.formation}</div>
+              </div>
+            </div>
+
+            <!-- LABO -->
+            <div data-section-body="labo" hidden>
+              <p class="po-labo-intro">{labo.intro}</p>
+              <div class="po-cards">
+                {labo.cards.map((card) => (
+                  <div class="po-card">
+                    <div class="po-card-cat">{card.cat}</div>
+                    <h4 class="po-card-title">{card.title}</h4>
+                    <p class="po-card-desc">{card.desc}</p>
+                    <div class="po-card-meta">
+                      <div><span class="po-card-k">STACK //</span> {card.stack}</div>
+                      <div><span class="po-card-k">PREUVE //</span> {card.preuve}</div>
+                      {card.nodes && (
+                        <div><span class="po-card-k">NODES //</span> {card.nodes}</div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- STACK -->
+            <div data-section-body="stack" hidden>
+              <div class="po-stack">
+                {stack.groups.map((g) => (
+                  <div class="po-stack-row">
+                    <div class="po-stack-cat">{g.name.toUpperCase()}</div>
+                    <div class="po-stack-items">{g.items.join(' · ')}</div>
+                  </div>
+                ))}
+                <div class="po-stack-row po-stack-row--last">
+                  <div class="po-stack-cat po-stack-cat--enc">{stack.enCours.name.toUpperCase()}</div>
+                  <div class="po-stack-items">
+                    <span class="po-mark">{stack.enCours.items.join(', ')}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTACT -->
+            <div data-section-body="contact" hidden>
+              <h2 class="po-contact-h">Une question, une opportunité ?</h2>
+              <p class="po-contact-p">
+                Le plus simple est de m'écrire. Je réponds vite et je suis ouvert aux opportunités
+                d'administration systèmes / infrastructure en France.
+              </p>
+              <div class="po-contact-grid">
+                <a class="po-contact-link" href={`mailto:${site.email}`}>
+                  <span class="po-contact-k">→ EMAIL</span><span class="po-contact-v">{site.email}</span>
+                </a>
+                <a class="po-contact-link" href={site.links.linkedin} target="_blank" rel="noopener">
+                  <span class="po-contact-k">→ LINKEDIN</span><span class="po-contact-v">{site.links.linkedinLabel}</span>
+                </a>
+                <a class="po-contact-link" href={site.links.github} target="_blank" rel="noopener">
+                  <span class="po-contact-k">→ GITHUB</span><span class="po-contact-v">{site.links.githubLabel}</span>
+                </a>
+                {site.showPhoneOnSite && (
+                  <a class="po-contact-link" href={`tel:${site.phone.replace(/\s+/g, '')}`}>
+                    <span class="po-contact-k">→ TÉLÉPHONE</span><span class="po-contact-v">{site.phone}</span>
+                  </a>
+                )}
+                <a class="po-contact-link po-contact-link--cv" href={cvHref}>
+                  <span class="po-contact-k">↓ CV (PDF)</span><span class="po-contact-v po-contact-v--cv">Télécharger</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="po-modal-foot">
+            <span>PLANCHE <span data-modal-num></span> / 05 · B.POVEDA</span>
+            <span>43.70°N · 7.27°E · NICE, FR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { initPortail } from '../scripts/portail';
+    initPortail();
+  </script>
+</BaseLayout>
+
+<style>
+  /* ============================================================
+     PORTAIL ORBITAL — styles dedies (porte fidelement du prototype).
+     Palette Portail dans tokens.css ; nuances specifiques en local.
+     ============================================================ */
+
+  /* Le Portail est un plein-ecran fixe : on neutralise le scroll du body
+     et on pose le degrade bleu electrique de fond. */
+  :global(body.po-body) {
+    background: var(--c-portal-1);
+    overflow: hidden;
+  }
+  :global(html:has(body.po-body)) {
+    overflow: hidden;
+  }
+
+  .po-root {
+    position: fixed;
+    inset: 0;
+    color: var(--c-on-portal);
+    font-family: var(--font-sans);
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(circle at 48% 42%, rgba(238, 243, 255, 0.105), transparent 28%),
+      radial-gradient(circle at 75% 18%, rgba(170, 210, 202, 0.09), transparent 24%),
+      radial-gradient(circle at 20% 86%, rgba(238, 243, 255, 0.06), transparent 30%),
+      var(--grad-portal);
+  }
+  .po-root ::selection {
+    background: var(--c-turquoise);
+    color: #11161c;
+  }
+  .po-root::before {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.2;
+    mix-blend-mode: screen;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(238, 243, 255, 0.28) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(24deg, rgba(238, 243, 255, 0.18) 0 1px, transparent 1px 29px),
+      radial-gradient(circle at center, rgba(238, 243, 255, 0.18), transparent 58%);
+    transform: rotate(-0.6deg);
+  }
+  .po-root::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 42%, transparent 0 32%, rgba(5, 10, 90, 0.18) 68%, rgba(4, 7, 64, 0.38) 100%),
+      linear-gradient(90deg, rgba(238, 243, 255, 0.05), transparent 18%, transparent 82%, rgba(238, 243, 255, 0.035));
+  }
+
+  /* ---------- FILIGRANE ---------- */
+  .po-watermark {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    user-select: none;
+  }
+  .po-wm-name {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(92px, 22vw, 390px);
+    line-height: 0.74;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    color: rgba(238, 243, 255, 0.07);
+    text-shadow: 0 0 42px rgba(238, 243, 255, 0.045);
+  }
+
+  /* ---------- STAGE / CANVAS / SATELLITES ---------- */
+  .po-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+  }
+  .po-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .po-sat {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--c-on-portal);
+    z-index: 16;
+    transition: color 0.2s ease;
+    border-radius: 999px;
+    isolation: isolate;
+  }
+  .po-sat::before {
+    content: '';
+    position: absolute;
+    inset: 7px;
+    border-radius: 999px;
+    background: rgba(170, 210, 202, 0.05);
+    border: 1px solid rgba(238, 243, 255, 0.16);
+    opacity: 0;
+    transform: scale(0.84);
+    transition: opacity 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  }
+  .po-sat:hover::before,
+  .po-sat:focus-visible::before {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 28px rgba(170, 210, 202, 0.24);
+  }
+  .po-sat:focus-visible {
+    outline: none;
+  }
+  .po-sat-glyph {
+    display: grid;
+    place-items: center;
+    transition: color 0.2s ease;
+    filter: drop-shadow(0 0 6px rgba(28, 43, 214, 0.9));
+  }
+  .po-sat:hover .po-sat-glyph,
+  .po-sat:focus-visible .po-sat-glyph {
+    color: var(--c-turquoise);
+    filter: drop-shadow(0 0 10px rgba(170, 210, 202, 0.42)) drop-shadow(0 0 18px rgba(238, 243, 255, 0.16)) !important;
+  }
+  .po-sat-leader {
+    position: absolute;
+    left: calc(50% + 16px);
+    top: 50%;
+    height: 1px;
+    width: 34px;
+    transform: translateY(-50%);
+    transform-origin: left center;
+    background: linear-gradient(90deg, rgba(170, 210, 202, 0.85), rgba(170, 210, 202, 0.35));
+    opacity: 0.6;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    pointer-events: none;
+  }
+  .po-sat-node {
+    position: absolute;
+    left: calc(50% + 15px);
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--c-turquoise);
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+  .po-sat-label {
+    position: absolute;
+    left: calc(50% + 54px);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    color: rgba(170, 210, 202, 0.78);
+    opacity: 0.78;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    pointer-events: none;
+  }
+  .po-sat:hover .po-sat-label,
+  .po-sat:focus-visible .po-sat-label {
+    opacity: 1 !important;
+    color: #d7f2ec !important;
+  }
+
+  /* ---------- HEADER ---------- */
+  .po-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 26px;
+  }
+  .po-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    color: rgba(238, 243, 255, 0.84);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-transform: uppercase;
+    background: rgba(7, 12, 110, 0.26);
+    border: 1px solid rgba(238, 243, 255, 0.18);
+    padding: 9px 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 14px 45px rgba(5, 10, 80, 0.16);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .po-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--c-turquoise);
+    display: inline-block;
+    border-radius: 50%;
+    animation: po-dotpulse 3.2s ease-in-out infinite;
+  }
+  .po-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .po-link-read {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(238, 243, 255, 0.66);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 10px 4px;
+    transition: color 0.18s ease;
+  }
+  .po-link-read:hover {
+    color: var(--c-turquoise);
+    text-decoration: none;
+  }
+  .po-menu-btn {
+    background: rgba(7, 12, 110, 0.18);
+    color: var(--c-on-portal);
+    border: 1px solid rgba(238, 243, 255, 0.34);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    padding: 10px 13px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 36px rgba(7, 12, 110, 0.18);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .po-cv-btn {
+    text-decoration: none;
+    background: var(--c-on-portal-2);
+    color: var(--c-portal-1);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    padding: 11px 15px;
+    white-space: nowrap;
+    box-shadow: 0 8px 30px rgba(7, 12, 110, 0.28), 0 0 0 1px rgba(238, 243, 255, 0.45);
+    text-transform: uppercase;
+  }
+  .po-cv-btn:hover {
+    text-decoration: none;
+  }
+
+  /* ---------- INDICE ---------- */
+  .po-hint {
+    position: absolute;
+    top: 78px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 35;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    color: var(--c-turquoise);
+    background: rgba(7, 12, 110, 0.42);
+    border: 1px solid rgba(170, 210, 202, 0.28);
+    box-shadow: 0 0 34px rgba(170, 210, 202, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding: 8px 14px;
+    text-transform: uppercase;
+    animation: po-hintpulse 2.4s ease-in-out infinite;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .po-hint[hidden] {
+    display: none;
+  }
+
+  /* ---------- IDENTITÉ ---------- */
+  .po-identity {
+    position: absolute;
+    left: 26px;
+    bottom: 24px;
+    z-index: 30;
+    max-width: 70vw;
+    pointer-events: none;
+  }
+  .po-name {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(28px, 3.2vw, 44px);
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    text-shadow: 0 0 32px rgba(238, 243, 255, 0.12);
+  }
+  .po-subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--c-turquoise);
+    margin-top: 7px;
+    text-transform: uppercase;
+  }
+  .po-status {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 1.95;
+    letter-spacing: 0.07em;
+    color: rgba(234, 240, 255, 0.6);
+    margin-top: 13px;
+    text-transform: uppercase;
+  }
+  .po-coords {
+    position: absolute;
+    right: 26px;
+    bottom: 24px;
+    z-index: 30;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(234, 240, 255, 0.5);
+    pointer-events: none;
+  }
+
+  /* ---------- MENU DE REPLI ---------- */
+  .po-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(11, 16, 28, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: po-fadein 0.18s ease;
+  }
+  .po-menu[hidden] {
+    display: none;
+  }
+  .po-menu-card {
+    width: 100%;
+    max-width: 440px;
+    background: #fbfcfc;
+    color: #11161c;
+    box-shadow: 0 30px 80px rgba(8, 14, 60, 0.45);
+    animation: po-modalin 0.22s ease;
+  }
+  .po-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #d6dde0;
+  }
+  .po-menu-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--c-cyanotype);
+  }
+  .po-menu-x {
+    background: none;
+    border: 1px solid #d6dde0;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    color: #11161c;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .po-menu-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .po-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 22px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid #ecf0f1;
+    cursor: pointer;
+    text-align: left;
+    color: #11161c;
+  }
+  .po-menu-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: #5c6770;
+  }
+  .po-menu-sq {
+    width: 7px;
+    height: 7px;
+    background: var(--c-cyanotype);
+    display: inline-block;
+  }
+  .po-menu-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    flex: 1;
+  }
+  .po-menu-arrow {
+    color: var(--c-cyanotype);
+    font-size: 15px;
+  }
+  .po-menu-read {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 22px;
+    text-decoration: none;
+    background: #fff;
+    color: var(--c-cyanotype);
+    border-bottom: 1px solid #ecf0f1;
+  }
+  .po-menu-read:hover {
+    text-decoration: none;
+    background: #f4f7f8;
+  }
+  .po-menu-read-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    flex: 1;
+  }
+  .po-menu-read-arrow {
+    color: var(--c-cyanotype);
+  }
+  .po-menu-cv {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 22px;
+    text-decoration: none;
+    background: #11161c;
+    color: var(--c-on-portal);
+  }
+  .po-menu-cv:hover {
+    text-decoration: none;
+  }
+  .po-menu-cv-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    flex: 1;
+  }
+  .po-menu-cv-arrow {
+    color: var(--c-turquoise);
+  }
+
+  /* ---------- MODALE ---------- */
+  .po-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(11, 16, 28, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 5vh 22px;
+    overflow-y: auto;
+    animation: po-fadein 0.18s ease;
+  }
+  .po-modal[hidden] {
+    display: none;
+  }
+  .po-modal-card {
+    position: relative;
+    width: 100%;
+    max-width: var(--maxw-modal);
+    background: var(--c-cream);
+    color: #171c24;
+    box-shadow: 0 40px 110px rgba(8, 14, 60, 0.55);
+    border: 1px solid #d8d0be;
+    animation: po-modalin 0.24s ease;
+    display: flex;
+  }
+  .po-corner {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .po-corner--tl {
+    top: 9px;
+    left: 9px;
+    border-top: 1.5px solid var(--c-cyanotype);
+    border-left: 1.5px solid var(--c-cyanotype);
+  }
+  .po-corner--tr {
+    top: 9px;
+    right: 9px;
+    border-top: 1.5px solid var(--c-cyanotype);
+    border-right: 1.5px solid var(--c-cyanotype);
+  }
+  .po-corner--bl {
+    bottom: 9px;
+    left: 9px;
+    border-bottom: 1.5px solid var(--c-cyanotype);
+    border-left: 1.5px solid var(--c-cyanotype);
+  }
+  .po-corner--br {
+    bottom: 9px;
+    right: 9px;
+    border-bottom: 1.5px solid var(--c-cyanotype);
+    border-right: 1.5px solid var(--c-cyanotype);
+  }
+  .po-strip {
+    flex-shrink: 0;
+    width: 56px;
+    border-right: 1px solid #e0d9c8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 26px 0 22px;
+    background: var(--c-panel);
+  }
+  .po-strip-top {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: var(--c-cyanotype);
+    font-weight: 700;
+  }
+  .po-strip-bottom {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    writing-mode: vertical-rl;
+    color: #a39b86;
+  }
+  .po-modal-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .po-modal-head {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--c-cream);
+    border-bottom: 1.5px solid var(--c-cyanotype);
+    padding: 22px 26px 15px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .po-modal-section {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--c-cyanotype);
+  }
+  .po-modal-title {
+    font-weight: 800;
+    font-size: clamp(22px, 2.8vw, 29px);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin: 9px 0 6px;
+    color: #11161c;
+  }
+  .po-modal-desc {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    color: #857e6b;
+  }
+  .po-modal-x {
+    background: none;
+    border: 1px solid #c9c2b0;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: #11161c;
+    font-size: 15px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .po-modal-body {
+    padding: 26px 30px 30px;
+  }
+  .po-modal-foot {
+    margin-top: auto;
+    border-top: 1px solid #e0d9c8;
+    background: var(--c-panel);
+    padding: 13px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: #a39b86;
+  }
+
+  /* Surlignage signature local (sur fond papier creme) */
+  .po-mark {
+    background: linear-gradient(180deg, transparent 56%, var(--c-turquoise) 56%);
+    padding: 0 2px;
+    font-weight: 600;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* ----- PROFIL ----- */
+  .po-profil-h {
+    font-weight: 800;
+    font-size: clamp(24px, 3vw, 32px);
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    color: #11161c;
+  }
+  .po-p {
+    font-size: 15.5px;
+    line-height: 1.74;
+    color: #2a323b;
+    margin-bottom: 16px;
+  }
+  .po-p--last {
+    margin-bottom: 0;
+  }
+  .po-p strong {
+    font-weight: 700;
+    color: #11161c;
+  }
+
+  /* ----- PARCOURS ----- */
+  .po-jobs {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .po-job {
+    border-left: 2px solid #d6dde0;
+    padding-left: 18px;
+  }
+  .po-job.is-active {
+    border-left-color: var(--c-cyanotype);
+  }
+  .po-job-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .po-job-role {
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.005em;
+    color: #171c24;
+  }
+  .po-job-period {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: #5c6770;
+    white-space: nowrap;
+  }
+  .po-job-period.is-active {
+    color: var(--c-cyanotype);
+  }
+  .po-job-org {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: #5c6770;
+    margin: 5px 0 12px;
+  }
+  .po-job-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .po-job-bullet {
+    display: flex;
+    gap: 11px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #2a323b;
+  }
+  .po-job-bullet strong {
+    font-weight: 700;
+    color: #11161c;
+  }
+  .po-job-sq {
+    width: 6px;
+    height: 6px;
+    background: var(--c-cyanotype);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .po-job-text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #2a323b;
+  }
+  .po-formation {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: #5c6770;
+    border-top: 1px solid #d6dde0;
+    padding-top: 14px;
+  }
+
+  /* ----- LABO ----- */
+  .po-labo-intro {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: #2a323b;
+    margin-bottom: 24px;
+    max-width: 600px;
+  }
+  .po-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .po-card {
+    border: 1px solid #d6dde0;
+    padding: 20px 22px;
+    background: #fff;
+  }
+  .po-card-cat {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--c-cyanotype);
+    margin-bottom: 8px;
+  }
+  .po-card-title {
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+    color: #171c24;
+  }
+  .po-card-desc {
+    font-size: 14px;
+    line-height: 1.62;
+    color: #2a323b;
+    margin-bottom: 14px;
+  }
+  .po-card-meta {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 1.9;
+    color: #5c6770;
+    letter-spacing: 0.03em;
+  }
+  .po-card-k {
+    color: var(--c-cyanotype);
+    font-weight: 700;
+  }
+
+  /* ----- STACK ----- */
+  .po-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .po-stack-row {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    border-bottom: 1px solid #ecf0f1;
+    padding-bottom: 16px;
+  }
+  .po-stack-row--last {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .po-stack-cat {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--c-cyanotype);
+  }
+  .po-stack-cat--enc {
+    color: var(--c-turquoise-edge);
+  }
+  .po-stack-items {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #2a323b;
+  }
+
+  /* ----- CONTACT ----- */
+  .po-contact-h {
+    font-weight: 800;
+    font-size: clamp(22px, 2.8vw, 30px);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    color: #11161c;
+  }
+  .po-contact-p {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: #2a323b;
+    margin-bottom: 26px;
+    max-width: 520px;
+  }
+  .po-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .po-contact-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 15px 18px;
+    text-decoration: none;
+    border: 1px solid #d6dde0;
+    color: #11161c;
+  }
+  .po-contact-link:hover {
+    text-decoration: none;
+    background: #f4f7f8;
+  }
+  .po-contact-link--cv {
+    background: #11161c;
+    color: var(--c-on-portal);
+    border-color: #11161c;
+  }
+  .po-contact-link--cv:hover {
+    background: #1b222b;
+  }
+  .po-contact-k {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .po-contact-v {
+    font-size: 12px;
+    color: #5c6770;
+  }
+  .po-contact-v--cv {
+    color: var(--c-turquoise);
+  }
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes po-dotpulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.76;
+      box-shadow: 0 0 0 4px rgba(170, 210, 202, 0.14), 0 0 24px rgba(170, 210, 202, 0.25);
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+      box-shadow: 0 0 0 7px rgba(170, 210, 202, 0.18), 0 0 34px rgba(170, 210, 202, 0.42);
+    }
+  }
+  @keyframes po-hintpulse {
+    0%,
+    100% {
+      opacity: 0.9;
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      opacity: 0.48;
+      transform: translateX(-50%) translateY(-1px);
+    }
+  }
+  @keyframes po-modalin {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes po-fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 760px) {
+    .po-sat-label,
+    .po-sat-leader {
+      display: none !important;
+    }
+    .po-link-read {
+      display: none;
+    }
+  }
+
+  /* ---------- REDUCED MOTION : on fige tout ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .po-root *,
+    .po-root *::before,
+    .po-root *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>

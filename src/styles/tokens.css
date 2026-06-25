@@ -1,0 +1,76 @@
+/* ============================================================
+   Design tokens — Portfolio Benoit Poveda
+   Theme cyanotype / "planche scientifique" (inspiration Nous Research).
+   Source : handoff README "Design Tokens" + brief "Direction artistique".
+   Valeurs hi-fi / definitives. Regle d'or : UN seul geste turquoise par ecran.
+   ============================================================ */
+:root {
+  /* --- Couleurs : bleus --- */
+  --c-cyanotype: #1f5ea6;      /* accent principal : liens, titres, filets */
+  --c-navy: #16334e;           /* bleu profond : blocs forts, avatar, duotone */
+  --c-ink: #11161c;            /* encre / noir froid : texte fort, nav, contact */
+  --c-footer: #0c1014;         /* noir footer */
+
+  /* Bleu electrique — fond du Portail (degrade 135deg) */
+  --c-portal-1: #1c2bd6;
+  --c-portal-2: #1e2deb;
+  --c-portal-3: #111aa5;
+  --grad-portal: linear-gradient(135deg, var(--c-portal-1) 0%, var(--c-portal-2) 45%, var(--c-portal-3) 100%);
+
+  /* --- Couleurs : turquoise (signature, discret) --- */
+  --c-turquoise: #aad2ca;       /* turquoise poussiereux : LE geste signature */
+  --c-turquoise-edge: #73b3a8;  /* bord du turquoise */
+  --c-turquoise-soft: #cfe9e2;  /* texte turquoise clair sur fond fonce */
+  --c-turquoise-soft2: #cfe6f2;
+
+  /* --- Couleurs : surfaces claires --- */
+  --c-paper: #e5ebed;          /* fond de page (papier froid) */
+  --c-surface: #fbfcfc;        /* cartes / surfaces (blanc casse) */
+  --c-cream: #faf8f2;          /* papier creme : modale Portail, feuille CV */
+  --c-panel: #f2eee3;          /* panneau creme */
+  --c-panel-cool: #e9f0f1;     /* panneau froid */
+
+  /* --- Couleurs : texte --- */
+  --c-text: #39414a;           /* corps */
+  --c-text-2: #5c6770;         /* secondaire */
+  --c-on-portal: #eaf0ff;      /* encre claire sur bleu Portail */
+  --c-on-portal-2: #eef3ff;
+
+  /* --- Couleurs : filets / bordures --- */
+  --c-rule: #d6dde0;           /* filets / bordures */
+  --c-rule-dotted: #c7d1d5;    /* pointilles */
+
+  /* --- Typographie --- */
+  --font-sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+  /* Echelles typographiques */
+  --fs-hero: clamp(44px, 7.4vw, 90px);
+  --lh-hero: 0.94;
+  --ls-hero: -0.025em;
+  --ls-mono: 0.12em;           /* labels mono : .06–.16em — valeur courante */
+
+  /* --- Rayons & espacements --- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --section-pad-y: 82px;
+  --section-pad-x: 26px;
+  --maxw-content: 1180px;
+  --maxw-modal: 860px;
+
+  /* --- Effets --- */
+  --shadow-card: 0 1px 0 rgba(17, 22, 28, 0.04), 0 8px 24px -16px rgba(17, 22, 28, 0.25);
+  --shadow-sheet: 0 24px 60px -28px rgba(17, 22, 28, 0.45);
+  --ease-reveal: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Surlignage signature (UN seul par ecran) */
+  --mark-turquoise: linear-gradient(180deg, transparent 55%, var(--c-turquoise) 55%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ease-reveal: linear;
+  }
+}

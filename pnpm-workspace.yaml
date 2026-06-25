@@ -1,0 +1,4 @@
+# Autorise les scripts de build des dépendances natives utilisées par Astro/Vite.
+allowBuilds:
+  esbuild: true
+  sharp: true

@@ -1,0 +1,25 @@
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+*-debug.log*
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# environment
+.env
+.env.*
+!.env.example
+
+# editor / os
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
