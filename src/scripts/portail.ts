@@ -66,11 +66,8 @@ interface ProjectedPoly {
 export function initPortail(): void {
   const root = document.querySelector<HTMLElement>('[data-portal-root]');
   const stage = document.querySelector<HTMLElement>('[data-portal-stage]');
-  const liquidWarp = document.querySelector<HTMLElement>('[data-portal-warp]');
-  const liquidNoise = document.querySelector<SVGElement>('[data-portal-warp-noise]');
-  const liquidDisplace = document.querySelector<SVGElement>('[data-portal-warp-displace]');
   const canvas = document.querySelector<HTMLCanvasElement>('[data-portal-canvas]');
-  if (!root || !stage || !liquidWarp || !canvas) return;
+  if (!root || !stage || !canvas) return;
 
   /* ---- Etat ---- */
   let open: string | null = null;
@@ -86,16 +83,6 @@ export function initPortail(): void {
   let cx = 0;
   let cy = 0;
   let lon0 = -25;
-
-  /* ---- Distorsion type displacement-map sur le filigrane autour du globe ---- */
-  const liquid = {
-    x: 0,
-    y: 0,
-    tx: 0,
-    ty: 0,
-    active: false,
-    strength: 0,
-  };
 
   /* ---- Satellites ---- */
   const satEls = Array.from(document.querySelectorAll<HTMLElement>('[data-sat]'));
@@ -252,13 +239,6 @@ export function initPortail(): void {
     cx = W / 2;
     cy = H / 2;
     R = Math.min(0.188 * S, 305);
-    if (!liquid.x && !liquid.y) {
-      liquid.x = cx + R * 1.45;
-      liquid.y = cy;
-      liquid.tx = liquid.x;
-      liquid.ty = liquid.y;
-    }
-    syncLiquidWarp(performance.now());
     draw();
     positionSats();
   }
@@ -536,63 +516,6 @@ export function initPortail(): void {
   }
 
   /* =========================================================
-     Distorsion souris : displacement-map masquee sur le filigrane
-     ========================================================= */
-  function pointerInsideLiquidRing(x: number, y: number): boolean {
-    if (!R) return false;
-    const d = Math.hypot(x - cx, y - cy);
-    return d > R * 1.06 && d < R * 2.95;
-  }
-
-  function onPointerMove(e: PointerEvent): void {
-    if (reduced || open != null || menuOpen) {
-      liquid.active = false;
-      return;
-    }
-    const target = e.target as HTMLElement | null;
-    if (target?.closest('[data-sat], .po-header, .po-menu, .po-modal')) {
-      liquid.active = false;
-      return;
-    }
-    const rect = stage!.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    liquid.tx = x;
-    liquid.ty = y;
-    liquid.active = pointerInsideLiquidRing(x, y);
-  }
-
-  function onPointerLeave(): void {
-    liquid.active = false;
-  }
-
-  function syncLiquidWarp(now: number): void {
-    if (reduced || open != null || menuOpen || !R) {
-      liquid.active = false;
-    }
-
-    liquid.x += (liquid.tx - liquid.x) * 0.28;
-    liquid.y += (liquid.ty - liquid.y) * 0.28;
-    liquid.strength += ((liquid.active ? 1 : 0) - liquid.strength) * 0.2;
-
-    const visible = liquid.strength > 0.015 && pointerInsideLiquidRing(liquid.x, liquid.y);
-    const radius = Math.min(R * 0.96, 178);
-    const displacement = visible ? 12 + liquid.strength * 54 : 0;
-    const wobble = Math.sin(now * 0.004) * 0.004;
-
-    root!.style.setProperty('--po-liquid-x', `${liquid.x.toFixed(1)}px`);
-    root!.style.setProperty('--po-liquid-y', `${liquid.y.toFixed(1)}px`);
-    root!.style.setProperty('--po-liquid-r', `${radius.toFixed(1)}px`);
-    liquidWarp!.style.opacity = visible ? (0.98 * liquid.strength).toFixed(3) : '0';
-
-    liquidDisplace?.setAttribute('scale', displacement.toFixed(1));
-    liquidNoise?.setAttribute(
-      'baseFrequency',
-      `${(0.016 + liquid.strength * 0.009 + wobble).toFixed(4)} ${(0.048 + liquid.strength * 0.024 - wobble).toFixed(4)}`,
-    );
-  }
-
-  /* =========================================================
      Orbites + globe (VERBATIM)
      ========================================================= */
   function drawOrbits(c: CanvasRenderingContext2D): void {
@@ -751,7 +674,6 @@ export function initPortail(): void {
         if (!paused[i]) theta[i] += dt * ORB[i].sp * SATELLITE_SPEED;
       }
     }
-    syncLiquidWarp(now);
     draw();
     positionSats();
     raf = requestAnimationFrame(loop);
@@ -760,10 +682,6 @@ export function initPortail(): void {
   /* =========================================================
      Branchements DOM
      ========================================================= */
-  // Hover liquid-glass : suit la souris uniquement dans l'anneau autour du globe.
-  root.addEventListener('pointermove', onPointerMove);
-  root.addEventListener('pointerleave', onPointerLeave);
-
   // Satellites : ouverture + hover/focus.
   satEls.forEach((el, i) => {
     const id = el.dataset.sat;
@@ -844,7 +762,5 @@ export function initPortail(): void {
   window.addEventListener('beforeunload', () => {
     cancelAnimationFrame(raf);
     document.removeEventListener('keydown', onKey);
-    root.removeEventListener('pointermove', onPointerMove);
-    root.removeEventListener('pointerleave', onPointerLeave);
   });
 }

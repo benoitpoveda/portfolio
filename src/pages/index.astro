@@ -34,37 +34,10 @@ const portfolioHref = site.routes.portfolio;
   bodyClass="po-body"
 >
   <div class="po-root" data-portal-root>
-    <!-- ============ FILIGRANE ============ -->
-    <div class="po-watermark" aria-hidden="true">
-      <span class="po-wm-name">Benoît</span>
-      <span class="po-wm-name">Poveda</span>
-    </div>
-    <div class="po-watermark po-watermark--warp" aria-hidden="true" data-portal-warp>
-      <span class="po-wm-name">Benoît</span>
-      <span class="po-wm-name">Poveda</span>
-    </div>
-    <svg class="po-liquid-filter" aria-hidden="true" focusable="false">
-      <filter id="po-liquid-distort" x="-20%" y="-20%" width="140%" height="140%">
-        <feTurbulence
-          data-portal-warp-noise
-          type="fractalNoise"
-          baseFrequency="0.018 0.052"
-          numOctaves="2"
-          seed="11"
-          result="noise"
-        />
-        <feDisplacementMap
-          data-portal-warp-displace
-          in="SourceGraphic"
-          in2="noise"
-          scale="0"
-          xChannelSelector="R"
-          yChannelSelector="G"
-          result="displaced"
-        />
-        <feGaussianBlur in="displaced" stdDeviation="0.12" />
-      </filter>
-    </svg>
+    <!-- ============ FOND À DISTORSION TEMPORELLE ============
+         Le canvas melt (degrade bleu + filigrane « BENOIT POVEDA ») est injecte
+         ici en JS, en fond (z-index 0), et se deforme autour du curseur. Le globe
+         et la nav restent nets au-dessus (.po-stage z-index 5+). Voir portal-melt.ts. -->
 
     <!-- ============ STAGE (globe + orbites + satellites) ============ -->
     <div class="po-stage" data-portal-stage>
@@ -293,6 +266,8 @@ const portfolioHref = site.routes.portfolio;
 
   <script>
     import { initPortail } from '../scripts/portail';
+    import { initPortalMelt } from '../scripts/portal-melt';
+    initPortalMelt();
     initPortail();
   </script>
 </BaseLayout>
@@ -353,62 +328,6 @@ const portfolioHref = site.routes.portfolio;
     background:
       radial-gradient(circle at 50% 42%, transparent 0 32%, rgba(5, 10, 90, 0.18) 68%, rgba(4, 7, 64, 0.38) 100%),
       linear-gradient(90deg, rgba(238, 243, 255, 0.05), transparent 18%, transparent 82%, rgba(238, 243, 255, 0.035));
-  }
-
-  /* ---------- FILIGRANE ---------- */
-  .po-watermark {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    user-select: none;
-  }
-  .po-wm-name {
-    font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: clamp(92px, 22vw, 390px);
-    line-height: 0.74;
-    letter-spacing: -0.055em;
-    text-transform: uppercase;
-    color: rgba(238, 243, 255, 0.07);
-    text-shadow: 0 0 42px rgba(238, 243, 255, 0.045);
-  }
-  .po-watermark--warp {
-    z-index: 4;
-    opacity: 0;
-    filter: url(#po-liquid-distort) contrast(1.22) saturate(1.16);
-    mix-blend-mode: screen;
-    will-change: opacity, mask-image, -webkit-mask-image;
-    -webkit-mask-image: radial-gradient(
-      circle var(--po-liquid-r, 0px) at var(--po-liquid-x, 50%) var(--po-liquid-y, 50%),
-      rgba(0, 0, 0, 1) 0 35%,
-      rgba(0, 0, 0, 0.82) 48%,
-      rgba(0, 0, 0, 0.36) 62%,
-      transparent 78%
-    );
-    mask-image: radial-gradient(
-      circle var(--po-liquid-r, 0px) at var(--po-liquid-x, 50%) var(--po-liquid-y, 50%),
-      rgba(0, 0, 0, 1) 0 35%,
-      rgba(0, 0, 0, 0.82) 48%,
-      rgba(0, 0, 0, 0.36) 62%,
-      transparent 78%
-    );
-  }
-  .po-watermark--warp .po-wm-name {
-    color: rgba(238, 243, 255, 0.17);
-    text-shadow:
-      0 0 16px rgba(238, 243, 255, 0.12),
-      0 0 48px rgba(170, 210, 202, 0.13);
-  }
-  .po-liquid-filter {
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: hidden;
   }
 
   /* ---------- STAGE / CANVAS / SATELLITES ---------- */
