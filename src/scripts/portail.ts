@@ -62,22 +62,15 @@ interface ProjectedPoly {
   paths: VisiblePath[];
   allVisible: boolean;
 }
-interface LiquidRipple {
-  x: number;
-  y: number;
-  radius: number;
-  life: number;
-  maxLife: number;
-  phase: number;
-}
 
 export function initPortail(): void {
   const root = document.querySelector<HTMLElement>('[data-portal-root]');
   const stage = document.querySelector<HTMLElement>('[data-portal-stage]');
-  const liquidCanvas = document.querySelector<HTMLCanvasElement>('[data-portal-liquid]');
-  const liquidLens = document.querySelector<HTMLElement>('[data-portal-liquid-lens]');
+  const liquidWarp = document.querySelector<HTMLElement>('[data-portal-warp]');
+  const liquidNoise = document.querySelector<SVGElement>('[data-portal-warp-noise]');
+  const liquidDisplace = document.querySelector<SVGElement>('[data-portal-warp-displace]');
   const canvas = document.querySelector<HTMLCanvasElement>('[data-portal-canvas]');
-  if (!root || !stage || !liquidCanvas || !liquidLens || !canvas) return;
+  if (!root || !stage || !liquidWarp || !canvas) return;
 
   /* ---- Etat ---- */
   let open: string | null = null;
@@ -86,7 +79,6 @@ export function initPortail(): void {
 
   /* ---- Geometrie courante (remplie par resize) ---- */
   let ctx: CanvasRenderingContext2D | null = null;
-  let liquidCtx: CanvasRenderingContext2D | null = null;
   let W = 0;
   let H = 0;
   let S = 0;
@@ -95,7 +87,7 @@ export function initPortail(): void {
   let cy = 0;
   let lon0 = -25;
 
-  /* ---- Champ de deformation liquid-glass autour du globe ---- */
+  /* ---- Distorsion type displacement-map sur le filigrane autour du globe ---- */
   const liquid = {
     x: 0,
     y: 0,
@@ -103,9 +95,7 @@ export function initPortail(): void {
     ty: 0,
     active: false,
     strength: 0,
-    lastDrop: 0,
   };
-  const ripples: LiquidRipple[] = [];
 
   /* ---- Satellites ---- */
   const satEls = Array.from(document.querySelectorAll<HTMLElement>('[data-sat]'));
@@ -246,24 +236,18 @@ export function initPortail(): void {
   /* =========================================================
      Canvas : dimensionnement
      ========================================================= */
-  function fitCanvas(el: HTMLCanvasElement, dpr: number): CanvasRenderingContext2D | null {
-    el.width = W * dpr;
-    el.height = H * dpr;
-    el.style.width = W + 'px';
-    el.style.height = H + 'px';
-    const nextCtx = el.getContext('2d');
-    if (nextCtx) nextCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    return nextCtx;
-  }
-
   function resize(): void {
     const r = stage!.getBoundingClientRect();
     W = r.width;
     H = r.height;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    liquidCtx = fitCanvas(liquidCanvas!, dpr);
-    ctx = fitCanvas(canvas!, dpr);
+    canvas!.width = W * dpr;
+    canvas!.height = H * dpr;
+    canvas!.style.width = W + 'px';
+    canvas!.style.height = H + 'px';
+    ctx = canvas!.getContext('2d');
     if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     S = Math.min(W, H);
     cx = W / 2;
     cy = H / 2;
@@ -274,7 +258,7 @@ export function initPortail(): void {
       liquid.tx = liquid.x;
       liquid.ty = liquid.y;
     }
-    drawLiquidField(0, performance.now());
+    syncLiquidWarp(performance.now());
     draw();
     positionSats();
   }
@@ -552,12 +536,12 @@ export function initPortail(): void {
   }
 
   /* =========================================================
-     Hover liquid-glass autour du globe (hors globe + satellites)
+     Distorsion souris : displacement-map masquee sur le filigrane
      ========================================================= */
   function pointerInsideLiquidRing(x: number, y: number): boolean {
     if (!R) return false;
     const d = Math.hypot(x - cx, y - cy);
-    return d > R * 1.08 && d < R * 2.75;
+    return d > R * 1.06 && d < R * 2.95;
   }
 
   function onPointerMove(e: PointerEvent): void {
@@ -576,143 +560,36 @@ export function initPortail(): void {
     liquid.tx = x;
     liquid.ty = y;
     liquid.active = pointerInsideLiquidRing(x, y);
-
-    const now = performance.now();
-    if (liquid.active && now - liquid.lastDrop > 70) {
-      ripples.push({
-        x,
-        y,
-        radius: R * (0.16 + ((ripples.length * 17) % 7) * 0.012),
-        life: 0,
-        maxLife: 0.95,
-        phase: ripples.length * 1.73,
-      });
-      if (ripples.length > 18) ripples.shift();
-      liquid.lastDrop = now;
-    }
   }
 
   function onPointerLeave(): void {
     liquid.active = false;
   }
 
-  function punchGlobeOut(c: CanvasRenderingContext2D): void {
-    c.globalCompositeOperation = 'destination-out';
-    c.beginPath();
-    c.arc(cx, cy, R * 1.045, 0, Math.PI * 2);
-    c.fill();
-    c.globalCompositeOperation = 'source-over';
-  }
-
-  function drawLiquidLens(c: CanvasRenderingContext2D, x: number, y: number, radius: number, strength: number, now: number): void {
-    const pulse = Math.sin(now * 0.0038) * 0.5 + 0.5;
-
-    c.save();
-    c.globalCompositeOperation = 'screen';
-
-    const glow = c.createRadialGradient(x, y, radius * 0.08, x, y, radius * 1.15);
-    glow.addColorStop(0, `rgba(${INK},${0.2 * strength})`);
-    glow.addColorStop(0.35, `rgba(170,210,202,${0.16 * strength})`);
-    glow.addColorStop(0.62, `rgba(110,170,255,${0.07 * strength})`);
-    glow.addColorStop(1, 'rgba(238,243,255,0)');
-    c.fillStyle = glow;
-    c.beginPath();
-    c.arc(x, y, radius * 1.16, 0, Math.PI * 2);
-    c.fill();
-
-    // Refracted cyanotype bands: imitates the soft liquid warping in the reference.
-    c.lineCap = 'round';
-    c.lineJoin = 'round';
-    for (let i = -4; i <= 4; i++) {
-      const yy = y + i * radius * 0.16;
-      const amp = radius * (0.035 + 0.013 * Math.cos(i + pulse * Math.PI));
-      c.beginPath();
-      for (let step = -6; step <= 6; step++) {
-        const t = step / 6;
-        const px = x + t * radius * 0.9;
-        const py = yy + Math.sin(t * Math.PI * 1.8 + now * 0.004 + i) * amp;
-        if (step === -6) c.moveTo(px, py);
-        else c.lineTo(px, py);
-      }
-      c.strokeStyle = `rgba(${INK},${(0.055 + Math.abs(i) * 0.006) * strength})`;
-      c.lineWidth = Math.max(0.65, R * 0.0022);
-      c.stroke();
-    }
-
-    for (let i = 0; i < 5; i++) {
-      const rr = radius * (0.42 + i * 0.115 + pulse * 0.018);
-      c.beginPath();
-      c.ellipse(x, y, rr * 1.24, rr * 0.72, (-18 + i * 13) * RAD, 0, Math.PI * 2);
-      c.strokeStyle = `rgba(170,210,202,${(0.06 - i * 0.006) * strength})`;
-      c.lineWidth = Math.max(0.7, R * 0.0026);
-      c.stroke();
-    }
-
-    c.globalCompositeOperation = 'lighter';
-    const spec = c.createRadialGradient(x - radius * 0.24, y - radius * 0.28, 0, x - radius * 0.24, y - radius * 0.28, radius * 0.5);
-    spec.addColorStop(0, `rgba(${INK},${0.16 * strength})`);
-    spec.addColorStop(1, 'rgba(238,243,255,0)');
-    c.fillStyle = spec;
-    c.beginPath();
-    c.arc(x - radius * 0.24, y - radius * 0.28, radius * 0.5, 0, Math.PI * 2);
-    c.fill();
-
-    c.restore();
-  }
-
-  function drawLiquidField(dt: number, now: number): void {
-    const c = liquidCtx;
-    if (!c) return;
-    c.clearRect(0, 0, W, H);
+  function syncLiquidWarp(now: number): void {
     if (reduced || open != null || menuOpen || !R) {
-      liquidLens!.style.opacity = '0';
-      return;
+      liquid.active = false;
     }
 
-    liquid.x += (liquid.tx - liquid.x) * 0.22;
-    liquid.y += (liquid.ty - liquid.y) * 0.22;
-    liquid.strength += ((liquid.active ? 1 : 0) - liquid.strength) * 0.16;
+    liquid.x += (liquid.tx - liquid.x) * 0.28;
+    liquid.y += (liquid.ty - liquid.y) * 0.28;
+    liquid.strength += ((liquid.active ? 1 : 0) - liquid.strength) * 0.2;
 
-    const lensScale = 0.82 + liquid.strength * 0.2;
-    liquidLens!.style.opacity = liquid.strength > 0.03 && pointerInsideLiquidRing(liquid.x, liquid.y) ? (0.46 * liquid.strength).toFixed(3) : '0';
-    liquidLens!.style.transform = `translate3d(${liquid.x.toFixed(1)}px, ${liquid.y.toFixed(1)}px, 0) translate(-50%, -50%) scale(${lensScale.toFixed(3)})`;
+    const visible = liquid.strength > 0.015 && pointerInsideLiquidRing(liquid.x, liquid.y);
+    const radius = Math.min(R * 0.96, 178);
+    const displacement = visible ? 12 + liquid.strength * 54 : 0;
+    const wobble = Math.sin(now * 0.004) * 0.004;
 
-    c.save();
-    for (let i = ripples.length - 1; i >= 0; i--) {
-      const r = ripples[i];
-      r.life += dt;
-      const t = Math.min(1, r.life / r.maxLife);
-      if (t >= 1) {
-        ripples.splice(i, 1);
-        continue;
-      }
-      if (!pointerInsideLiquidRing(r.x, r.y)) continue;
-      const alpha = (1 - t) * 0.18;
-      const rr = r.radius * (1 + t * 1.6);
-      c.globalCompositeOperation = 'screen';
-      c.strokeStyle = `rgba(170,210,202,${alpha})`;
-      c.lineWidth = Math.max(0.7, R * 0.003 * (1 - t));
-      c.beginPath();
-      c.ellipse(
-        r.x,
-        r.y,
-        rr * (1.25 + Math.sin(r.phase + now * 0.002) * 0.06),
-        rr * 0.68,
-        -18 * RAD,
-        0,
-        Math.PI * 2,
-      );
-      c.stroke();
-    }
+    root!.style.setProperty('--po-liquid-x', `${liquid.x.toFixed(1)}px`);
+    root!.style.setProperty('--po-liquid-y', `${liquid.y.toFixed(1)}px`);
+    root!.style.setProperty('--po-liquid-r', `${radius.toFixed(1)}px`);
+    liquidWarp!.style.opacity = visible ? (0.98 * liquid.strength).toFixed(3) : '0';
 
-    if (liquid.strength > 0.015 && pointerInsideLiquidRing(liquid.x, liquid.y)) {
-      drawLiquidLens(c, liquid.x, liquid.y, Math.min(R * 0.58, 112), liquid.strength, now);
-    }
-
-    // The effect is deliberately behind the globe canvas, but the globe has translucent ink.
-    // This hard mask guarantees the liquid hover never deforms/brightens the globe itself.
-    punchGlobeOut(c);
-    c.restore();
+    liquidDisplace?.setAttribute('scale', displacement.toFixed(1));
+    liquidNoise?.setAttribute(
+      'baseFrequency',
+      `${(0.016 + liquid.strength * 0.009 + wobble).toFixed(4)} ${(0.048 + liquid.strength * 0.024 - wobble).toFixed(4)}`,
+    );
   }
 
   /* =========================================================
@@ -874,7 +751,7 @@ export function initPortail(): void {
         if (!paused[i]) theta[i] += dt * ORB[i].sp * SATELLITE_SPEED;
       }
     }
-    drawLiquidField(dt, now);
+    syncLiquidWarp(now);
     draw();
     positionSats();
     raf = requestAnimationFrame(loop);
