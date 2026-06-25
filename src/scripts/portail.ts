@@ -111,13 +111,13 @@ export function initPortail(): void {
     if (el) el.style.color = on ? '#AAD2CA' : '#EAF0FF';
     const l = labelEls[i];
     if (l) {
-      l.style.opacity = on ? '1' : '0.78';
-      l.style.color = on ? '#CDEDE5' : 'rgba(170,210,202,.78)';
+      l.style.opacity = on ? '1' : '0.82';
+      l.style.color = on ? '#D7F2EC' : 'rgba(170,210,202,.82)';
     }
     const ld = leaderEls[i];
-    if (ld) ld.style.opacity = on ? '1' : '0.6';
+    if (ld) ld.style.opacity = on ? '1' : '0.62';
     const nd = nodeEls[i];
-    if (nd) nd.style.opacity = on ? '1' : '0.7';
+    if (nd) nd.style.opacity = on ? '1' : '0.76';
   }
 
   /* =========================================================

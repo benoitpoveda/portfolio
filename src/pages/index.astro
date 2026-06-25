@@ -52,10 +52,15 @@ const portfolioHref = site.routes.portfolio;
           aria-label={`Ouvrir la section ${s.label.replace('// ', '')}`}
         >
           <span class="po-sat-glyph">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.4">
-              <ellipse cx="17" cy="17" rx="13" ry="5" transform="rotate(-26 17 17)"></ellipse>
-              <circle cx="17" cy="17" r="5.6"></circle>
-              <circle cx="17" cy="17" r="1.5" fill="currentColor" stroke="none"></circle>
+            <svg viewBox="0 0 72 72" aria-hidden="true">
+              <g class="po-sat-ring-spin">
+                <circle cx="36" cy="36" r="21"></circle>
+                <ellipse cx="36" cy="36" rx="28" ry="8" transform="rotate(-24 36 36)"></ellipse>
+                <ellipse cx="36" cy="36" rx="28" ry="8" transform="rotate(35 36 36)"></ellipse>
+              </g>
+              <path class="po-sat-cross" d="M36 10v11M36 51v11M10 36h11M51 36h11"></path>
+              <circle class="po-sat-soft" cx="36" cy="36" r="10"></circle>
+              <circle class="po-sat-mint-fill" cx="36" cy="36" r="5.2"></circle>
             </svg>
           </span>
           <span class="po-sat-leader" data-sat-leader aria-hidden="true"></span>
@@ -366,8 +371,8 @@ const portfolioHref = site.routes.portfolio;
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 46px;
-    height: 46px;
+    width: 54px;
+    height: 54px;
     display: grid;
     place-items: center;
     background: none;
@@ -375,7 +380,7 @@ const portfolioHref = site.routes.portfolio;
     cursor: pointer;
     color: var(--c-on-portal);
     z-index: 16;
-    transition: color 0.2s ease;
+    transition: color 0.22s ease, filter 0.22s ease;
     border-radius: 999px;
     isolation: isolate;
   }
@@ -402,43 +407,73 @@ const portfolioHref = site.routes.portfolio;
   .po-sat-glyph {
     display: grid;
     place-items: center;
-    transition: color 0.2s ease;
-    filter: drop-shadow(0 0 6px rgba(28, 43, 214, 0.9));
+    transition: color 0.22s ease;
+    filter: drop-shadow(0 0 7px rgba(7, 12, 110, 0.86));
+  }
+  .po-sat-glyph svg {
+    width: 42px;
+    height: 42px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+  .po-sat-ring-spin {
+    transform-origin: 36px 36px;
+    animation: po-satspin 18s linear infinite;
+  }
+  .po-sat-mint-fill {
+    fill: var(--c-turquoise);
+    stroke: none;
+    filter: drop-shadow(0 0 6px rgba(170, 210, 202, 0.45));
+  }
+  .po-sat-soft {
+    opacity: 0.44;
+  }
+  .po-sat-cross {
+    opacity: 0.72;
   }
   .po-sat:hover .po-sat-glyph,
   .po-sat:focus-visible .po-sat-glyph {
-    color: var(--c-turquoise);
-    filter: drop-shadow(0 0 10px rgba(170, 210, 202, 0.42)) drop-shadow(0 0 18px rgba(238, 243, 255, 0.16)) !important;
+    color: #ddf7f0;
+    filter: drop-shadow(0 0 10px rgba(170, 210, 202, 0.46)) drop-shadow(0 0 20px rgba(238, 243, 255, 0.18)) !important;
+  }
+  .po-sat:hover .po-sat-ring-spin,
+  .po-sat:focus-visible .po-sat-ring-spin {
+    animation-duration: 9s;
   }
   .po-sat-leader {
     position: absolute;
-    left: calc(50% + 16px);
+    left: calc(50% + 20px);
     top: 50%;
     height: 1px;
-    width: 34px;
+    width: 38px;
     transform: translateY(-50%);
     transform-origin: left center;
-    background: linear-gradient(90deg, rgba(170, 210, 202, 0.85), rgba(170, 210, 202, 0.35));
-    opacity: 0.6;
+    background: linear-gradient(90deg, rgba(170, 210, 202, 0.92), rgba(170, 210, 202, 0.28));
+    opacity: 0.62;
     transition: opacity 0.2s ease, background 0.2s ease;
     pointer-events: none;
   }
   .po-sat-node {
     position: absolute;
-    left: calc(50% + 15px);
+    left: calc(50% + 20px);
     top: 50%;
     width: 4px;
     height: 4px;
     border-radius: 50%;
     background: var(--c-turquoise);
     transform: translate(-50%, -50%);
-    opacity: 0.7;
+    opacity: 0.76;
     transition: opacity 0.2s ease;
     pointer-events: none;
+    box-shadow: 0 0 12px rgba(170, 210, 202, 0.42);
   }
   .po-sat-label {
     position: absolute;
-    left: calc(50% + 54px);
+    left: calc(50% + 62px);
     top: 50%;
     transform: translateY(-50%);
     white-space: nowrap;
@@ -446,10 +481,11 @@ const portfolioHref = site.routes.portfolio;
     font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.13em;
-    color: rgba(170, 210, 202, 0.78);
-    opacity: 0.78;
+    color: rgba(170, 210, 202, 0.82);
+    opacity: 0.82;
     transition: opacity 0.2s ease, color 0.2s ease;
     pointer-events: none;
+    text-shadow: 0 0 14px rgba(7, 12, 110, 0.9);
   }
   .po-sat:hover .po-sat-label,
   .po-sat:focus-visible .po-sat-label {
@@ -1185,6 +1221,11 @@ const portfolioHref = site.routes.portfolio;
       transform: scale(1.2);
       opacity: 1;
       box-shadow: 0 0 0 7px rgba(170, 210, 202, 0.18), 0 0 34px rgba(170, 210, 202, 0.42);
+    }
+  }
+  @keyframes po-satspin {
+    to {
+      transform: rotate(360deg);
     }
   }
   @keyframes po-hintpulse {
