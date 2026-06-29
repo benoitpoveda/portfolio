@@ -88,12 +88,18 @@ const drawPortalDecor: MeltDecor = (ctx, w, h) => {
   try { ctxAny.letterSpacing = '0px'; } catch { /* noop */ }
 };
 
-/** Réglages courants de l'effet (mémoire courte, déplacement marqué, pinceau serré, grain fin). */
+/**
+ * Réglages finaux de l'effet (figés après réglage en direct) :
+ *  - decay  0.765 → « resistance » : mémoire/persistance de la trace
+ *  - amp    0.100 → « intensity »  : intensité du déplacement
+ *  - radius 0.15  → « rayon »      : taille du pinceau sous le curseur
+ *  - scale  6.0   → « grain »      : finesse de la turbulence
+ */
 export const MELT_SETTINGS = {
-  decay: 0.85,
-  amp: 0.16,
-  radius: 0.13,
-  scale: 8,
+  decay: 0.765,
+  amp: 0.1,
+  radius: 0.15,
+  scale: 6,
 };
 
 export function initPortalMelt(): MeltBackground | null {

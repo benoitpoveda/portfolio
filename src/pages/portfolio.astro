@@ -16,6 +16,7 @@ function strong(text: string, phrase: string): string {
 }
 
 const lede = hero.ledeLines.join(' ');
+const year = new Date().getFullYear();
 const coords = site.showPhoneOnSite
   ? `${site.email}<br>${site.phone} · ${site.locationLong}`
   : `${site.email}<br>${site.locationLong}`;
@@ -23,7 +24,7 @@ const coords = site.showPhoneOnSite
 
 <BaseLayout
   title={`Portfolio — ${site.name}`}
-  description={site.meta.description}
+  description={site.meta.descriptionPortfolio}
   path="/portfolio"
   bodyClass="pf-body"
 >
@@ -55,7 +56,7 @@ const coords = site.showPhoneOnSite
           <div class="pf-cta" data-reveal>
             <a class="pf-btn pf-btn--solid" href="#labo">→ Mes projets</a>
             <a class="pf-btn pf-btn--ghost" href={site.links.github} target="_blank" rel="noopener">→ GitHub</a>
-            <a class="pf-btn pf-btn--ghost" href={site.routes.cv}>↓ Télécharger le CV</a>
+            <a class="pf-btn pf-btn--ghost" href={site.routes.cv}>→ Voir le CV</a>
           </div>
         </div>
 
@@ -210,7 +211,7 @@ const coords = site.showPhoneOnSite
 
     <!-- ============ FOOTER ============ -->
     <footer class="pf-footer">
-      <span>© 2026 {site.name}</span>
+      <span>© {year} {site.name}</span>
       {footer.interets.length > 0 && (
         <span class="pf-footer-interets">Centres d'intérêt // {footer.interets.join(' · ')}</span>
       )}

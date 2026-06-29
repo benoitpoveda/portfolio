@@ -1,4 +1,5 @@
 # Autorise les scripts de build des dépendances natives utilisées par Astro/Vite.
-allowBuilds:
-  esbuild: true
-  sharp: true
+# Clé standard pnpm (≥ 9.4) : liste des paquets dont le script de build est autorisé.
+onlyBuiltDependencies:
+  - esbuild
+  - sharp

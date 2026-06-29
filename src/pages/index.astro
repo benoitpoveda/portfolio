@@ -76,7 +76,7 @@ const portfolioHref = site.routes.portfolio;
         <button class="po-menu-btn" type="button" data-menu-toggle aria-label="Ouvrir le menu des sections">
           // Menu
         </button>
-        <a class="po-cv-btn" href={cvHref}>Télécharger le CV →</a>
+        <a class="po-cv-btn" href={cvHref}>Voir le CV →</a>
       </div>
     </header>
 
@@ -85,7 +85,7 @@ const portfolioHref = site.routes.portfolio;
 
     <!-- ============ IDENTITÉ ============ -->
     <div class="po-identity">
-      <div class="po-name">{site.name}</div>
+      <h1 class="po-name">{site.name}</h1>
       <div class="po-subtitle">{site.role}</div>
       <div class="po-status">
         DISPO&nbsp;&nbsp;// {site.status.dispo}<br />
@@ -118,7 +118,7 @@ const portfolioHref = site.routes.portfolio;
             <span class="po-menu-read-arrow">→</span>
           </a>
           <a class="po-menu-cv" href={cvHref} data-menu-cv>
-            <span class="po-menu-cv-label">↓ TÉLÉCHARGER LE CV (PDF)</span>
+            <span class="po-menu-cv-label">→ VOIR LE CV</span>
             <span class="po-menu-cv-arrow">→</span>
           </a>
         </div>
@@ -249,7 +249,7 @@ const portfolioHref = site.routes.portfolio;
                   </a>
                 )}
                 <a class="po-contact-link po-contact-link--cv" href={cvHref}>
-                  <span class="po-contact-k">↓ CV (PDF)</span><span class="po-contact-v po-contact-v--cv">Télécharger</span>
+                  <span class="po-contact-k">→ CV</span><span class="po-contact-v po-contact-v--cv">Voir en ligne</span>
                 </a>
               </div>
             </div>
@@ -266,10 +266,8 @@ const portfolioHref = site.routes.portfolio;
 
   <script>
     import { initPortail } from '../scripts/portail';
-    import { initPortalMelt, MELT_SETTINGS } from '../scripts/portal-melt';
-    import { mountMeltPanel } from '../scripts/portal-melt-panel'; // TEMP : panneau de réglage — à retirer
-    const meltFx = initPortalMelt();
-    if (meltFx) mountMeltPanel(meltFx, MELT_SETTINGS); // TEMP : panneau de réglage — à retirer
+    import { initPortalMelt } from '../scripts/portal-melt';
+    initPortalMelt();
     initPortail();
   </script>
 </BaseLayout>
@@ -599,6 +597,7 @@ const portfolioHref = site.routes.portfolio;
     pointer-events: none;
   }
   .po-name {
+    margin: 0;
     font-family: var(--font-serif);
     font-weight: 700;
     font-size: clamp(28px, 3.2vw, 44px);

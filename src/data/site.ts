@@ -45,6 +45,10 @@ export const site = {
     description:
       'Portfolio de Benoît Poveda, administrateur systèmes / infrastructure à Nice. ' +
       'Homelab Proxmox documenté, automatisation, et une application interne assistée par IA en production.',
+    // Description distincte pour la vue lecture /portfolio (évite le doublon SEO avec la home).
+    descriptionPortfolio:
+      'Le parcours, le homelab Proxmox et les projets de Benoît Poveda, ' +
+      'administrateur systèmes / infrastructure à Nice — version lecture, détaillée.',
     lang: 'fr',
   },
 } as const;

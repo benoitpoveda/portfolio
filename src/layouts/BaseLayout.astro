@@ -1,4 +1,18 @@
 ---
+// Polices auto-hébergées (Fontsource) — plus de CDN Google : pas de requête
+// bloquante vers fonts.googleapis.com ni de fuite d'IP visiteur (RGPD).
+// Archivo (titres/corps) : graisses réellement utilisées (400→900).
+import '@fontsource/archivo/400.css';
+import '@fontsource/archivo/500.css';
+import '@fontsource/archivo/600.css';
+import '@fontsource/archivo/700.css';
+import '@fontsource/archivo/800.css';
+import '@fontsource/archivo/900.css';
+// Space Mono (labels / data) : régulier + gras.
+import '@fontsource/space-mono/400.css';
+import '@fontsource/space-mono/700.css';
+// Cormorant Garamond (filigrane du Portail) : 700 uniquement.
+import '@fontsource/cormorant-garamond/700.css';
 import '../styles/global.css';
 import { site } from '../data/site';
 
@@ -17,6 +31,8 @@ const {
 } = Astro.props;
 
 const canonical = new URL(path, Astro.site ?? 'https://benoitpoveda.fr').href;
+// Carte sociale (aperçu LinkedIn / Twitter) — URL absolue requise.
+const ogImage = new URL('og.png', Astro.site ?? 'https://benoitpoveda.fr').href;
 ---
 
 <!doctype html>
@@ -38,15 +54,12 @@ const canonical = new URL(path, Astro.site ?? 'https://benoitpoveda.fr').href;
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content={site.name} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.role}`} />
     <meta name="twitter:card" content="summary_large_image" />
-
-    <!-- Polices : Archivo (titres/corps), Space Mono (labels/data), Cormorant Garamond (Portail) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:wght@600;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="twitter:image" content={ogImage} />
 
     <slot name="head" />
   </head>

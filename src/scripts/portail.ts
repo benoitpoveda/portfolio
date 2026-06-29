@@ -758,9 +758,22 @@ export function initPortail(): void {
   last = performance.now();
   raf = requestAnimationFrame(loop);
 
+  // Onglet masque : on stoppe la boucle (globe + satellites) et on la relance au retour.
+  function onVisibility(): void {
+    if (document.hidden) {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    } else if (!raf) {
+      last = performance.now(); // evite un saut d'animation au retour
+      raf = requestAnimationFrame(loop);
+    }
+  }
+  document.addEventListener('visibilitychange', onVisibility);
+
   // Nettoyage (HMR / navigation : evite les boucles rAF zombies).
   window.addEventListener('beforeunload', () => {
     cancelAnimationFrame(raf);
     document.removeEventListener('keydown', onKey);
+    document.removeEventListener('visibilitychange', onVisibility);
   });
 }

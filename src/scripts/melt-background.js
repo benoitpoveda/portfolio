@@ -249,6 +249,17 @@ export class MeltBackground {
     if (window.ResizeObserver) { this._ro = new ResizeObserver(() => this._resize()); this._ro.observe(this.host); }
     this._onResize = () => this._resize();
     window.addEventListener('resize', this._onResize);
+
+    // Onglet masqué : on arrête la boucle GL (batterie/CPU) et on la relance au retour.
+    this._onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(this._raf); this._raf = 0;
+      } else if (!this._raf && this.gl) {
+        this.t0 = (performance || Date).now() - 0; // continuité du temps
+        this._raf = requestAnimationFrame(this._loop);
+      }
+    };
+    document.addEventListener('visibilitychange', this._onVisibility);
   }
 
   _resize() {
@@ -326,6 +337,7 @@ export class MeltBackground {
     cancelAnimationFrame(this._raf);
     if (this._onMove) window.removeEventListener('pointermove', this._onMove);
     if (this._onResize) window.removeEventListener('resize', this._onResize);
+    if (this._onVisibility) document.removeEventListener('visibilitychange', this._onVisibility);
     if (this._ro) this._ro.disconnect();
     if (this.gl) { const e = this.gl.getExtension('WEBGL_lose_context'); if (e) e.loseContext(); }
     if (this.canvas && this.canvas.parentNode) this.canvas.parentNode.removeChild(this.canvas);

@@ -5,6 +5,16 @@
  * Pour ajouter une vraie photo : remplacer <span>BP</span> par
  * <img src="/photo.jpg" alt="Benoît Poveda"> (un filtre N&B/duotone est applique).
  */
+// Polices auto-hébergées (Fontsource) — pas de CDN Google (perf + RGPD).
+// Le CV utilise Archivo (corps) et Space Mono (labels) ; pas de serif.
+import '@fontsource/archivo/400.css';
+import '@fontsource/archivo/500.css';
+import '@fontsource/archivo/600.css';
+import '@fontsource/archivo/700.css';
+import '@fontsource/archivo/800.css';
+import '@fontsource/archivo/900.css';
+import '@fontsource/space-mono/400.css';
+import '@fontsource/space-mono/700.css';
 import { site } from '../data/site';
 ---
 
@@ -17,12 +27,6 @@ import { site } from '../data/site';
     <meta name="description" content={`CV de ${site.name} — ${site.role}.`} />
     <meta name="robots" content="index,follow" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <div class="toolbar">
