@@ -26,7 +26,7 @@ export const hero = {
   ctas: [
     { label: 'Mes projets', glyph: '→', href: '#labo', kind: 'solid' },
     { label: 'GitHub', glyph: '→', href: 'github', kind: 'ghost' },
-    { label: 'Voir le CV', glyph: '→', href: 'cv', kind: 'ghost' },
+    { label: 'Télécharger le CV (PDF)', glyph: '↓', href: 'cvPdf', kind: 'ghost' },
   ],
 } as const;
 

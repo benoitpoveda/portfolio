@@ -24,6 +24,7 @@ const SAT_META = [
 ];
 
 const cvHref = site.routes.cv;
+const cvPdfHref = site.routes.cvPdf;
 const portfolioHref = site.routes.portfolio;
 ---
 
@@ -76,7 +77,7 @@ const portfolioHref = site.routes.portfolio;
         <button class="po-menu-btn" type="button" data-menu-toggle aria-label="Ouvrir le menu des sections">
           // Menu
         </button>
-        <a class="po-cv-btn" href={cvHref}>Voir le CV →</a>
+        <a class="po-cv-btn" href={cvPdfHref} download>Télécharger le CV →</a>
       </div>
     </header>
 
@@ -117,8 +118,8 @@ const portfolioHref = site.routes.portfolio;
             <span class="po-menu-read-label">↳ VUE LECTURE / CLASSIQUE</span>
             <span class="po-menu-read-arrow">→</span>
           </a>
-          <a class="po-menu-cv" href={cvHref} data-menu-cv>
-            <span class="po-menu-cv-label">→ VOIR LE CV</span>
+          <a class="po-menu-cv" href={cvPdfHref} download data-menu-cv>
+            <span class="po-menu-cv-label">↓ TÉLÉCHARGER LE CV (PDF)</span>
             <span class="po-menu-cv-arrow">→</span>
           </a>
         </div>

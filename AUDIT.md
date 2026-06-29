@@ -26,9 +26,9 @@ Code de **très bonne qualité** (accessible, commenté, robuste). Bloquant lev�
 
 - [x] **Image OpenGraph créée.** `public/og.png` (1200×630, aux couleurs du Portail) +
   balises `og:image` / `twitter:image` (+ width/height/alt) dans `BaseLayout.astro`.
-- [x] **Libellés « CV (PDF) » corrigés.** Reformulés en « Voir le CV » (la page `/cv` est
-  une page HTML optimisée impression A4 → Ctrl+P = PDF). *(Option : déposer un vrai
-  `benoit-poveda-cv.pdf` dans `/public` si tu veux un téléchargement direct.)*
+- [x] **Vrai PDF du CV.** `public/benoit-poveda-cv.pdf` (généré depuis `/cv` via chromium
+  headless, A4 1 page). Les CTA « Télécharger le CV » pointent dessus (`download`) ;
+  la page HTML `/cv` reste accessible (« Voir en ligne » dans la carte contact).
 - [x] **Sitemap ajouté.** `@astrojs/sitemap` → `/sitemap-index.xml` + `Sitemap:` dans `robots.txt`.
 - [x] **`<h1>` sur la home.** `.po-name` est passé de `<div>` à `<h1>` (SEO + a11y).
 - [x] **Polices auto-hébergées (Fontsource).** Plus de `fonts.googleapis.com` (perf + RGPD),
@@ -52,8 +52,14 @@ contenu centralisé (`site.ts` / `content.ts`), `astro check` 0 erreur.
 
 ---
 
-## ❓ Reste à décider (toi)
-1. **Domaine final** : `benoitpoveda.fr` confirmé ? Si oui → le brancher en *custom domain*
-   sur le projet Cloudflare Pages `portfolio` (DNS OVH → CNAME, ou nameservers → Cloudflare).
-2. **Vrai PDF du CV** : garder « Voir le CV » (page HTML imprimable), ou déposer un
-   `benoit-poveda-cv.pdf` dans `/public` et repointer les liens dessus ?
+## ❓ Domaine — à brancher (action OVH requise)
+Décision prise : **brancher `benoitpoveda.fr`**. ⚠️ Mais au 2026-06-29 le domaine n'a
+**aucun enregistrement DNS** (NS vide via resolver public) et n'est pas une zone Cloudflare
+→ il faut d'abord **le déclarer/déléguer chez OVH** :
+- Option full Cloudflare (recommandée, apex géré proprement) : ajouter `benoitpoveda.fr`
+  comme zone dans Cloudflare → changer les nameservers OVH → ceux de Cloudflare → puis
+  *Custom domain* sur le projet Pages `portfolio` (1 clic, CNAME/apex auto).
+- Option DNS chez OVH : Pages custom domain + enregistrements A/AAAA OVH vers les IP CF Pages
+  (apex) ou CNAME `www` → `portfolio-35b.pages.dev`.
+Une fois branché : remettre éventuellement `site:` sur le domaine (déjà `benoitpoveda.fr`)
+et re-déployer pour canonical / OG / sitemap corrects.

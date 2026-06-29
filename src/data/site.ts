@@ -36,7 +36,8 @@ export const site = {
   routes: {
     portail: '/',
     portfolio: '/portfolio',
-    cv: '/cv',
+    cv: '/cv', // page HTML imprimable (vue en ligne)
+    cvPdf: '/benoit-poveda-cv.pdf', // PDF téléchargeable (généré depuis /cv)
   },
 
   /* Meta / SEO */
