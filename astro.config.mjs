@@ -4,8 +4,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // Mettre le vrai domaine avant le deploiement (utilise pour les URLs canoniques / OpenGraph / sitemap).
-  site: 'https://benoitpoveda.fr',
+  // Domaine de prod (pilote URLs canoniques / OpenGraph / sitemap).
+  site: 'https://www.povedaben.fr',
   // Genere /sitemap-index.xml + /sitemap-0.xml (reference dans public/robots.txt).
   integrations: [sitemap()],
   // Sortie statique par defaut — parfait pour un portfolio (deployable sur Netlify / Vercel / GitHub Pages).

@@ -44,8 +44,8 @@ Node ≥ 18 · pnpm.
 - **Photo** : monogramme « BP » par défaut. Pour une vraie photo dans le CV, remplacer `<span>BP</span>`
   (classe `.ph`) par `<img src="/photo.jpg" alt="Benoît Poveda">` dans `src/pages/cv.astro`
   (un filtre N&B / duotone est appliqué). Déposer l'image dans `public/`.
-- **Domaine** : placeholder `https://benoitpoveda.fr` dans `astro.config.mjs` (`site`) — à remplacer
-  par le vrai domaine (URLs canoniques / OpenGraph).
+- **Domaine** : `https://www.povedaben.fr` dans `astro.config.mjs` (`site`) — pilote les URLs
+  canoniques / OpenGraph / sitemap. Déployé sur Cloudflare Pages (auto-deploy depuis `main`).
 
 ## Déploiement
 

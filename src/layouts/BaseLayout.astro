@@ -30,9 +30,9 @@ const {
   path = '/',
 } = Astro.props;
 
-const canonical = new URL(path, Astro.site ?? 'https://benoitpoveda.fr').href;
+const canonical = new URL(path, Astro.site ?? 'https://www.povedaben.fr').href;
 // Carte sociale (aperçu LinkedIn / Twitter) — URL absolue requise.
-const ogImage = new URL('og.png', Astro.site ?? 'https://benoitpoveda.fr').href;
+const ogImage = new URL('og.png', Astro.site ?? 'https://www.povedaben.fr').href;
 ---
 
 <!doctype html>

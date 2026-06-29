@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://benoitpoveda.fr/sitemap-index.xml
+Sitemap: https://www.povedaben.fr/sitemap-index.xml
