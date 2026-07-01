@@ -157,7 +157,7 @@ export const stack = {
 export const contact = {
   mono: '// CONTACT',
   title: 'TRAVAILLONS ENSEMBLE',
-  accroche: `Une question, une opportunité ? Le plus simple est de m'écrire.`,
+  accroche: `Écrivez-moi, je réponds volontiers. Que ce soit une question technique ou un projet à discuter.`,
 } as const;
 
 /* ---- FOOTER ---- */
