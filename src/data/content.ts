@@ -35,7 +35,7 @@ export const profil = {
   mono: '// PROFIL',
   title: 'À propos',
   paragraphs: [
-    `Technicien systèmes & réseaux chez un éditeur de logiciels de caisse, je gère au quotidien le support N2/N3. Mais ce qui me définit le mieux, c'est que je n'attends pas qu'un outil existe pour gagner du temps : je le construis.`,
+    `Technicien systèmes & réseaux chez un éditeur de logiciels de caisse, je gère au quotidien le support N2/N3. Mais mon réflexe va plus loin : dès qu'un outil me ferait gagner du temps, je le construis.`,
     `Dernier exemple en date, la refonte du centre d'aide de mon employeur. J'ai conçu et déployé une application web interne, assistée par IA, qui automatise la production et la mise en forme des articles : environ 20× plus rapide, ~150 h économisées sur 230 articles. Elle est en production et adoptée par l'équipe.`,
     `Je suis arrivé dans l'IT par une reconversion. Avant, 15 ans dans l'optique — dont 7 à cofonder et diriger une boutique, du commercial à la gestion en passant par toute l'informatique du magasin. J'en garde une autonomie totale, le sens du résultat et le goût du concret.`,
     `Pour progresser, j'ai monté un homelab Proxmox complet : virtualisation, stockage ZFS sous TrueNAS, conteneurs Docker, reverse proxy, sauvegardes automatisées, VPN, supervision. C'est mon terrain de jeu, et la meilleure preuve de ce que je sais faire — tout est documenté et versionné.`,
