@@ -1,8 +1,8 @@
 /**
- * Portail orbital — moteur Canvas (globe grave + orbites + satellites) et interactions.
+ * Portail orbital — moteur Canvas (globe grave + satellites) et interactions.
  *
  * Portage fidele du prototype Portail.dc.html (DCLogic -> TS vanille) :
- *  - la geometrie de dessin (proj, hachures, drawGlobe/Orbits/LandMass/OceanEngraving,
+ *  - la geometrie de dessin (proj, hachures, drawGlobe/LandMass/OceanEngraving,
  *    positionSats) est conservee VERBATIM ;
  *  - seule la plomberie framework (etat/rendu React-like) est reecrite en DOM statique.
  *
@@ -21,7 +21,7 @@ const COSP0 = Math.cos(PHI0);
 const INK = '238,243,255';
 const HORIZON_Z = -0.012;
 
-/** Orbites : rx, ry (fraction de S), rot (deg), sp (vitesse rad/s), ph (phase). */
+/** Trajectoires satellites : rx, ry (fraction de S), rot (deg), sp (vitesse rad/s), ph (phase). */
 interface Orbit {
   rx: number;
   ry: number;
@@ -516,27 +516,8 @@ export function initPortail(): void {
   }
 
   /* =========================================================
-     Orbites + globe (VERBATIM)
+     Globe (les trajectoires pointillees des satellites ne sont plus dessinees)
      ========================================================= */
-  function drawOrbits(c: CanvasRenderingContext2D): void {
-    c.save();
-    c.translate(cx, cy);
-    for (let i = 0; i < ORB.length; i++) {
-      const o = ORB[i];
-      c.save();
-      c.rotate(o.rot * RAD);
-      c.setLineDash(i % 2 ? [2, 9] : [1.5, 7]);
-      c.lineWidth = 1;
-      c.strokeStyle = `rgba(${INK},${i % 2 ? 0.18 : 0.235})`;
-      c.beginPath();
-      c.ellipse(0, 0, o.rx * S, o.ry * S, 0, 0, Math.PI * 2);
-      c.stroke();
-      c.restore();
-    }
-    c.setLineDash([]);
-    c.restore();
-  }
-
   function drawGlobe(c: CanvasRenderingContext2D): void {
     const rad = R;
     c.save();
@@ -627,7 +608,6 @@ export function initPortail(): void {
   function draw(): void {
     if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
-    drawOrbits(ctx);
     drawGlobe(ctx);
   }
 
