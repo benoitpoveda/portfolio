@@ -61,6 +61,22 @@ const ogImage = new URL('og.png', Astro.site ?? 'https://www.povedaben.fr').href
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
 
+    <!-- Données structurées Person (fiche Google sur le nom) -->
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: site.name,
+        jobTitle: 'Technicien systèmes & infrastructure',
+        url: site.links.site,
+        image: ogImage,
+        address: { '@type': 'PostalAddress', addressLocality: 'Nice', addressCountry: 'FR' },
+        sameAs: [site.links.github, site.links.linkedin],
+      })}
+    />
+
     <slot name="head" />
   </head>
   <body class={bodyClass}>
