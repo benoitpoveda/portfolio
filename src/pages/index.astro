@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
-import { profil, parcours, labo, stack } from '../data/content';
+import { profil, parcours, labo, stack, contact } from '../data/content';
 
 /** Enveloppe une sous-chaine dans le surlignage signature turquoise (UN seul par ecran). */
 function mark(text: string, phrase: string): string {
@@ -29,7 +29,7 @@ const portfolioHref = site.routes.portfolio;
 ---
 
 <BaseLayout
-  title={`${site.name} — Portail`}
+  title={site.meta.title}
   description={site.meta.description}
   path="/"
   bodyClass="po-body"
@@ -87,10 +87,10 @@ const portfolioHref = site.routes.portfolio;
     <!-- ============ IDENTITÉ ============ -->
     <div class="po-identity">
       <h1 class="po-name">{site.name}</h1>
-      <div class="po-subtitle">{site.role}</div>
+      <div class="po-subtitle">{site.shortRole}</div>
       <div class="po-status">
-        DISPO&nbsp;&nbsp;// {site.status.dispo}<br />
-        FOCUS&nbsp;&nbsp;// {site.status.focus}
+        DISPO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// {site.status.dispo}<br />
+        OBJECTIF&nbsp;&nbsp;// {site.status.focus}
       </div>
     </div>
 
@@ -203,6 +203,14 @@ const portfolioHref = site.routes.portfolio;
                       {card.nodes && (
                         <div><span class="po-card-k">NODES //</span> {card.nodes}</div>
                       )}
+                      {card.doc && (
+                        <div>
+                          <span class="po-card-k">DOC //</span>{' '}
+                          <a class="po-card-link" href={card.doc.href} target="_blank" rel="noopener">
+                            {card.doc.label} →
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -230,10 +238,7 @@ const portfolioHref = site.routes.portfolio;
             <!-- CONTACT -->
             <div data-section-body="contact" hidden>
               <h2 class="po-contact-h">Prenons contact</h2>
-              <p class="po-contact-p">
-                Écrivez-moi, je réponds volontiers. Que ce soit une question technique ou un projet
-                à discuter.
-              </p>
+              <p class="po-contact-p">{contact.accroche}</p>
               <div class="po-contact-grid">
                 <a class="po-contact-link" href={`mailto:${site.email}`}>
                   <span class="po-contact-k">→ EMAIL</span><span class="po-contact-v">{site.email}</span>
@@ -1094,6 +1099,15 @@ const portfolioHref = site.routes.portfolio;
     color: var(--c-cyanotype);
     font-weight: 700;
   }
+  .po-card-link {
+    color: var(--c-cyanotype);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+  .po-card-link:hover {
+    color: var(--c-turquoise-edge);
+    text-decoration: none;
+  }
 
   /* ----- STACK ----- */
   .po-stack {
@@ -1244,6 +1258,15 @@ const portfolioHref = site.routes.portfolio;
     }
     .po-link-read {
       display: none;
+    }
+  }
+  /* Petits ecrans : les coordonnees decoratives chevauchent le bloc identite — on les retire. */
+  @media (max-width: 560px) {
+    .po-coords {
+      display: none;
+    }
+    .po-identity {
+      max-width: calc(100vw - 48px);
     }
   }
 

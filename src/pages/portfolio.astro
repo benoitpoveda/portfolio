@@ -23,7 +23,7 @@ const coords = site.showPhoneOnSite
 ---
 
 <BaseLayout
-  title={`Portfolio — ${site.name}`}
+  title={`Portfolio · ${site.meta.title}`}
   description={site.meta.descriptionPortfolio}
   path="/portfolio"
   bodyClass="pf-body"
@@ -39,6 +39,7 @@ const coords = site.showPhoneOnSite
         {sections.map((s) => (
           <a href={`#${s.id}`}>// {s.nav}</a>
         ))}
+        <a class="pf-nav-portal" href={site.routes.portail}>↗ Portail</a>
       </span>
       <a class="pf-nav-cv" href={site.routes.cv}>↓ CV</a>
     </nav>
@@ -69,8 +70,8 @@ const coords = site.showPhoneOnSite
             </span>
           </div>
           <div class="pf-releve">
-            <div><span class="pf-releve-k">DISPO</span>&nbsp;&nbsp;// ouvert aux opportunités · Nice, FR · mobile</div>
-            <div><span class="pf-releve-k">FOCUS</span>&nbsp;&nbsp;// infrastructure · automatisation · Linux</div>
+            <div><span class="pf-releve-k">DISPO</span>&nbsp;&nbsp;// ouvert aux opportunités · Nice / Sophia / Monaco</div>
+            <div><span class="pf-releve-k">OBJECTIF</span>&nbsp;&nbsp;// administrateur systèmes / infrastructure</div>
           </div>
         </div>
       </div>
@@ -121,7 +122,7 @@ const coords = site.showPhoneOnSite
                 <ul class="pf-job-bullets">
                   {job.bullets.map((b, bi) => (
                     <li>
-                      <span class={`pf-dot${bi === 1 && i === 0 ? ' is-aqua' : ''}`} aria-hidden="true"></span>
+                      <span class={`pf-dot${bi === 0 && i === 0 ? ' is-aqua' : ''}`} aria-hidden="true"></span>
                       <span set:html={mark(b, '~150 h économisées sur la refonte (230 articles)')}></span>
                     </li>
                   ))}
@@ -144,7 +145,7 @@ const coords = site.showPhoneOnSite
         <p class="pf-labo-intro" data-reveal>{labo.intro}</p>
         <div class="pf-cards">
           {labo.cards.map((card, i) => (
-            <article class="pf-card" data-reveal>
+            <article class={`pf-card${i === 0 ? ' pf-card--wide' : ''}`} data-reveal>
               <div class={`pf-card-head ${i % 2 === 0 ? 'is-navy' : 'is-cyan'}`}>
                 <div class="pf-card-tex" aria-hidden="true"></div>
                 <span class="pf-card-cat">{card.cat}</span>
@@ -157,6 +158,12 @@ const coords = site.showPhoneOnSite
                   <div><span class="pf-k">PREUVE //</span> <span class="pf-v">{card.preuve}</span></div>
                   {card.nodes && (
                     <div><span class="pf-k">NODES //</span> <span class="pf-v" set:html={mark(card.nodes, '~12 VM & conteneurs')}></span></div>
+                  )}
+                  {card.doc && (
+                    <div>
+                      <span class="pf-k">DOC&nbsp;&nbsp; //</span>{' '}
+                      <a class="pf-card-link" href={card.doc.href} target="_blank" rel="noopener">{card.doc.label} →</a>
+                    </div>
                   )}
                 </div>
               </div>
@@ -215,7 +222,7 @@ const coords = site.showPhoneOnSite
       {footer.interets.length > 0 && (
         <span class="pf-footer-interets">Centres d'intérêt // {footer.interets.join(' · ')}</span>
       )}
-      <a href="#profil">↑ Haut</a>
+      <span class="pf-footer-links"><a href={site.routes.portail}>↗ Vue immersive</a> · <a href="#profil">↑ Haut</a></span>
     </footer>
   </div>
 
@@ -702,6 +709,22 @@ const coords = site.showPhoneOnSite
   }
   .pf-v {
     color: var(--c-text-2);
+  }
+  .pf-card--wide {
+    grid-column: 1 / -1;
+  }
+  .pf-card-link {
+    color: var(--c-cyanotype);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+  .pf-card-link:hover {
+    color: var(--c-turquoise-edge);
+    text-decoration: none;
+  }
+  .pf-nav-links .pf-nav-portal {
+    color: var(--c-turquoise);
+    opacity: 0.95;
   }
 
   /* ---------- STACK ---------- */
