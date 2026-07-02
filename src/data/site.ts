@@ -10,7 +10,7 @@ export const site = {
   role: 'Administrateur systèmes / infrastructure',
   shortRole: 'Infrastructure · Automatisation · Linux',
   location: 'Nice, FR',
-  locationLong: 'Nice & environs · Permis B',
+  locationLong: 'Nice · Sophia Antipolis · Monaco · Permis B',
 
   /* Contact — affichage public */
   email: 'povedaben@proton.me',
@@ -20,6 +20,8 @@ export const site = {
   showPhoneOnSite: false,
 
   links: {
+    site: 'https://www.povedaben.fr',
+    siteLabel: 'www.povedaben.fr',
     github: 'https://github.com/benoitpoveda',
     githubLabel: 'github.com/benoitpoveda',
     linkedin: 'https://www.linkedin.com/in/benoitpoveda',
@@ -28,8 +30,8 @@ export const site = {
 
   /* Releve mono affiche sous le hero / dans le bloc identite */
   status: {
-    dispo: 'OUVERT AUX OPPORTUNITÉS · NICE, FR · MOBILE',
-    focus: 'INFRASTRUCTURE · AUTOMATISATION · LINUX',
+    dispo: 'OUVERT AUX OPPORTUNITÉS · NICE / SOPHIA / MONACO',
+    focus: 'ADMINISTRATEUR SYSTÈMES / INFRASTRUCTURE',
   },
 
   /* Liens internes */

@@ -45,7 +45,7 @@ export const profil = {
   stats: [
     { value: '~150 h', label: 'économisées · app IA' },
     { value: '20×', label: 'plus rapide' },
-    { value: 'N2/N3', label: 'support quotidien' },
+    { value: '~12', label: 'VM & LXC · homelab' },
     { value: 'TSSR', label: 'titre pro niv. 5' },
   ],
 } as const;
@@ -61,9 +61,9 @@ export const parcours = {
       org: 'Clyo Systems',
       meta: 'Éditeur de logiciels de caisse · Nice',
       bullets: [
-        `Support N2/N3 (caisse, terminaux Sunmi/PAX, TPE) via Zendesk.`,
         `Conception, développement et déploiement d'une application web interne, assistée par IA, qui automatise la production et la mise en forme des articles du centre d'aide : reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles) — en production, adoptée par l'équipe.`,
         `Déploiement du matériel et des applications métier ; outils internes (script atelier, générateur d'étiquettes) et automatisation (PowerShell, Bash).`,
+        `Diagnostic et résolution d'incidents en production — support N2/N3 (caisse, terminaux Sunmi/PAX, TPE) via Zendesk.`,
       ],
     },
     {
@@ -101,8 +101,17 @@ export const parcours = {
 export const labo = {
   mono: '// LABO & PROJETS',
   title: 'Labo & Projets',
-  intro: `Mon homelab est mon terrain d'apprentissage et ma meilleure preuve. Tout est conçu, déployé et maintenu seul — et documenté.`,
+  intro: `Ce que je construis et exploite moi-même : une application en production chez mon employeur, un homelab Proxmox complet — documenté sur GitHub — et un VPS Linux public. Tout est conçu, déployé et maintenu seul.`,
   cards: [
+    {
+      cat: '// EN ENTREPRISE · EN PRODUCTION',
+      title: `Refonte du centre d'aide — application web assistée par IA`,
+      desc: `L'outil que j'ai conçu, développé et déployé seul chez mon employeur : une application web interne qui automatise la production et la mise en forme des articles du centre d'aide, avec l'IA en assistance. Reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles). En production et adoptée par l'équipe.`,
+      stack: `App web interne · pipeline IA · détails d'architecture en entretien`,
+      preuve: `De l'idée à la production · automatisation d'un process métier · exploitation`,
+      nodes: '230 articles · ~150 h gagnées',
+      doc: null,
+    },
     {
       cat: '// VIRTUALISATION',
       title: 'HOME SERVER — Infrastructure auto-hébergée',
@@ -110,6 +119,7 @@ export const labo = {
       stack: 'Proxmox VE · Debian · KVM/LXC · Ryzen 7 5800X / 64 Go',
       preuve: `Virtualisation · architecture d'infrastructure · autonomie d'exploitation`,
       nodes: '~12 VM & conteneurs sur 1 hyperviseur',
+      doc: { href: 'https://github.com/benoitpoveda/homelab-proxmox', label: 'github.com/benoitpoveda/homelab-proxmox' },
     },
     {
       cat: '// DONNÉES',
@@ -118,6 +128,10 @@ export const labo = {
       stack: 'TrueNAS · ZFS · NFS · Proxmox Backup Server',
       preuve: `Stratégie de sauvegarde · intégrité des données · restauration`,
       nodes: null,
+      doc: {
+        href: 'https://github.com/benoitpoveda/homelab-proxmox/blob/main/docs/stockage-zfs-vs-lvm.md',
+        label: 'docs/stockage-zfs-vs-lvm.md',
+      },
     },
     {
       cat: '// RÉSEAU & SÉCURITÉ',
@@ -126,6 +140,10 @@ export const labo = {
       stack: 'WireGuard · Nginx Proxy Manager · TLS / Let’s Encrypt · Pi-hole · pfSense',
       preuve: `Accès distant sécurisé · reverse proxy & TLS · segmentation réseau · DNS`,
       nodes: null,
+      doc: {
+        href: 'https://github.com/benoitpoveda/homelab-proxmox/blob/main/docs/reseau-wireguard-pfsense.md',
+        label: 'docs/reseau-wireguard-pfsense.md',
+      },
     },
     {
       cat: '// OBSERVABILITÉ',
@@ -134,6 +152,10 @@ export const labo = {
       stack: 'Prometheus · InfluxDB · Grafana · Telegram · agent maison',
       preuve: `Observabilité · métriques & dashboards · automatisation des opérations`,
       nodes: null,
+      doc: {
+        href: 'https://github.com/benoitpoveda/homelab-proxmox/blob/main/docs/supervision-prometheus-grafana.md',
+        label: 'docs/supervision-prometheus-grafana.md',
+      },
     },
   ],
 } as const;
@@ -157,7 +179,7 @@ export const stack = {
 export const contact = {
   mono: '// CONTACT',
   title: 'TRAVAILLONS ENSEMBLE',
-  accroche: `Écrivez-moi, je réponds volontiers. Que ce soit une question technique ou un projet à discuter.`,
+  accroche: `Un poste, une mission, une question technique ? Écrivez-moi — je réponds vite.`,
 } as const;
 
 /* ---- FOOTER ---- */
