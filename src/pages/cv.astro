@@ -23,7 +23,7 @@ import { site } from '../data/site';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CV — {site.name}</title>
+    <title>CV — {site.name} · Systèmes & Infrastructure</title>
     <meta name="description" content={`CV de ${site.name} — ${site.role}.`} />
     <meta name="robots" content="index,follow" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -44,6 +44,7 @@ import { site } from '../data/site';
         <div>
           <div class="s-h">Contact</div>
           {site.phone && <div class="ci">{site.phone}</div>}
+          <a class="ci link" href={site.links.site} target="_blank" rel="noopener">{site.links.siteLabel}</a>
           <a class="ci link" href={`mailto:${site.email}`}>{site.email}</a>
           <a class="ci link" href={site.links.github} target="_blank" rel="noopener">{site.links.githubLabel}</a>
           <a class="ci link" href={site.links.linkedin} target="_blank" rel="noopener">{site.links.linkedinLabel}</a>
@@ -92,9 +93,9 @@ import { site } from '../data/site';
             <div class="en-hd"><h4>Tech. Systèmes &amp; Réseaux · Support N2/N3</h4><span class="yr">2024 — auj.</span></div>
             <div class="org">Clyo Systems · Éditeur de logiciels de caisse · Nice</div>
             <ul>
-              <li>Support N2/N3 (caisse, terminaux Sunmi/PAX, TPE) via Zendesk.</li>
               <li class="impact">Conception, développement et déploiement d'une application web interne, assistée par IA, qui automatise la production et la mise en forme des articles du centre d'aide : reformatage ~20× plus rapide, <span class="hl">~150 h économisées sur la refonte (230 articles)</span> — en production, adoptée par l'équipe.</li>
               <li>Déploiement du matériel et des applications métier ; développement d'outils internes (script atelier, générateur d'étiquettes en remplacement de Zebra Designer) et automatisation (PowerShell, Bash).</li>
+              <li>Diagnostic et résolution d'incidents en production — support N2/N3 (caisse, terminaux Sunmi/PAX, TPE) via Zendesk.</li>
             </ul>
           </div>
           <div class="en">
