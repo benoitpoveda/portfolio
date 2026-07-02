@@ -750,10 +750,22 @@ export function initPortail(): void {
   }
   document.addEventListener('visibilitychange', onVisibility);
 
-  // Nettoyage (HMR / navigation : evite les boucles rAF zombies).
-  window.addEventListener('beforeunload', () => {
+  // Nettoyage sur VRAIE fermeture uniquement (pagehide non persisté) — jamais sur
+  // beforeunload : au retour via bfcache la page est restaurée telle quelle, et si
+  // les handlers ont été retirés rien ne peut relancer la boucle (portail figé).
+  window.addEventListener('pagehide', (e) => {
+    if (e.persisted) return; // part en bfcache : visibilitychange gère pause/reprise
     cancelAnimationFrame(raf);
     document.removeEventListener('keydown', onKey);
     document.removeEventListener('visibilitychange', onVisibility);
+  });
+
+  // Retour depuis le bfcache : certains navigateurs ne rejouent pas
+  // visibilitychange → on relance explicitement la boucle.
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted && !raf) {
+      last = performance.now(); // évite un saut d'animation au retour
+      raf = requestAnimationFrame(loop);
+    }
   });
 }

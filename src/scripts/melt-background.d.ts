@@ -45,6 +45,11 @@ export class MeltBackground {
   /** Repeint le décor (utile après le chargement d'une police web). */
   redraw(): void;
   setImage(src: string | HTMLImageElement | HTMLCanvasElement): void;
+  /**
+   * Relance la boucle après une restauration bfcache.
+   * Renvoie `false` si le contexte WebGL a été perdu (recréer le fond).
+   */
+  resume(): boolean;
   destroy(): void;
 }
 

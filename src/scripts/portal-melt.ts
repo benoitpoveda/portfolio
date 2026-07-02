@@ -106,22 +106,40 @@ export function initPortalMelt(): MeltBackground | null {
   const mount = document.querySelector<HTMLElement>('[data-portal-root]');
   if (!mount) return null;
 
-  const fx = new MeltBackground({
-    mount,
-    zIndex: '0', // sous le stage (globe/nav, z-index 5+) et sous ::before/::after
-    draw: drawPortalDecor,
-    idle: false, // pas de souris virtuelle : l'effet ne joue qu'au survol réel
-    ...MELT_SETTINGS,
+  const create = (): MeltBackground => {
+    const inst = new MeltBackground({
+      mount,
+      zIndex: '0', // sous le stage (globe/nav, z-index 5+) et sous ::before/::after
+      draw: drawPortalDecor,
+      idle: false, // pas de souris virtuelle : l'effet ne joue qu'au survol réel
+      ...MELT_SETTINGS,
+    });
+    // La police web (Cormorant Garamond) peut arriver après le 1er rendu :
+    // on repeint le décor une fois les polices prêtes pour un nom net et fidèle.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => inst.redraw()).catch(() => { /* noop */ });
+    }
+    return inst;
+  };
+
+  let fx = create();
+
+  // Nettoyage sur VRAIE fermeture uniquement (pagehide non persisté) — jamais sur
+  // beforeunload : quand la page part en bfcache puis revient (retour arrière),
+  // le canvas détruit ne serait jamais recréé → fond disparu.
+  window.addEventListener('pagehide', (e) => {
+    if (!e.persisted) fx.destroy();
   });
 
-  // La police web (Cormorant Garamond) peut arriver après le 1er rendu :
-  // on repeint le décor une fois les polices prêtes pour un nom net et fidèle.
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => fx.redraw()).catch(() => { /* noop */ });
-  }
-
-  // Nettoyage (HMR / navigation) : évite une boucle rAF zombie.
-  window.addEventListener('beforeunload', () => fx.destroy());
+  // Retour depuis le bfcache : on relance la boucle ; si le contexte WebGL a été
+  // perdu pendant la mise en cache, on recrée le fond de zéro.
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    if (!fx.resume()) {
+      fx.destroy();
+      fx = create();
+    }
+  });
 
   return fx;
 }

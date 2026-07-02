@@ -206,6 +206,16 @@ export class MeltBackground {
   // Repeint le décor (utile après le chargement d'une police web, p.ex.).
   redraw() { this._redrawDecor(); }
 
+  // Relance la boucle après une restauration bfcache (retour arrière navigateur).
+  // Renvoie false si le contexte WebGL a été perdu pendant la mise en cache :
+  // l'appelant doit alors détruire et recréer le fond.
+  resume() {
+    if (!this.gl) return true; // mode fallback 2D statique : rien à relancer
+    if (this.gl.isContextLost && this.gl.isContextLost()) return false;
+    if (!this._raf) this._raf = requestAnimationFrame(this._loop);
+    return true;
+  }
+
   setImage(src) {
     if (typeof src === 'string') {
       const img = new Image();
