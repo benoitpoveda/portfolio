@@ -1169,6 +1169,9 @@ const portfolioHref = site.routes.portfolio;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* La valeur (URL longue) passe sous le libellé quand la carte est etroite,
+       au lieu de deborder (les items flex ne retrecissent pas sous min-width:auto). */
+    flex-wrap: wrap;
     gap: 10px;
     padding: 15px 18px;
     text-decoration: none;
@@ -1192,10 +1195,15 @@ const portfolioHref = site.routes.portfolio;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.06em;
+    white-space: nowrap;
   }
   .po-contact-v {
     font-size: 12px;
     color: #5c6770;
+    min-width: 0;
+    margin-left: auto;
+    text-align: right;
+    overflow-wrap: anywhere;
   }
   .po-contact-v--cv {
     color: var(--c-turquoise);
