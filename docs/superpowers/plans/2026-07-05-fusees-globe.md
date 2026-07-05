@@ -37,7 +37,7 @@
   et `interface RocketGeom { cx: number; cy: number; R: number }`.
   Task 2 s'appuie exactement sur ces trois noms.
 
-- [ ] **Step 1: Écrire le fichier complet**
+- [x] **Step 1: Écrire le fichier complet**
 
 ```ts
 /**
@@ -372,12 +372,12 @@ export function createRockets(ink: string): Rockets {
 }
 ```
 
-- [ ] **Step 2: Vérifier les types**
+- [x] **Step 2: Vérifier les types**
 
 Run: `pnpm check`
 Expected: `Result (17 files): - 0 errors - 0 warnings - 0 hints` (16 fichiers + le nouveau)
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/scripts/rockets.ts
@@ -395,7 +395,7 @@ git commit -m "feat(portail): module mini-fusees gravees (spec 2026-07-05)"
 - Consumes: `createRockets(ink: string): Rockets` de Task 1 ; `INK`, `frozen`, `cx`, `cy`, `R`, boucle `loop`/`draw` existants.
 - Produces: rien (feuille d'intégration).
 
-- [ ] **Step 1: Importer et instancier**
+- [x] **Step 1: Importer et instancier**
 
 Après `import { CONTINENTS } from './continents';` (ligne 13) :
 
@@ -411,7 +411,7 @@ Dans `initPortail()`, après le bloc satellites (`const paused: boolean[] = ORB.
   const rockets = createRockets(INK);
 ```
 
-- [ ] **Step 2: Dessiner après le globe**
+- [x] **Step 2: Dessiner après le globe**
 
 Remplacer la fonction `draw` (lignes 608-612) :
 
@@ -424,7 +424,7 @@ Remplacer la fonction `draw` (lignes 608-612) :
   }
 ```
 
-- [ ] **Step 3: Faire vivre les fusées sous le gel existant**
+- [x] **Step 3: Faire vivre les fusées sous le gel existant**
 
 Dans `loop` (lignes 647-660), ajouter `rockets.update(dt);` dans le bloc `if (!frozen)` :
 
@@ -446,14 +446,14 @@ Dans `loop` (lignes 647-660), ajouter `rockets.update(dt);` dans le bloc `if (!f
   }
 ```
 
-- [ ] **Step 4: Vérifier types et build**
+- [x] **Step 4: Vérifier types et build**
 
 Run: `pnpm check`
 Expected: `0 errors`
 Run: `pnpm build`
 Expected: build Astro complet sans erreur (sortie `dist/`).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/scripts/portail.ts
@@ -470,24 +470,24 @@ git commit -m "feat(portail): decollages aleatoires des mini-fusees sur le globe
 - Consumes: le site complet (Tasks 1-2).
 - Produces: captures d'écran de contrôle, éventuels ajustements de constantes.
 
-- [ ] **Step 1: Lancer le dev server**
+- [x] **Step 1: Lancer le dev server**
 
 Run: `pnpm dev` (en tâche de fond)
 Expected: `Local http://localhost:4321/`
 
-- [ ] **Step 2: Captures**
+- [x] **Step 2: Captures**
 
 Avec l'outillage navigateur disponible (headless Chromium/Playwright, sinon contrôle manuel par Benoît) : capturer la page d'accueil à t≈4 s (décollage + panache + traînée visibles) et t≈15 s (2e mission, si booster : séparation/retour).
 Expected: fusée au trait fin encre claire, traînée pointillée, aucun élément coloré nouveau, étiquettes satellites lisibles par-dessus.
 
-- [ ] **Step 3: Contrôles comportement**
+- [x] **Step 3: Contrôles comportement**
 
 - Modale ouverte (clic satellite) : rotation ET fusées figées ; fermeture : reprise sans saut (le `dt` est borné à 0,05 s).
 - `prefers-reduced-motion: reduce` (émulation devtools ou capture avec le media émulé) : aucune fusée n'apparaît jamais.
 - Redimensionner la fenêtre pendant un vol : la trajectoire se remet à l'échelle sans casser.
 Expected: conforme à la spec, sinon ajuster les constantes de cadence/taille dans `rockets.ts` et re-vérifier.
 
-- [ ] **Step 4: Arrêter le serveur, commit final éventuel**
+- [x] **Step 4: Arrêter le serveur, commit final éventuel**
 
 ```bash
 git add -A && git commit -m "fix(portail): reglages visuels mini-fusees apres controle" # seulement si retouches
