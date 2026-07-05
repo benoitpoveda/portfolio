@@ -11,6 +11,7 @@
  * indice de 1er chargement, clavier (Esc, piege a Tab), focus, prefers-reduced-motion.
  */
 import { CONTINENTS } from './continents';
+import { createRockets } from './rockets';
 
 /* ===== Constantes geometriques (VERBATIM prototype) ===== */
 const RAD = Math.PI / 180;
@@ -91,6 +92,9 @@ export function initPortail(): void {
   const nodeEls = satEls.map((el) => el.querySelector<HTMLElement>('[data-sat-node]'));
   const theta: number[] = ORB.map((o) => o.ph);
   const paused: boolean[] = ORB.map(() => false);
+
+  /* ---- Mini-fusées (module isolé, même encre que la planche) ---- */
+  const rockets = createRockets(INK);
 
   /* ---- Elements de modale / menu / indice ---- */
   const modal = document.querySelector<HTMLElement>('[data-modal]');
@@ -609,6 +613,7 @@ export function initPortail(): void {
     if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
     drawGlobe(ctx);
+    rockets.draw(ctx, { cx, cy, R });
   }
 
   /* =========================================================
@@ -653,6 +658,7 @@ export function initPortail(): void {
       for (let i = 0; i < ORB.length; i++) {
         if (!paused[i]) theta[i] += dt * ORB[i].sp * SATELLITE_SPEED;
       }
+      rockets.update(dt);
     }
     draw();
     positionSats();
