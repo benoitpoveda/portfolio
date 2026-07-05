@@ -87,7 +87,7 @@ const coords = site.showPhoneOnSite
         </div>
         <div class="pf-profil">
           <div class="pf-profil-text">
-            <p class="pf-profil-lead" data-reveal set:html={strong(profil.paragraphs[0], 'je le construis.')}></p>
+            <p class="pf-profil-lead" data-reveal>{profil.paragraphs[0]}</p>
             <p data-reveal set:html={mark(profil.paragraphs[1], '~150 h économisées sur 230 articles')}></p>
             <p data-reveal>{profil.paragraphs[2]}</p>
             <p data-reveal set:html={strong(profil.paragraphs[4], 'administrateur systèmes / infrastructure')}></p>
