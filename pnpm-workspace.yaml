@@ -1,5 +1,10 @@
 # Autorise les scripts de build des dépendances natives utilisées par Astro/Vite.
-# Clé standard pnpm (≥ 9.4) : liste des paquets dont le script de build est autorisé.
+# pnpm ≥ 11 : clé allowBuilds (par paquet) ; onlyBuiltDependencies conservé pour compat.
+allowBuilds:
+  esbuild: true
+  sharp: true
 onlyBuiltDependencies:
   - esbuild
   - sharp
+# Le pré-check deps avant chaque `pnpm run` relançait un install sans TTY (fatal) : désactivé.
+verifyDepsBeforeRun: false
