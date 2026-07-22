@@ -1058,7 +1058,9 @@ const portfolioHref = site.routes.portfolio;
   }
   .po-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* min(280px, 100%) : sur mobile la modale offre moins de 280px — sans le min()
+       la piste garde 280px de large et les cartes debordent du cadre. */
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     gap: 16px;
   }
   .po-card {
@@ -1162,7 +1164,7 @@ const portfolioHref = site.routes.portfolio;
   }
   .po-contact-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
     gap: 12px;
   }
   .po-contact-link {
@@ -1260,9 +1262,17 @@ const portfolioHref = site.routes.portfolio;
 
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 760px) {
-    .po-sat-label,
-    .po-sat-leader {
-      display: none !important;
+    /* Le label a droite du satellite deborde de l'ecran : on le recentre SOUS le
+       glyphe (ligne de rappel et point n'ont alors plus de sens — retires). */
+    .po-sat-leader,
+    .po-sat-node {
+      display: none;
+    }
+    .po-sat-label {
+      left: 50%;
+      top: calc(100% - 6px);
+      transform: translateX(-50%);
+      font-size: 9px;
     }
     .po-link-read {
       display: none;
@@ -1275,6 +1285,28 @@ const portfolioHref = site.routes.portfolio;
     }
     .po-identity {
       max-width: calc(100vw - 48px);
+    }
+    /* La modale est trop etroite pour le bandeau lateral et les grandes marges. */
+    .po-strip {
+      display: none;
+    }
+    .po-modal {
+      padding: 3vh 12px;
+    }
+    .po-modal-head {
+      padding: 18px 18px 13px;
+    }
+    .po-modal-body {
+      padding: 20px 18px 24px;
+    }
+    .po-modal-foot {
+      padding: 12px 18px;
+    }
+    /* Categorie au-dessus des items : la colonne fixe de 170px ne laissait
+       qu'une trentaine de pixels au texte (empilement lettre a lettre). */
+    .po-stack-row {
+      grid-template-columns: 1fr;
+      gap: 5px;
     }
   }
 
