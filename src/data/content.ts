@@ -101,7 +101,7 @@ export const parcours = {
 export const labo = {
   mono: '// LABO & PROJETS',
   title: 'Labo & Projets',
-  intro: `Ce que je construis et exploite moi-même : une application en production chez mon employeur, un homelab Proxmox complet — documenté sur GitHub — et un VPS Linux public. Tout est conçu, déployé et maintenu seul.`,
+  intro: `Ce que je construis et exploite moi-même : des applications en production chez mon employeur, un homelab Proxmox complet — documenté sur GitHub — et un VPS Linux public. Tout est conçu, déployé et maintenu seul.`,
   cards: [
     {
       cat: '// EN ENTREPRISE · EN PRODUCTION',
@@ -110,6 +110,24 @@ export const labo = {
       stack: `App web interne · pipeline IA · détails d'architecture en entretien`,
       preuve: `De l'idée à la production · automatisation d'un process métier · exploitation`,
       nodes: '230 articles · ~150 h gagnées',
+      doc: null,
+    },
+    {
+      cat: '// EN ENTREPRISE · EN PRODUCTION',
+      title: `CLYO LABELS — impression d'étiquettes & serveur de licence`,
+      desc: `Une application Windows que j'ai développée pour remplacer ZebraDesigner chez les clients de mon employeur : étiquettes thermiques et planches gondole A4 imprimées directement depuis la base de la caisse, avec éditeur visuel et aperçu hors-ligne. Licence activée en ligne contre un serveur FastAPI que j'ai développé et que j'exploite. Installée chez un premier client.`,
+      stack: `C# / WPF / .NET · MySQL · ZPL · Python / FastAPI · code privé (contexte employeur)`,
+      preuve: `Produit complet client + serveur · du besoin terrain à la production · licence & installeur`,
+      nodes: '2 dépôts · en production client',
+      doc: null,
+    },
+    {
+      cat: '// EN ENTREPRISE · AUTOMATISATION',
+      title: `CLYO DEPLOY TOOL — déploiement des machines en atelier`,
+      desc: `L'application graphique qui unifie la préparation des caisses, bornes et écrans cuisine avant livraison client : activation Windows automatique, installation des logiciels, configuration système, journal en direct. Utilisée quotidiennement à l'atelier ; je la maintiens et la fais évoluer seul.`,
+      stack: `PowerShell · WPF · ps2exe · code privé (contexte employeur)`,
+      preuve: `Automatisation d'un process métier · industrialisation · maintenance dans la durée`,
+      nodes: null,
       doc: null,
     },
     {
