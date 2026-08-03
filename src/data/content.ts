@@ -105,10 +105,10 @@ export const labo = {
   cards: [
     {
       cat: '// EN ENTREPRISE · EN PRODUCTION',
-      title: `Refonte du centre d'aide — application web assistée par IA`,
-      desc: `L'outil que j'ai conçu, développé et déployé seul chez mon employeur : une application web interne qui automatise la production et la mise en forme des articles du centre d'aide, avec l'IA en assistance. Reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles). En production et adoptée par l'équipe.`,
-      stack: `App web interne · pipeline IA · détails d'architecture en entretien`,
-      preuve: `De l'idée à la production · automatisation d'un process métier · exploitation`,
+      title: `QUALITY GATE — refonte du centre d'aide assistée par IA`,
+      desc: `L'outil que j'ai conçu, développé et déployé seul chez mon employeur : un dashboard qui récupère les articles du centre d'aide via l'API Zendesk, les reformate avec l'IA et les republie. Auto-hébergé en conteneurs Docker derrière un reverse proxy TLS, avec authentification et bannissement automatique des IP. Reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles). En production et adoptée par l'équipe.`,
+      stack: `React / Vite · FastAPI · Docker Compose · Caddy + Let's Encrypt · API Zendesk · Claude Code · code privé (contexte employeur)`,
+      preuve: `De l'idée à la production · conteneurisation & reverse proxy TLS · durcissement (auth, fail2ban) · exploitation`,
       nodes: '230 articles · ~150 h gagnées',
       doc: null,
     },
