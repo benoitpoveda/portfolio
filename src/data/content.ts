@@ -165,9 +165,9 @@ export const labo = {
     },
     {
       cat: '// OBSERVABILITÉ',
-      title: 'Supervision & alerting — métriques et agent maison',
-      desc: `Une stack de supervision (Prometheus, InfluxDB, Grafana) qui collecte les métriques de l'infra dans des tableaux de bord, doublée d'un agent maison assisté par IA qui surveille l'état du lab (disques, ZFS, sauvegardes, services) et m'alerte sur Telegram. Observabilité + alerte proactive.`,
-      stack: 'Prometheus · InfluxDB · Grafana · Telegram · agent maison',
+      title: 'Supervision & alerting — métriques et Hermes Agent',
+      desc: `Une stack de supervision (Prometheus, InfluxDB, Grafana) qui collecte les métriques de l'infra dans des tableaux de bord, doublée d'Hermes Agent, un agent maison propulsé par Claude Code qui surveille l'état du lab (disques, ZFS, sauvegardes, services) et m'alerte sur Telegram. Observabilité + alerte proactive.`,
+      stack: 'Prometheus · InfluxDB · Grafana · Telegram · Hermes Agent (Claude Code)',
       preuve: `Observabilité · métriques & dashboards · automatisation des opérations`,
       nodes: null,
       doc: {
