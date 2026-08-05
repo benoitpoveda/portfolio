@@ -64,6 +64,31 @@ h4 {
   outline-offset: 3px;
 }
 
+/* --- Lien d'evitement : hors ecran, revele au premier Tab --- */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 200;
+  /* Sorti de l'ecran plutot que display:none : reste focalisable. */
+  transform: translateY(-160%);
+  background: var(--c-ink);
+  color: var(--c-paper);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 11px 16px;
+  border-radius: var(--r-sm);
+  box-shadow: var(--sh-2, 0 10px 30px rgba(5, 10, 40, 0.28));
+}
+.skip-link:focus-visible {
+  transform: none;
+  text-decoration: none;
+}
+
 /* --- Layout --- */
 .container {
   width: 100%;

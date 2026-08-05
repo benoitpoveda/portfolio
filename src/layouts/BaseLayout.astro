@@ -80,6 +80,7 @@ const ogImage = new URL('og.png', Astro.site ?? 'https://www.povedaben.fr').href
     <slot name="head" />
   </head>
   <body class={bodyClass}>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
     <slot />
   </body>
 </html>

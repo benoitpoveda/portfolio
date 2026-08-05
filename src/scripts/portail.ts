@@ -110,6 +110,8 @@ export function initPortail(): void {
     if (id) sectionBodies.set(id, el);
   });
   const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const menuCard = document.querySelector<HTMLElement>('[data-menu-card]');
+  const menuToggles = Array.from(document.querySelectorAll<HTMLElement>('[data-menu-toggle]'));
   const hintEl = document.querySelector<HTMLElement>('[data-hint]');
 
   /** Numero + intitule + sous-titre par section (VERBATIM prototype : META). */
@@ -143,6 +145,8 @@ export function initPortail(): void {
      Ouverture / fermeture modale & menu
      ========================================================= */
   let lastFocused: HTMLElement | null = null;
+  /** Declencheur a rendre au focus quand le menu se referme. */
+  let menuOpener: HTMLElement | null = null;
 
   function syncModal(): void {
     if (!modal) return;
@@ -150,7 +154,9 @@ export function initPortail(): void {
     modal.hidden = !isOpen;
     if (!isOpen) return;
     const m = (open && META[open]) || { num: '', label: '', title: '', desc: '' };
-    if (modalLabel) modalLabel.setAttribute('aria-label', m.label);
+    // `m.label` porte le prefixe decoratif « // » : lu tel quel, un lecteur
+    // d'ecran annonce « slash slash profil ». On ne garde que l'intitule.
+    if (modalLabel) modalLabel.setAttribute('aria-label', m.label.replace(/^\/\/\s*/, ''));
     curNumEls.forEach((el) => {
       el.textContent = m.num;
     });
@@ -184,11 +190,15 @@ export function initPortail(): void {
   }
 
   function openSection(id: string): void {
-    // Le menu partage l'entree d'historique deja empilee : on ne memorise
-    // le declencheur que si l'on vient du globe.
-    if (open == null && !menuOpen) lastFocused = document.activeElement as HTMLElement | null;
+    if (open == null) {
+      // Ouverte depuis le menu, la modale doit rendre le focus au bouton qui a
+      // ouvert le menu — pas a l'item clique, qui va disparaitre.
+      lastFocused = menuOpen ? menuOpener : (document.activeElement as HTMLElement | null);
+    }
     open = id;
+    // Le menu partage l'entree d'historique deja empilee par son ouverture.
     menuOpen = false;
+    menuOpener = null;
     pushOverlayState();
     syncModal();
     syncMenu();
@@ -210,25 +220,36 @@ export function initPortail(): void {
 
   function syncMenu(): void {
     if (menu) menu.hidden = !menuOpen;
+    menuToggles.forEach((b) => b.setAttribute('aria-expanded', String(menuOpen)));
   }
   function toggleMenu(): void {
-    menuOpen = !menuOpen;
-    if (menuOpen) pushOverlayState();
-    else popOverlayState();
+    if (menuOpen) {
+      closeMenu();
+      return;
+    }
+    menuOpen = true;
+    menuOpener = document.activeElement as HTMLElement | null;
+    pushOverlayState();
     syncMenu();
+    // Sans ca le focus reste sur le bouton, hors du panneau : le piege a Tab
+    // ci-dessous n'aurait rien a retenir.
+    window.setTimeout(() => menuCard?.querySelector<HTMLElement>('button,a[href]')?.focus(), 40);
   }
+
   function closeMenu(skipHistory = false): void {
     if (!menuOpen) return;
     menuOpen = false;
     syncMenu();
+    if (menuOpener && typeof menuOpener.focus === 'function') menuOpener.focus();
+    menuOpener = null;
     if (!skipHistory) popOverlayState();
   }
 
   /* =========================================================
-     Clavier : Esc + piege a Tab dans la modale
+     Clavier : Esc + piege a Tab dans la couche ouverte
      ========================================================= */
-  function trap(e: KeyboardEvent): void {
-    const c = modalCard;
+  function trap(e: KeyboardEvent, container: HTMLElement | null): void {
+    const c = container;
     if (!c) return;
     const f = c.querySelectorAll<HTMLElement>('a[href],button:not([disabled])');
     if (!f.length) return;
@@ -249,10 +270,16 @@ export function initPortail(): void {
         e.preventDefault();
         closeModal();
       } else if (e.key === 'Tab') {
-        trap(e);
+        trap(e, modalCard);
       }
     } else if (menuOpen) {
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMenu();
+      } else if (e.key === 'Tab') {
+        // Le menu couvre l'ecran : Tab ne doit pas partir sur le contenu derriere.
+        trap(e, menuCard);
+      }
     }
   }
 

@@ -15,6 +15,27 @@ function strong(text: string, phrase: string): string {
   return text.includes(phrase) ? text.replace(phrase, `<b>${phrase}</b>`) : text;
 }
 
+/* Les phrases ci-dessous portent le surlignage signature et le gras. Si l'une
+   d'elles bouge dans content.ts, la mise en forme disparait du site sans la
+   moindre erreur — d'ou ce controle unique au build. On cherche dans l'ENSEMBLE
+   de la collection concernee : mark() est appele par puce et par carte, donc
+   controler appel par appel crierait sur toutes celles qui ne portent rien. */
+const PHRASES_CIBLES: ReadonlyArray<readonly [string, string]> = [
+  ['~150 h', hero.sub],
+  ['~150 h économisées sur 230 articles', profil.paragraphs.join(' ')],
+  ['administrateur systèmes / infrastructure', profil.paragraphs.join(' ')],
+  [
+    '~150 h économisées sur la refonte (230 articles)',
+    parcours.jobs.flatMap((j) => [...j.bullets]).join(' '),
+  ],
+  ['~12 VM & conteneurs', labo.cards.map((c) => c.nodes ?? '').join(' ')],
+];
+for (const [phrase, source] of PHRASES_CIBLES) {
+  if (!source.includes(phrase)) {
+    console.warn(`[portfolio] phrase-cible introuvable, mise en forme perdue : « ${phrase} »`);
+  }
+}
+
 const lede = hero.ledeLines.join(' ');
 const year = new Date().getFullYear();
 const coords = site.showPhoneOnSite
@@ -84,6 +105,7 @@ const coords = site.showPhoneOnSite
     </div>
 
     <!-- ============ HERO ============ -->
+    <main id="contenu">
     <header class="pf-hero">
       <div class="pf-grid-texture" aria-hidden="true"></div>
       <div class="pf-hero-inner container">
@@ -126,10 +148,18 @@ const coords = site.showPhoneOnSite
         </div>
         <div class="pf-profil">
           <div class="pf-profil-text">
-            <p class="pf-profil-lead" data-reveal>{profil.paragraphs[0]}</p>
-            <p data-reveal set:html={mark(profil.paragraphs[1], '~150 h économisées sur 230 articles')}></p>
-            <p data-reveal>{profil.paragraphs[2]}</p>
-            <p data-reveal set:html={strong(profil.paragraphs[4], 'administrateur systèmes / infrastructure')}></p>
+            {/* On parcourt TOUS les paragraphes : la version precedente listait les
+                index 0,1,2,4 et perdait silencieusement le 3 (le homelab). */}
+            {profil.paragraphs.map((p, i) => {
+              const cls = i === 0 ? 'pf-profil-lead' : undefined;
+              if (i === 1) {
+                return <p class={cls} data-reveal set:html={mark(p, '~150 h économisées sur 230 articles')} />;
+              }
+              if (i === profil.paragraphs.length - 1) {
+                return <p class={cls} data-reveal set:html={strong(p, 'administrateur systèmes / infrastructure')} />;
+              }
+              return <p class={cls} data-reveal>{p}</p>;
+            })}
           </div>
           <div class="pf-stats" data-reveal>
             {profil.stats.map((s) => (
@@ -254,6 +284,7 @@ const coords = site.showPhoneOnSite
       </div>
       <div class="pf-contact-tex" aria-hidden="true"></div>
     </section>
+    </main>
 
     <!-- ============ FOOTER ============ -->
     <footer class="pf-footer">
@@ -901,8 +932,10 @@ const coords = site.showPhoneOnSite
     text-decoration: none;
     border-bottom: 1px solid currentColor;
   }
+  /* Le turquoise-edge tombait a 2,34:1 sur fond clair : le survol degradait un
+     etat de repos pourtant conforme. On fonce au lieu d'eclaircir. */
   .pf-card-link:hover {
-    color: var(--c-turquoise-edge);
+    color: var(--c-navy);
     text-decoration: none;
   }
   .pf-nav-links .pf-nav-portal {
@@ -951,7 +984,8 @@ const coords = site.showPhoneOnSite
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--c-turquoise-edge);
+    /* --c-turquoise-edge tombait a 1,99:1 sur le papier : meme famille, assombri. */
+    color: #2f635a;
   }
   .pf-encours-v {
     font-size: 13.5px;
@@ -1071,7 +1105,8 @@ const coords = site.showPhoneOnSite
   /* ---------- FOOTER ---------- */
   .pf-footer {
     background: var(--c-footer);
-    color: #6e7c7a;
+    /* #6e7c7a plafonnait a 4,39:1 sur l'encre du pied : eclairci d'un cran. */
+    color: #7b8a87;
     padding: 26px;
     display: flex;
     justify-content: space-between;

@@ -42,7 +42,7 @@ import { site } from '../data/site';
         <div class="ph"><span>{site.monogram}</span></div>
 
         <div>
-          <div class="s-h">Contact</div>
+          <h2 class="s-h">Contact</h2>
           {site.phone && <div class="ci">{site.phone}</div>}
           <a class="ci link" href={site.links.site} target="_blank" rel="noopener">{site.links.siteLabel}</a>
           <a class="ci link" href={`mailto:${site.email}`}>{site.email}</a>
@@ -51,7 +51,7 @@ import { site } from '../data/site';
         </div>
 
         <div>
-          <div class="s-h">Compétences</div>
+          <h2 class="s-h">Compétences</h2>
           <div class="sg"><b>Linux &amp; conteneurs</b><span>Linux (Debian, Fedora) · Docker (multi-conteneurs, reverse proxy, TLS)</span></div>
           <div class="sg"><b>Virtu. &amp; stockage</b><span>Proxmox (VM/LXC), VMware · ZFS, TrueNAS</span></div>
           <div class="sg"><b>Windows &amp; annuaire</b><span>Windows Server, Active Directory, DHCP/DNS · Microsoft 365, Azure AD</span></div>
@@ -62,13 +62,13 @@ import { site } from '../data/site';
         </div>
 
         <div>
-          <div class="s-h">Langues</div>
+          <h2 class="s-h">Langues</h2>
           <div class="lr"><span>Français</span><em>natif</em></div>
           <div class="lr"><span>Anglais</span><em>B1</em></div>
         </div>
 
         <div>
-          <div class="s-h">Centres d'intérêt</div>
+          <h2 class="s-h">Centres d'intérêt</h2>
           <div class="ints">Escalade · Randonnée · Veille technologique</div>
         </div>
 
@@ -81,16 +81,16 @@ import { site } from '../data/site';
       <main class="main">
         <div>
           <div class="eyebrow"><span class="hl">Systèmes · Infrastructure · Automatisation</span></div>
-          <div class="name">Benoît Poveda</div>
+          <h1 class="name">Benoît Poveda</h1>
           <div class="role">Technicien Systèmes &amp; Infrastructure</div>
         </div>
 
         <p class="profil">Technicien systèmes &amp; réseaux qui conçoit et déploie ses propres outils pour automatiser l'exploitation. Je mène actuellement la refonte du centre d'aide de mon employeur via une application web assistée par IA, aujourd'hui en production. Avant l'IT, 7 ans à cofonder et diriger une entreprise : autonomie, sens du résultat et goût du concret. Titre pro TSSR (niveau 5, bac+2). Je vise un poste d'administrateur systèmes / infrastructure.</p>
 
         <div>
-          <div class="sh"><span class="t">Expérience</span></div>
+          <h2 class="sh"><span class="t">Expérience</span></h2>
           <div class="en">
-            <div class="en-hd"><h4>Tech. Systèmes &amp; Réseaux · Support N2/N3</h4><span class="yr">2024 — auj.</span></div>
+            <div class="en-hd"><h3>Tech. Systèmes &amp; Réseaux · Support N2/N3</h3><span class="yr">2024 — auj.</span></div>
             <div class="org">Clyo Systems · Éditeur de logiciels de caisse · Nice</div>
             <ul>
               <li class="impact">Conception et déploiement de <b>Quality Gate</b>, application web interne assistée par IA (React/FastAPI, Docker + reverse proxy TLS) qui automatise la mise en forme des articles du centre d'aide : reformatage ~20× plus rapide, <span class="hl">~150 h économisées sur la refonte (230 articles)</span> — en production, adoptée par l'équipe.</li>
@@ -99,23 +99,23 @@ import { site } from '../data/site';
             </ul>
           </div>
           <div class="en">
-            <div class="en-hd"><h4>Tech. Sup. Systèmes &amp; Réseaux — Stage</h4><span class="yr">2024</span></div>
+            <div class="en-hd"><h3>Tech. Sup. Systèmes &amp; Réseaux — Stage</h3><span class="yr">2024</span></div>
             <div class="org">Régie Ligne d'Azur · Nice</div>
             <ul><li>Routeurs industriels (InHand, HP 5140), switch Cisco 9200L ; migration Outlook → Microsoft 365 (PowerShell).</li></ul>
           </div>
           <div class="en">
-            <div class="en-hd"><h4>Cofondateur &amp; gérant</h4><span class="yr">2017 — 2024</span></div>
+            <div class="en-hd"><h3>Cofondateur &amp; gérant</h3><span class="yr">2017 — 2024</span></div>
             <div class="org">Lympia Lunetier · Magasin d'optique · Nice</div>
             <ul><li>Création et gestion complète d'un point de vente (commercial, achats, gestion) et de toute l'informatique de la boutique — postes, réseau, logiciel métier — avec mon associée.</li></ul>
           </div>
           <div class="en">
-            <div class="en-hd"><h4>Opticien-lunetier — Collaborateur</h4><span class="yr">2007 — 2016</span></div>
+            <div class="en-hd"><h3>Opticien-lunetier — Collaborateur</h3><span class="yr">2007 — 2016</span></div>
             <div class="org">Afflelou · Marc Le Bihan · Les Opticiens Mutualistes · Optique Garnier — Nice &amp; Paris</div>
           </div>
         </div>
 
         <div>
-          <div class="sh"><span class="t">Projets personnels</span></div>
+          <h2 class="sh"><span class="t">Projets personnels</span></h2>
           <ul>
             <li><b>Homelab Proxmox</b> — virtualisation (VM/LXC), TrueNAS (ZFS), Docker, reverse proxy, sauvegardes automatisées (PBS), VPS Linux en production.</li>
             <li><b>Refonte du site web Lympia Lunetier</b> — conception et intégration.</li>
@@ -123,7 +123,7 @@ import { site } from '../data/site';
         </div>
 
         <div>
-          <div class="sh"><span class="t">Formation</span></div>
+          <h2 class="sh"><span class="t">Formation</span></h2>
           <ul>
             <li><b>Titre pro niveau 5</b> · Tech. Sup. Systèmes &amp; Réseaux — ENI École Informatique (2024).</li>
             <li><b>BTS Opticien-lunetier</b> — GRETA Côte d'Azur (2010).</li>
@@ -283,7 +283,7 @@ import { site } from '../data/site';
       .en { margin-bottom: 14px; }
       .en:last-child { margin-bottom: 0; }
       .en-hd { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
-      .en-hd h4 { font-weight: 700; font-size: 14.5px; color: var(--ink); }
+      .en-hd h3 { font-weight: 700; font-size: 14.5px; color: var(--ink); }
       .yr { font-family: 'Space Mono', monospace; font-size: 10.5px; font-weight: 700; color: var(--blue); white-space: nowrap; letter-spacing: 0.02em; }
       .org { font-size: 12px; font-weight: 600; color: var(--muted); margin: 3px 0 7px; }
 
