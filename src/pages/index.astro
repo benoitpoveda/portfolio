@@ -112,9 +112,10 @@ const portfolioHref = site.routes.portfolio;
 
     <!-- ============ MENU DE REPLI ============ -->
     <div class="po-menu" data-menu hidden>
-      <!-- Pas de role="menu" : il promet une navigation aux fleches que ce
-           panneau n'implemente pas, et ses items n'etaient pas des menuitem.
-           Un <nav> decrit ce que c'est sans mentir au lecteur d'ecran. -->
+      {/* Pas de role="menu" : il promettrait une navigation aux fleches que ce
+          panneau n'implemente pas, et ses items n'etaient pas des menuitem.
+          Un <nav> decrit ce que c'est sans mentir au lecteur d'ecran.
+          Commentaire Astro : il ne part pas dans le HTML livre. */}
       <nav class="po-menu-card" aria-label="Sections du portfolio" data-menu-card>
         <div class="po-menu-head">
           <span class="po-menu-title">// SECTIONS</span>
@@ -279,8 +280,8 @@ const portfolioHref = site.routes.portfolio;
           <div class="po-modal-foot">
             <span>PLANCHE <span data-modal-num></span> / 05 · B.POVEDA</span>
             <span class="po-modal-coords">43.70°N · 7.27°E · NICE, FR</span>
-            <!-- Le compteur « 02 / 05 » promettait un feuilletage qui n'existait
-                 pas : il fallait fermer et viser un satellite pour chaque section. -->
+            {/* Le compteur « 02 / 05 » promettait un feuilletage qui n'existait
+                pas : il fallait fermer et viser un satellite pour chaque section. */}
             <span class="po-modal-nav">
               <button class="po-modal-step" type="button" data-modal-prev aria-label="Planche précédente">←</button>
               <button class="po-modal-step" type="button" data-modal-next aria-label="Planche suivante">→</button>
