@@ -29,6 +29,7 @@ import { site } from '../data/site';
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
+    <a class="skip-link" href="#cv">Aller au CV</a>
     <div class="toolbar">
       <span>
         <a class="tb-back" href={site.routes.portfolio}>← Portfolio</a>
@@ -78,7 +79,7 @@ import { site } from '../data/site';
         </div>
       </aside>
 
-      <main class="main">
+      <main class="main" id="cv">
         <div>
           <div class="eyebrow"><span class="hl">Systèmes · Infrastructure · Automatisation</span></div>
           <h1 class="name">Benoît Poveda</h1>
@@ -159,6 +160,27 @@ import { site } from '../data/site';
         -webkit-font-smoothing: antialiased;
       }
 
+      /* Hors ecran mais focalisable : revele au 1er Tab, masque a l'impression. */
+      .skip-link {
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        z-index: 200;
+        transform: translateY(-160%);
+        background: var(--ink);
+        color: #e5ebed;
+        font-family: 'Space Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 11px 16px;
+        border-radius: 6px;
+      }
+      .skip-link:focus-visible {
+        transform: none;
+      }
       .toolbar {
         width: 210mm;
         max-width: 100%;
@@ -298,7 +320,7 @@ import { site } from '../data/site';
         * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         html, body { background: #fff; }
         body { padding: 0; }
-        .toolbar { display: none; }
+        .toolbar, .skip-link { display: none; }
         .page { box-shadow: none; width: 210mm; max-width: none; min-height: 0; border-radius: 0; }
         @page { size: A4; margin: 0; }
       }

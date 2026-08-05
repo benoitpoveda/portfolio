@@ -189,8 +189,23 @@ export function initPortail(): void {
     history.back();
   }
 
+  /** Ordre des planches, pour le feuilletage ← → du pied de modale. */
+  const ORDRE = Object.keys(META);
+
+  /** Passe a la planche voisine, en bouclant (05 → 01). */
+  function stepSection(delta: number): void {
+    if (open == null) return;
+    const i = ORDRE.indexOf(open);
+    if (i < 0) return;
+    openSection(ORDRE[(i + delta + ORDRE.length) % ORDRE.length]);
+  }
+
   function openSection(id: string): void {
-    if (open == null) {
+    // En feuilletage la modale est deja ouverte : ni nouvelle entree
+    // d'historique, ni declencheur a memoriser, ni focus a deplacer — sinon
+    // chaque fleche renverrait le focus sur la croix de fermeture.
+    const feuillete = open != null;
+    if (!feuillete) {
       // Ouverte depuis le menu, la modale doit rendre le focus au bouton qui a
       // ouvert le menu — pas a l'item clique, qui va disparaitre.
       lastFocused = menuOpen ? menuOpener : (document.activeElement as HTMLElement | null);
@@ -202,8 +217,12 @@ export function initPortail(): void {
     pushOverlayState();
     syncModal();
     syncMenu();
-    // Le focus part sur le bouton de fermeture (a11y, comme le prototype).
-    window.setTimeout(() => closeBtn?.focus(), 40);
+    if (!feuillete) {
+      // Le focus part sur le bouton de fermeture (a11y, comme le prototype).
+      window.setTimeout(() => closeBtn?.focus(), 40);
+    }
+    // La planche a change : on repart du haut (c'est l'enveloppe qui defile).
+    if (modal) modal.scrollTop = 0;
   }
 
   /** `skipHistory` : fermeture deja provoquee par l'historique, ou navigation
@@ -271,6 +290,10 @@ export function initPortail(): void {
         closeModal();
       } else if (e.key === 'Tab') {
         trap(e, modalCard);
+      } else if (e.key === 'ArrowLeft') {
+        stepSection(-1);
+      } else if (e.key === 'ArrowRight') {
+        stepSection(1);
       }
     } else if (menuOpen) {
       if (e.key === 'Escape') {
@@ -763,7 +786,13 @@ export function initPortail(): void {
     a.addEventListener('click', () => closeMenu(true)),
   );
 
-  // Modale : fermeture + clic sur le fond.
+  // Modale : feuilletage, fermeture, clic sur le fond.
+  document
+    .querySelectorAll<HTMLElement>('[data-modal-prev]')
+    .forEach((b) => b.addEventListener('click', () => stepSection(-1)));
+  document
+    .querySelectorAll<HTMLElement>('[data-modal-next]')
+    .forEach((b) => b.addEventListener('click', () => stepSection(1)));
   closeBtn?.addEventListener('click', () => closeModal());
   if (modal) {
     modal.addEventListener('click', (e) => {
@@ -796,10 +825,24 @@ export function initPortail(): void {
     window.addEventListener('resize', resize);
   }
 
-  // Indice de 1er chargement : ~5,4 s (cache si reduced-motion).
+  /* Indice de 1er chargement. Il disparaissait apres 5,4 s : le visiteur qui
+     hesitait plus longtemps se retrouvait devant un ecran muet. Il reste
+     desormais jusqu'a la premiere interaction — c'est elle qui prouve que le
+     message a servi. Un plafond long evite qu'il s'incruste indefiniment. */
   if (hintEl) {
-    if (reduced) hintEl.hidden = true;
-    else window.setTimeout(() => (hintEl.hidden = true), 5400);
+    if (reduced) {
+      hintEl.hidden = true;
+    } else {
+      const interactions = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+      let plafond = 0;
+      const masquerIndice = (): void => {
+        hintEl.hidden = true;
+        window.clearTimeout(plafond);
+        interactions.forEach((t) => document.removeEventListener(t, masquerIndice));
+      };
+      interactions.forEach((t) => document.addEventListener(t, masquerIndice, { passive: true }));
+      plafond = window.setTimeout(masquerIndice, 45000);
+    }
   }
 
   // Etat initial des couches pilotees par JS.

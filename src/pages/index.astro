@@ -278,7 +278,13 @@ const portfolioHref = site.routes.portfolio;
 
           <div class="po-modal-foot">
             <span>PLANCHE <span data-modal-num></span> / 05 · B.POVEDA</span>
-            <span>43.70°N · 7.27°E · NICE, FR</span>
+            <span class="po-modal-coords">43.70°N · 7.27°E · NICE, FR</span>
+            <!-- Le compteur « 02 / 05 » promettait un feuilletage qui n'existait
+                 pas : il fallait fermer et viser un satellite pour chaque section. -->
+            <span class="po-modal-nav">
+              <button class="po-modal-step" type="button" data-modal-prev aria-label="Planche précédente">←</button>
+              <button class="po-modal-step" type="button" data-modal-next aria-label="Planche suivante">→</button>
+            </span>
           </div>
         </div>
       </div>
@@ -324,7 +330,7 @@ const portfolioHref = site.routes.portfolio;
   }
   .po-root ::selection {
     background: var(--c-turquoise);
-    color: #11161c;
+    color: var(--c-ink);
   }
   .po-root::before {
     content: '';
@@ -687,8 +693,8 @@ const portfolioHref = site.routes.portfolio;
   .po-menu-card {
     width: 100%;
     max-width: 440px;
-    background: #fbfcfc;
-    color: #11161c;
+    background: var(--c-surface);
+    color: var(--c-ink);
     box-shadow: 0 30px 80px rgba(8, 14, 60, 0.45);
     animation: po-modalin 0.22s ease;
   }
@@ -697,7 +703,7 @@ const portfolioHref = site.routes.portfolio;
     align-items: center;
     justify-content: space-between;
     padding: 18px 22px;
-    border-bottom: 1px solid #d6dde0;
+    border-bottom: 1px solid var(--c-rule);
   }
   .po-menu-title {
     font-family: var(--font-mono);
@@ -708,11 +714,11 @@ const portfolioHref = site.routes.portfolio;
   }
   .po-menu-x {
     background: none;
-    border: 1px solid #d6dde0;
+    border: 1px solid var(--c-rule);
     width: 30px;
     height: 30px;
     cursor: pointer;
-    color: #11161c;
+    color: var(--c-ink);
     font-size: 14px;
     line-height: 1;
   }
@@ -730,13 +736,13 @@ const portfolioHref = site.routes.portfolio;
     border-bottom: 1px solid #ecf0f1;
     cursor: pointer;
     text-align: left;
-    color: #11161c;
+    color: var(--c-ink);
   }
   .po-menu-num {
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 700;
-    color: #5c6770;
+    color: var(--c-text-2);
   }
   .po-menu-sq {
     width: 7px;
@@ -785,7 +791,7 @@ const portfolioHref = site.routes.portfolio;
     gap: 14px;
     padding: 16px 22px;
     text-decoration: none;
-    background: #11161c;
+    background: var(--c-ink);
     color: var(--c-on-portal);
   }
   .po-menu-cv:hover {
@@ -921,7 +927,7 @@ const portfolioHref = site.routes.portfolio;
     letter-spacing: -0.01em;
     text-transform: uppercase;
     margin: 9px 0 6px;
-    color: #11161c;
+    color: var(--c-ink);
   }
   .po-modal-desc {
     font-family: var(--font-mono);
@@ -935,7 +941,7 @@ const portfolioHref = site.routes.portfolio;
     width: 32px;
     height: 32px;
     cursor: pointer;
-    color: #11161c;
+    color: var(--c-ink);
     font-size: 15px;
     line-height: 1;
     flex-shrink: 0;
@@ -956,6 +962,27 @@ const portfolioHref = site.routes.portfolio;
     font-size: 10px;
     letter-spacing: 0.14em;
     color: #6b6455;
+    flex-wrap: wrap;
+  }
+  .po-modal-nav {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .po-modal-step {
+    background: none;
+    border: 1px solid #c9c2b0;
+    width: 34px;
+    height: 30px;
+    cursor: pointer;
+    color: var(--c-ink);
+    font-size: 13px;
+    line-height: 1;
+    transition: background 0.16s ease, border-color 0.16s ease;
+  }
+  .po-modal-step:hover {
+    background: var(--c-cream);
+    border-color: var(--c-navy);
   }
 
   /* Surlignage signature local (sur fond papier creme) */
@@ -975,7 +1002,7 @@ const portfolioHref = site.routes.portfolio;
     letter-spacing: -0.015em;
     text-transform: uppercase;
     margin-bottom: 22px;
-    color: #11161c;
+    color: var(--c-ink);
   }
   .po-p {
     font-size: 15.5px;
@@ -988,7 +1015,7 @@ const portfolioHref = site.routes.portfolio;
   }
   .po-p strong {
     font-weight: 700;
-    color: #11161c;
+    color: var(--c-ink);
   }
 
   /* ----- PARCOURS ----- */
@@ -998,7 +1025,7 @@ const portfolioHref = site.routes.portfolio;
     gap: 24px;
   }
   .po-job {
-    border-left: 2px solid #d6dde0;
+    border-left: 2px solid var(--c-rule);
     padding-left: 18px;
   }
   .po-job.is-active {
@@ -1021,7 +1048,7 @@ const portfolioHref = site.routes.portfolio;
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 700;
-    color: #5c6770;
+    color: var(--c-text-2);
     white-space: nowrap;
   }
   .po-job-period.is-active {
@@ -1031,7 +1058,7 @@ const portfolioHref = site.routes.portfolio;
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.05em;
-    color: #5c6770;
+    color: var(--c-text-2);
     margin: 5px 0 12px;
   }
   .po-job-bullets {
@@ -1049,7 +1076,7 @@ const portfolioHref = site.routes.portfolio;
   }
   .po-job-bullet strong {
     font-weight: 700;
-    color: #11161c;
+    color: var(--c-ink);
   }
   .po-job-sq {
     width: 6px;
@@ -1067,8 +1094,8 @@ const portfolioHref = site.routes.portfolio;
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.05em;
-    color: #5c6770;
-    border-top: 1px solid #d6dde0;
+    color: var(--c-text-2);
+    border-top: 1px solid var(--c-rule);
     padding-top: 14px;
   }
 
@@ -1088,7 +1115,7 @@ const portfolioHref = site.routes.portfolio;
     gap: 16px;
   }
   .po-card {
-    border: 1px solid #d6dde0;
+    border: 1px solid var(--c-rule);
     padding: 20px 22px;
     background: #fff;
   }
@@ -1118,7 +1145,7 @@ const portfolioHref = site.routes.portfolio;
     font-family: var(--font-mono);
     font-size: 10.5px;
     line-height: 1.9;
-    color: #5c6770;
+    color: var(--c-text-2);
     letter-spacing: 0.03em;
   }
   .po-card-k {
@@ -1177,7 +1204,7 @@ const portfolioHref = site.routes.portfolio;
     letter-spacing: -0.015em;
     text-transform: uppercase;
     margin-bottom: 14px;
-    color: #11161c;
+    color: var(--c-ink);
   }
   .po-contact-p {
     font-size: 15.5px;
@@ -1201,17 +1228,17 @@ const portfolioHref = site.routes.portfolio;
     gap: 10px;
     padding: 15px 18px;
     text-decoration: none;
-    border: 1px solid #d6dde0;
-    color: #11161c;
+    border: 1px solid var(--c-rule);
+    color: var(--c-ink);
   }
   .po-contact-link:hover {
     text-decoration: none;
     background: #f4f7f8;
   }
   .po-contact-link--cv {
-    background: #11161c;
+    background: var(--c-ink);
     color: var(--c-on-portal);
-    border-color: #11161c;
+    border-color: var(--c-ink);
   }
   .po-contact-link--cv:hover {
     background: #1b222b;
@@ -1225,7 +1252,7 @@ const portfolioHref = site.routes.portfolio;
   }
   .po-contact-v {
     font-size: 12px;
-    color: #5c6770;
+    color: var(--c-text-2);
     min-width: 0;
     margin-left: auto;
     text-align: right;

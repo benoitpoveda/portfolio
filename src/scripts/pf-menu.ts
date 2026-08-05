@@ -8,6 +8,8 @@
  * Sous 760px la barre d'ancres est masquee : ce menu EST la navigation, il ne
  * peut donc pas se permettre d'etre approximatif.
  */
+import { scrollToAnchor } from './anchor-scroll';
+
 export function initPfMenu(): void {
   const panel = document.querySelector<HTMLElement>('[data-pfmenu]');
   const card = panel?.querySelector<HTMLElement>('[data-pfmenu-card]') ?? null;
@@ -62,19 +64,8 @@ export function initPfMenu(): void {
     if (!skipHistory) popOverlayState();
   }
 
-  /** Va a la section demandee sans empiler d'entree supplementaire.
-   *  Saut immediat, jamais « smooth » : le html du site est en scroll-behavior
-   *  smooth, et lisser 2 500px apres la fermeture d'un menu fait defiler
-   *  l'ecran pendant plusieurs secondes au lieu d'arriver a destination. */
-  function gotoHash(hash: string): void {
-    const target = document.querySelector<HTMLElement>(hash);
-    if (!target) return;
-    history.replaceState(null, '', hash);
-    target.scrollIntoView({ behavior: 'auto', block: 'start' });
-    // Le focus suit le scroll, sinon le clavier repart du haut de page.
-    target.setAttribute('tabindex', '-1');
-    target.focus({ preventScroll: true });
-  }
+  /** Meme trajet que les ancres du reste de la page (duree fixe, focus pose). */
+  const gotoHash = scrollToAnchor;
 
   /* --- Piege a Tab : le panneau couvre l'ecran, Tab ne doit pas en sortir --- */
   function trap(e: KeyboardEvent): void {

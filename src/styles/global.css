@@ -14,7 +14,9 @@
 }
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
+  /* Pas de `scroll-behavior: smooth` : sur les distances de cette page (800 a
+     3000px) le lissage natif avance a vitesse constante et met plusieurs
+     secondes. Le trajet est anime en JS a duree fixe — voir anchor-scroll.ts. */
 }
 body {
   font-family: var(--font-sans);
