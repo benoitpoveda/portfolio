@@ -41,8 +41,47 @@ const coords = site.showPhoneOnSite
         ))}
         <a class="pf-nav-portal" href={site.routes.portail}>↗ Portail</a>
       </span>
-      <a class="pf-nav-cv" href={site.routes.cv}>↓ CV</a>
+      <span class="pf-nav-end">
+        <button
+          class="pf-nav-menu-btn"
+          type="button"
+          data-pfmenu-toggle
+          aria-expanded="false"
+          aria-controls="pf-menu"
+        >
+          // Menu
+        </button>
+        <a class="pf-nav-cv" href={site.routes.cv}>↓ CV</a>
+      </span>
     </nav>
+
+    <!-- ============ MENU MOBILE (remplace la barre d'ancres sous 760px) ============ -->
+    <div class="pf-menu" id="pf-menu" data-pfmenu hidden>
+      <div class="pf-menu-card" role="dialog" aria-modal="true" aria-label="Navigation" data-pfmenu-card>
+        <div class="pf-menu-head">
+          <span class="pf-menu-title">// SECTIONS</span>
+          <button class="pf-menu-x" type="button" data-pfmenu-close aria-label="Fermer le menu">✕</button>
+        </div>
+        <nav class="pf-menu-list">
+          {sections.map((s, i) => (
+            <a class="pf-menu-item" href={`#${s.id}`} data-pfmenu-link>
+              <span class="pf-menu-num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="pf-menu-sq" aria-hidden="true"></span>
+              <span class="pf-menu-label">{s.mono}</span>
+              <span class="pf-menu-arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+          <a class="pf-menu-out" href={site.routes.portail} data-pfmenu-link>
+            <span class="pf-menu-out-label">↗ Portail</span>
+            <span class="pf-menu-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="pf-menu-out" href={site.routes.cvPdf} download data-pfmenu-link>
+            <span class="pf-menu-out-label">↓ CV (PDF)</span>
+            <span class="pf-menu-arrow" aria-hidden="true">→</span>
+          </a>
+        </nav>
+      </div>
+    </div>
 
     <!-- ============ HERO ============ -->
     <header class="pf-hero">
@@ -209,7 +248,7 @@ const coords = site.showPhoneOnSite
           <a class="pf-cbtn pf-cbtn--solid" href={`mailto:${site.email}`}>✉ Email</a>
           <a class="pf-cbtn pf-cbtn--ghost" href={site.links.linkedin} target="_blank" rel="noopener">→ LinkedIn</a>
           <a class="pf-cbtn pf-cbtn--ghost" href={site.links.github} target="_blank" rel="noopener">→ GitHub</a>
-          <a class="pf-cbtn pf-cbtn--ghost" href={site.routes.cv}>↓ CV (PDF)</a>
+          <a class="pf-cbtn pf-cbtn--ghost" href={site.routes.cvPdf} download>↓ CV (PDF)</a>
         </div>
         <div class="pf-contact-coords" data-reveal set:html={coords}></div>
       </div>
@@ -228,7 +267,9 @@ const coords = site.showPhoneOnSite
 
   <script>
     import { initReveal } from '../scripts/reveal';
+    import { initPfMenu } from '../scripts/pf-menu';
     initReveal();
+    initPfMenu();
   </script>
 </BaseLayout>
 
@@ -304,8 +345,150 @@ const coords = site.showPhoneOnSite
     background: #fff;
     text-decoration: none;
   }
+  .pf-nav-end {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  /* Declencheur du menu : reprend le « // Menu » du Portail, meme grammaire mono.
+     Inutile tant que la barre d'ancres tient dans la largeur. */
+  .pf-nav-menu-btn {
+    display: none;
+    background: transparent;
+    color: var(--c-turquoise-soft);
+    border: 1px solid rgba(207, 233, 226, 0.34);
+    border-radius: var(--r-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  .pf-nav-menu-btn:hover {
+    color: var(--c-turquoise);
+    border-color: var(--c-turquoise-edge);
+  }
+
+  /* ---------- MENU MOBILE ---------- */
+  .pf-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(9, 13, 17, 0.72);
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+  }
+  .pf-menu[hidden] {
+    display: none;
+  }
+  .pf-menu-card {
+    background: var(--c-ink);
+    border-top: 1px solid rgba(207, 233, 226, 0.16);
+    padding: 18px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+    animation: pf-menu-in 0.24s var(--ease-reveal) both;
+  }
+  @keyframes pf-menu-in {
+    from {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+  }
+  .pf-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(207, 233, 226, 0.16);
+  }
+  .pf-menu-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--c-turquoise-edge);
+  }
+  .pf-menu-x {
+    background: transparent;
+    border: 0;
+    color: var(--c-turquoise-soft);
+    font-size: 15px;
+    line-height: 1;
+    /* Cible tactile confortable meme si le glyphe est petit. */
+    padding: 10px;
+    margin: -10px;
+    cursor: pointer;
+  }
+  .pf-menu-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .pf-menu-item,
+  .pf-menu-out {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* 56px de haut : confortable au pouce. */
+    min-height: 56px;
+    padding: 4px 2px;
+    color: var(--c-paper);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid rgba(207, 233, 226, 0.1);
+  }
+  .pf-menu-item:hover,
+  .pf-menu-out:hover {
+    color: var(--c-turquoise);
+    text-decoration: none;
+  }
+  .pf-menu-num {
+    color: var(--c-turquoise-edge);
+    font-size: 11px;
+    min-width: 22px;
+  }
+  .pf-menu-sq {
+    width: 6px;
+    height: 6px;
+    flex: none;
+    background: var(--c-turquoise-edge);
+  }
+  .pf-menu-label {
+    flex: 1;
+  }
+  .pf-menu-arrow {
+    color: var(--c-turquoise-edge);
+  }
+  .pf-menu-out {
+    border-bottom: 0;
+    min-height: 50px;
+    color: var(--c-turquoise-soft);
+  }
+  .pf-menu-out:first-of-type {
+    margin-top: 8px;
+    border-top: 1px solid rgba(207, 233, 226, 0.16);
+  }
+  .pf-menu-out-label {
+    flex: 1;
+  }
+
   @media (max-width: 760px) {
+    /* La barre d'ancres ne tient plus : le menu prend le relais (il porte les
+       memes sections, plus le Portail et le CV). */
     .pf-nav-links {
+      display: none;
+    }
+    .pf-nav-menu-btn {
+      display: inline-block;
+    }
+  }
+  /* Au-dela, le declencheur disparait : le panneau ne doit jamais rester ouvert. */
+  @media (min-width: 761px) {
+    .pf-menu {
       display: none;
     }
   }

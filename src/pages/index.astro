@@ -73,11 +73,17 @@ const portfolioHref = site.routes.portfolio;
     <!-- ============ HEADER ============ -->
     <header class="po-header">
       <div class="po-actions">
-        <a class="po-link-read" href={portfolioHref}>Vue lecture / classique →</a>
+        <a class="po-link-read" href={portfolioHref}>
+          <span class="po-lbl-long">Vue lecture / classique →</span>
+          <span class="po-lbl-short">↳ Lecture</span>
+        </a>
         <button class="po-menu-btn" type="button" data-menu-toggle aria-label="Ouvrir le menu des sections">
           // Menu
         </button>
-        <a class="po-cv-btn" href={cvPdfHref} download>Télécharger le CV →</a>
+        <a class="po-cv-btn" href={cvPdfHref} download>
+          <span class="po-lbl-long">Télécharger le CV →</span>
+          <span class="po-lbl-short">↓ CV</span>
+        </a>
       </div>
     </header>
 
@@ -463,9 +469,9 @@ const portfolioHref = site.routes.portfolio;
     font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.13em;
-    color: rgba(170, 210, 202, 0.82);
-    opacity: 0.82;
-    transition: opacity 0.2s ease, color 0.2s ease;
+    color: #bfe0d9;
+    opacity: 1;
+    transition: color 0.2s ease;
     pointer-events: none;
     text-shadow: 0 0 14px rgba(7, 12, 110, 0.9);
   }
@@ -518,13 +524,18 @@ const portfolioHref = site.routes.portfolio;
     align-items: center;
     gap: 10px;
   }
+  /* Libelles longs par defaut, courts sous 760px : le header garde ses trois
+     actions au lieu d'en sacrifier une (cf. .po-link-read, autrefois masquee). */
+  .po-lbl-short {
+    display: none;
+  }
   .po-link-read {
     font-family: var(--font-mono);
     font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(238, 243, 255, 0.66);
+    color: #ccd6ec;
     text-decoration: none;
     white-space: nowrap;
     padding: 10px 4px;
@@ -626,7 +637,7 @@ const portfolioHref = site.routes.portfolio;
     font-size: 10.5px;
     line-height: 1.95;
     letter-spacing: 0.07em;
-    color: rgba(234, 240, 255, 0.6);
+    color: #c3cfe8;
     margin-top: 13px;
     text-transform: uppercase;
   }
@@ -639,7 +650,7 @@ const portfolioHref = site.routes.portfolio;
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.1em;
-    color: rgba(234, 240, 255, 0.5);
+    color: #bcc8e2;
     pointer-events: none;
   }
 
@@ -863,7 +874,7 @@ const portfolioHref = site.routes.portfolio;
     font-size: 10px;
     letter-spacing: 0.32em;
     writing-mode: vertical-rl;
-    color: #a39b86;
+    color: #6b6455;
   }
   .po-modal-main {
     flex: 1;
@@ -903,7 +914,7 @@ const portfolioHref = site.routes.portfolio;
     font-family: var(--font-mono);
     font-size: 10.5px;
     letter-spacing: 0.16em;
-    color: #857e6b;
+    color: #6b6455;
   }
   .po-modal-x {
     background: none;
@@ -931,7 +942,7 @@ const portfolioHref = site.routes.portfolio;
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.14em;
-    color: #a39b86;
+    color: #6b6455;
   }
 
   /* Surlignage signature local (sur fond papier creme) */
@@ -1274,8 +1285,19 @@ const portfolioHref = site.routes.portfolio;
       transform: translateX(-50%);
       font-size: 9px;
     }
-    .po-link-read {
+    .po-lbl-long {
       display: none;
+    }
+    .po-lbl-short {
+      display: inline;
+    }
+    /* En nowrap l'indice depassait des deux cotes (-23px a 383px pour 360px de
+       large) : la seule consigne d'usage du Portail arrivait tronquee. */
+    .po-hint {
+      max-width: calc(100vw - 32px);
+      white-space: normal;
+      text-align: center;
+      line-height: 1.6;
     }
   }
   /* Petits ecrans : les coordonnees decoratives chevauchent le bloc identite — on les retire. */

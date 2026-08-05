@@ -163,6 +163,12 @@ h4 {
   border-top: 1px dashed var(--c-rule-dotted);
 }
 
+/* --- Fond fige pendant qu'un panneau plein ecran est ouvert (menu mobile) --- */
+.pf-menu-locked,
+.pf-menu-locked body {
+  overflow: hidden;
+}
+
 /* --- Reveal au scroll (failsafe gere en JS : force visible apres 1.5s) --- */
 [data-reveal] {
   opacity: 0;

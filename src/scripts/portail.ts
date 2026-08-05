@@ -161,23 +161,51 @@ export function initPortail(): void {
     });
   }
 
+  /* ---------------------------------------------------------
+     Historique : une modale ou un menu ouvert est un etat dont
+     le bouton Retour doit sortir (reflexe n°1 sur mobile) au lieu
+     de quitter le site. UNE seule entree couvre toute la pile
+     d'overlays : passer du menu a une modale n'en empile pas une
+     seconde, sinon il faudrait deux Retour pour revenir au globe.
+     --------------------------------------------------------- */
+  let overlayInHistory = false;
+
+  function pushOverlayState(): void {
+    if (overlayInHistory) return;
+    overlayInHistory = true;
+    // URL inchangee : on marque un etat, on ne navigue pas.
+    history.pushState({ poOverlay: true }, '');
+  }
+
+  function popOverlayState(): void {
+    if (!overlayInHistory) return;
+    overlayInHistory = false;
+    history.back();
+  }
+
   function openSection(id: string): void {
-    lastFocused = document.activeElement as HTMLElement | null;
+    // Le menu partage l'entree d'historique deja empilee : on ne memorise
+    // le declencheur que si l'on vient du globe.
+    if (open == null && !menuOpen) lastFocused = document.activeElement as HTMLElement | null;
     open = id;
     menuOpen = false;
+    pushOverlayState();
     syncModal();
     syncMenu();
     // Le focus part sur le bouton de fermeture (a11y, comme le prototype).
     window.setTimeout(() => closeBtn?.focus(), 40);
   }
 
-  function closeModal(): void {
+  /** `skipHistory` : fermeture deja provoquee par l'historique, ou navigation
+   *  sortante — dans les deux cas il ne faut pas rejouer un history.back(). */
+  function closeModal(skipHistory = false): void {
     if (open == null) return;
     open = null;
     syncModal();
     // Restitution du focus a l'element declencheur.
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
     lastFocused = null;
+    if (!skipHistory) popOverlayState();
   }
 
   function syncMenu(): void {
@@ -185,11 +213,15 @@ export function initPortail(): void {
   }
   function toggleMenu(): void {
     menuOpen = !menuOpen;
+    if (menuOpen) pushOverlayState();
+    else popOverlayState();
     syncMenu();
   }
-  function closeMenu(): void {
+  function closeMenu(skipHistory = false): void {
+    if (!menuOpen) return;
     menuOpen = false;
     syncMenu();
+    if (!skipHistory) popOverlayState();
   }
 
   /* =========================================================
@@ -685,7 +717,7 @@ export function initPortail(): void {
     b.addEventListener('click', toggleMenu),
   );
   document.querySelectorAll<HTMLElement>('[data-menu-close]').forEach((b) =>
-    b.addEventListener('click', closeMenu),
+    b.addEventListener('click', () => closeMenu()),
   );
   document.querySelectorAll<HTMLElement>('[data-menu-item]').forEach((b) =>
     b.addEventListener('click', () => {
@@ -698,13 +730,14 @@ export function initPortail(): void {
       if (e.target === e.currentTarget) closeMenu();
     });
   }
-  // Le lien CV du menu ferme aussi le menu.
+  // Les liens sortants du menu (vue lecture, CV) le referment : la page part,
+  // donc on ne touche pas a l'historique — un history.back() courserait la navigation.
   document.querySelectorAll<HTMLElement>('[data-menu-cv]').forEach((a) =>
-    a.addEventListener('click', closeMenu),
+    a.addEventListener('click', () => closeMenu(true)),
   );
 
   // Modale : fermeture + clic sur le fond.
-  closeBtn?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', () => closeModal());
   if (modal) {
     modal.addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closeModal();
@@ -713,6 +746,13 @@ export function initPortail(): void {
 
   // Clavier global.
   document.addEventListener('keydown', onKey);
+
+  // Bouton Retour : il sort de l'overlay au lieu de quitter le site.
+  window.addEventListener('popstate', () => {
+    overlayInHistory = false; // l'entree vient d'etre depilee par le navigateur
+    if (open != null) closeModal(true);
+    else if (menuOpen) closeMenu(true);
+  });
 
   // prefers-reduced-motion en direct.
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -769,9 +809,13 @@ export function initPortail(): void {
   // Retour depuis le bfcache : certains navigateurs ne rejouent pas
   // visibilitychange → on relance explicitement la boucle.
   window.addEventListener('pageshow', (e) => {
-    if (e.persisted && !raf) {
+    if (!e.persisted) return;
+    if (!raf) {
       last = performance.now(); // évite un saut d'animation au retour
       raf = requestAnimationFrame(loop);
     }
+    // Sortie par un lien du menu : l'overlay a ete ferme sans depiler son entree.
+    // Au retour bfcache on resynchronise, sinon le prochain Retour quitterait le site.
+    if (open == null && !menuOpen) overlayInHistory = false;
   });
 }
