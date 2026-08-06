@@ -168,7 +168,9 @@ const portfolioHref = site.routes.portfolio;
           <div class="po-modal-body">
             <!-- PROFIL -->
             <div data-section-body="profil" hidden>
-              <h2 class="po-profil-h">Quand l'outil n'existe pas, je le construis.</h2>
+              {/* Accroche factuelle : l'ancienne (« quand l'outil n'existe pas,
+                  je le construis ») revendiquait une posture de senior. */}
+              <h2 class="po-profil-h">Automatiser, documenter, comprendre.</h2>
               <p class="po-p">{profil.paragraphs[0]}</p>
               <p class="po-p" set:html={mark(profil.paragraphs[1], '~150 h économisées sur 230 articles')}></p>
               <p class="po-p">{profil.paragraphs[2]}</p>

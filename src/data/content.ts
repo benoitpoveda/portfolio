@@ -1,6 +1,7 @@
 /**
  * Contenu du site — SOURCE UNIQUE (Portail, Portfolio, CV partagent ces donnees).
- * Copie "prete a coller" du brief. NE PAS reecrire les accroches.
+ * Copie "prete a coller" du brief, revue le 2026-08-06 pour retirer la posture
+ * d'expert : accroches factuelles, pas de superlatif, pas de competence supposee.
  * Garde-fous : posture junior assumee, zero survente, aucune competence inventee.
  */
 
@@ -19,8 +20,8 @@ export const hero = {
   eyebrow: 'ADMINISTRATION SYSTÈMES · INFRASTRUCTURE · AUTOMATISATION',
   name: 'Benoît Poveda',
   ledeLines: [
-    `J'administre des systèmes et j'automatise l'exploitation.`,
-    `Et quand l'outil dont j'ai besoin n'existe pas, je le construis.`,
+    `Technicien systèmes & réseaux : j'administre des systèmes`,
+    `et j'automatise ce que je peux.`,
   ],
   sub: `En production aujourd'hui : une application interne assistée par IA qui a fait gagner ~150 h sur la refonte d'un centre d'aide.`,
   ctas: [
@@ -37,8 +38,8 @@ export const profil = {
   paragraphs: [
     `Technicien systèmes & réseaux chez un éditeur de logiciels de caisse, je gère au quotidien le support N2/N3.`,
     `Dernier exemple en date, la refonte du centre d'aide de mon employeur. J'ai conçu et déployé une application web interne, assistée par IA, qui automatise la production et la mise en forme des articles : environ 20× plus rapide, ~150 h économisées sur 230 articles. Elle est en production et adoptée par l'équipe.`,
-    `Je suis arrivé dans l'IT par une reconversion. Avant, 15 ans dans l'optique — dont 7 à cofonder et diriger une boutique, du commercial à la gestion en passant par toute l'informatique du magasin. J'en garde une autonomie totale, le sens du résultat et le goût du concret.`,
-    `Pour progresser, j'ai monté un homelab Proxmox complet : virtualisation, stockage ZFS sous TrueNAS, conteneurs Docker, reverse proxy, sauvegardes automatisées, VPN, supervision. C'est mon terrain de jeu, et la meilleure preuve de ce que je sais faire — tout est documenté et versionné.`,
+    `Je suis arrivé dans l'IT par une reconversion. Avant, 15 ans dans l'optique — dont 7 à cofonder et diriger une boutique, du commercial à la gestion en passant par toute l'informatique du magasin. J'en garde de l'autonomie, le sens du résultat et le goût du concret.`,
+    `Pour progresser, j'ai monté un homelab Proxmox complet : virtualisation, stockage ZFS sous TrueNAS, conteneurs Docker, reverse proxy, sauvegardes automatisées, VPN, supervision. C'est mon terrain d'apprentissage, et ce que j'ai de plus concret à montrer — tout est documenté et versionné.`,
     `Aujourd'hui, je cherche un poste d'administrateur systèmes / infrastructure où continuer à apprendre tout en apportant déjà de la valeur. Le terminal, le code et la doc font partie de mon quotidien.`,
   ],
   /* Grille 4 stats — le « ~150 h » porte le geste turquoise (un seul par ecran) */
@@ -101,12 +102,12 @@ export const parcours = {
 export const labo = {
   mono: '// LABO & PROJETS',
   title: 'Labo & Projets',
-  intro: `Ce que je construis et exploite moi-même : des applications en production chez mon employeur, un homelab Proxmox complet — documenté sur GitHub — et un VPS Linux public. Tout est conçu, déployé et maintenu seul.`,
+  intro: `Ce que je construis et exploite moi-même : des applications en production chez mon employeur, un homelab Proxmox complet — documenté sur GitHub — et un VPS Linux public.`,
   cards: [
     {
       cat: '// EN ENTREPRISE · EN PRODUCTION',
       title: `QUALITY GATE — refonte du centre d'aide assistée par IA`,
-      desc: `L'outil que j'ai conçu, développé et déployé seul chez mon employeur : un dashboard qui récupère les articles du centre d'aide via l'API Zendesk, les reformate avec l'IA et les republie. Auto-hébergé en conteneurs Docker derrière un reverse proxy TLS, avec authentification et bannissement automatique des IP. Reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles). En production et adoptée par l'équipe.`,
+      desc: `L'outil que j'ai conçu, développé et déployé chez mon employeur : un dashboard qui récupère les articles du centre d'aide via l'API Zendesk, les reformate avec l'IA et les republie. Auto-hébergé en conteneurs Docker derrière un reverse proxy TLS, avec authentification et bannissement automatique des IP. Reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles). En production et adoptée par l'équipe.`,
       stack: `React / Vite · FastAPI · Docker Compose · Caddy + Let's Encrypt · API Zendesk · Claude Code · code privé (contexte employeur)`,
       preuve: `De l'idée à la production · conteneurisation & reverse proxy TLS · durcissement (auth, fail2ban) · exploitation`,
       nodes: '230 articles · ~150 h gagnées',
@@ -124,7 +125,7 @@ export const labo = {
     {
       cat: '// EN ENTREPRISE · AUTOMATISATION',
       title: `CLYO DEPLOY TOOL — déploiement des machines en atelier`,
-      desc: `L'application graphique qui unifie la préparation des caisses, bornes et écrans cuisine avant livraison client : activation Windows automatique, installation des logiciels, configuration système, journal en direct. Utilisée quotidiennement à l'atelier ; je la maintiens et la fais évoluer seul.`,
+      desc: `L'application graphique qui unifie la préparation des caisses, bornes et écrans cuisine avant livraison client : activation Windows automatique, installation des logiciels, configuration système, journal en direct. Utilisée quotidiennement à l'atelier ; je la maintiens et la fais évoluer.`,
       stack: `PowerShell · WPF · ps2exe · code privé (contexte employeur)`,
       preuve: `Automatisation d'un process métier · industrialisation · maintenance dans la durée`,
       nodes: null,
@@ -142,7 +143,7 @@ export const labo = {
     {
       cat: '// DONNÉES',
       title: 'Sauvegardes & stockage — ZFS + Proxmox Backup Server',
-      desc: `Un stockage TrueNAS en miroir ZFS (qui survit à la perte d'un disque), exposé en NFS à l'hyperviseur, et des sauvegardes automatiques quotidiennes de toutes les VM via Proxmox Backup Server. La procédure de restauration est documentée, pas seulement configurée.`,
+      desc: `Un stockage TrueNAS en miroir ZFS (qui survit à la perte d'un disque), exposé en NFS à l'hyperviseur, et des sauvegardes automatiques quotidiennes de toutes les VM via Proxmox Backup Server. La procédure de restauration est documentée.`,
       stack: 'TrueNAS · ZFS · NFS · Proxmox Backup Server',
       preuve: `Stratégie de sauvegarde · intégrité des données · restauration`,
       nodes: null,
@@ -183,21 +184,23 @@ export const stack = {
   mono: '// STACK',
   title: 'Stack',
   groups: [
-    { name: 'Linux & conteneurs', items: ['Linux (Debian, Fedora)', 'Docker (multi-conteneurs, reverse proxy, TLS)'] },
+    { name: 'Linux & conteneurs', items: ['Linux (Debian)', 'Docker (multi-conteneurs, reverse proxy, TLS)'] },
     { name: 'Virtualisation & stockage', items: ['Proxmox (VM/LXC), VMware', 'ZFS, TrueNAS'] },
     { name: 'Windows & annuaire', items: ['Windows Server, Active Directory, DHCP/DNS', 'Microsoft 365, Azure AD'] },
     { name: 'Scripts & automatisation', items: ['Bash, PowerShell', 'Git'] },
     { name: 'Bases de données', items: ['MariaDB/MySQL, SQL Server'] },
     { name: 'Méthode & outils', items: ['ITIL v4, Zendesk, GLPI'] },
   ],
-  enCours: { name: 'En cours', items: ['Prometheus / Grafana', 'réseau (Cisco, pfSense, VLAN)'] },
+  /* « En cours » = en apprentissage, PAS acquis. Fedora y est descendu le
+     2026-08-06 : la decouverte est en cours, la lister en competence mentait. */
+  enCours: { name: 'En cours', items: ['Fedora', 'Prometheus / Grafana', 'réseau (Cisco, pfSense, VLAN)'] },
 } as const;
 
 /* ---- CONTACT (// CONTACT) ---- */
 export const contact = {
   mono: '// CONTACT',
   title: 'TRAVAILLONS ENSEMBLE',
-  accroche: `Un poste, une mission, une question technique ? Écrivez-moi — je réponds vite.`,
+  accroche: `Un poste, une mission, une question technique ? Écrivez-moi, je réponds à tous les messages.`,
 } as const;
 
 /* ---- FOOTER ---- */
