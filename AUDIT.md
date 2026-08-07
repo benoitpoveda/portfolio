@@ -1,8 +1,8 @@
-# Audit du portfolio — 2026-06-26 (mis à jour 2026-06-29)
+# Audit du portfolio — 2026-06-26 (mis à jour 2026-08-07)
 
-> **Statut : la quasi-totalité des fixes a été appliquée le 2026-06-29.**
-> Déployé sur Cloudflare Pages (auto-deploy GitHub branché). Reste 2 points qui
-> demandent une décision/asset de ta part (domaine, vrai PDF) — voir plus bas.
+> **Statut : tous les fixes de l'audit sont appliqués.**
+> Déployé sur Cloudflare Pages (auto-deploy GitHub branché), en ligne sur
+> `https://www.povedaben.fr`.
 
 ## Méthode
 Lecture intégrale du code (4 pages, 6 scripts, layout, tokens) + `astro check` (**0 erreur / 0 warning**) + build de prod (**OK**, 4 pages statiques).
@@ -18,8 +18,9 @@ Code de **très bonne qualité** (accessible, commenté, robuste). Bloquant lev�
   `MELT_SETTINGS` (`portal-melt.ts`) : decay 0.765 / amp 0.10 / radius 0.15 / scale 6.
   Fichier `portal-melt-panel.ts` supprimé, import + appel retirés de `index.astro`.
 - [x] **Domaine confirmé : `www.povedaben.fr`** (`povedaben.fr` enregistré chez OVH,
-  DNS chez OVH). `site:` mis à jour. Domaine rattaché au projet Pages côté Cloudflare.
-  ⏳ En attente : ajouter le CNAME `www → portfolio-35b.pages.dev` chez OVH (voir bas de page).
+  **zone DNS migrée chez Cloudflare le 2026-06-29** — NS `damien`/`jillian.ns.cloudflare.com`).
+  `site:` mis à jour, domaine rattaché au projet Pages, `www` et apex proxifiés,
+  apex redirigé en 301 vers `www` côté Cloudflare. ✅ Terminé (voir bas de page).
 
 ## 🟠 Important — SEO / partage / crédibilité
 
@@ -51,18 +52,19 @@ contenu centralisé (`site.ts` / `content.ts`), `astro check` 0 erreur.
 
 ---
 
-## 🌐 Domaine `www.povedaben.fr` — dernière étape (action OVH)
-Domaine rattaché au projet Pages côté Cloudflare (statut `initializing`). Pour finaliser,
-**ajouter UN enregistrement DNS chez OVH** (zone DNS de `povedaben.fr`) :
+## 🌐 Domaine `www.povedaben.fr` — ✅ résolu (2026-06-29, constaté 2026-08-07)
 
-```
-Type   : CNAME
-Sous-domaine / nom : www
-Cible / target     : portfolio-35b.pages.dev.
-TTL    : défaut
-```
+L'approche « CNAME chez OVH » décrite ici à l'origine n'a **pas** été retenue :
+la **zone DNS entière a été migrée d'OVH vers Cloudflare** le 2026-06-29
+(le domaine reste enregistré chez OVH, seul le DNS a bougé).
 
-⚠️ Si un enregistrement `www` existe déjà (il pointe vers le parking OVH `213.186.33.5`),
-le **remplacer** par ce CNAME. Après propagation (qq min → qq h), Cloudflare provisionne
-le TLS automatiquement et `https://www.povedaben.fr` sert le portfolio.
-Bonus : rediriger l'apex `povedaben.fr` → `www.povedaben.fr` (fonction redirection OVH).
+État actuel, vérifié le 2026-08-07 :
+- NS : `damien.ns.cloudflare.com` / `jillian.ns.cloudflare.com`
+- `www` et l'apex résolvent vers des IP anycast Cloudflare (proxifiés)
+- apex `povedaben.fr` → **301** → `https://www.povedaben.fr` (règle Cloudflare)
+- `https://www.povedaben.fr` → 200, TLS Cloudflare, en-têtes de `public/_headers` servis
+
+⚠️ Effet de bord homelab : le certif wildcard `*.povedaben.fr` renouvelé par NPM
+utilisait un challenge DNS-01 vers l'API **OVH**, zone que plus personne ne lit.
+Bascule vers l'API Cloudflare à faire avant le renouvellement auto (~22 août 2026) —
+procédure complète dans le vault : `01-Homelab/TODO_NPM_certif-wildcard-vers-Cloudflare.md`.
