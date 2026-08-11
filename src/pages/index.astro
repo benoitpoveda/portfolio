@@ -75,7 +75,7 @@ const portfolioHref = site.routes.portfolio;
           aria-expanded="false"
           aria-label="Ouvrir le menu des sections"
         >
-          // Menu
+          Menu
         </button>
         <a class="po-cv-btn" href={cvPdfHref} download>
           <span class="po-lbl-long">Télécharger le CV →</span>
@@ -92,13 +92,15 @@ const portfolioHref = site.routes.portfolio;
       <h1 class="po-name">{site.name}</h1>
       <div class="po-subtitle">{site.shortRole}</div>
       <div class="po-status">
-        DISPO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// {site.status.dispo}<br />
-        OBJECTIF&nbsp;&nbsp;// {site.status.focus}
+        <span class="po-status-k">DISPO</span>
+        <span>{site.status.dispo}</span>
+        <span class="po-status-k">OBJECTIF</span>
+        <span>{site.status.focus}</span>
       </div>
     </div>
 
     <div class="po-coords">
-      LAT 43.70°N · LON 7.27°E<br />// RELEVÉ ORBITAL · {site.location}
+      LAT 43.70°N · LON 7.27°E<br />RELEVÉ ORBITAL · {site.location}
     </div>
 
     <!-- ============ MENU DE REPLI ============ -->
@@ -195,7 +197,7 @@ const portfolioHref = site.routes.portfolio;
                     ) : null}
                   </div>
                 ))}
-                <div class="po-formation">FORMATION // {parcours.formation}</div>
+                <div class="po-formation">FORMATION · {parcours.formation}</div>
               </div>
             </div>
 
@@ -657,11 +659,18 @@ const portfolioHref = site.routes.portfolio;
   .po-status {
     font-family: var(--font-mono);
     font-size: 10.5px;
-    line-height: 1.95;
+    line-height: 1.5;
     letter-spacing: 0.07em;
     color: #c3cfe8;
     margin-top: 13px;
     text-transform: uppercase;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 12px;
+    row-gap: 5px;
+  }
+  .po-status-k {
+    opacity: 0.72;
   }
   .po-coords {
     position: absolute;
@@ -763,6 +772,12 @@ const portfolioHref = site.routes.portfolio;
   .po-menu-arrow {
     color: var(--c-cyanotype);
     font-size: 15px;
+    opacity: 0;
+    transition: opacity 0.18s var(--ease-reveal);
+  }
+  .po-menu-item:hover .po-menu-arrow,
+  .po-menu-item:focus-visible .po-menu-arrow {
+    opacity: 1;
   }
   .po-menu-read {
     display: flex;

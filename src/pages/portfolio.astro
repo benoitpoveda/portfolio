@@ -58,7 +58,7 @@ const coords = site.showPhoneOnSite
       </span>
       <span class="pf-nav-links">
         {sections.map((s) => (
-          <a href={`#${s.id}`}>// {s.nav}</a>
+          <a href={`#${s.id}`}>{s.nav}</a>
         ))}
         <a class="pf-nav-portal" href={site.routes.portail}>↗ Portail</a>
       </span>
@@ -70,7 +70,7 @@ const coords = site.showPhoneOnSite
           aria-expanded="false"
           aria-controls="pf-menu"
         >
-          // Menu
+          Menu
         </button>
         <a class="pf-nav-cv" href={site.routes.cv}>↓ CV</a>
       </span>
@@ -131,8 +131,10 @@ const coords = site.showPhoneOnSite
             </span>
           </div>
           <div class="pf-releve">
-            <div><span class="pf-releve-k">DISPO</span>&nbsp;&nbsp;// ouvert aux opportunités · Nice / Sophia / Monaco</div>
-            <div><span class="pf-releve-k">OBJECTIF</span>&nbsp;&nbsp;// administrateur systèmes / infrastructure</div>
+            <span class="pf-releve-k">DISPO</span>
+            <span>ouvert aux opportunités · Nice / Sophia / Monaco</span>
+            <span class="pf-releve-k">OBJECTIF</span>
+            <span>administrateur systèmes / infrastructure</span>
           </div>
         </div>
       </div>
@@ -300,7 +302,7 @@ const coords = site.showPhoneOnSite
     <footer class="pf-footer">
       <span>© {year} {site.name}</span>
       {footer.interets.length > 0 && (
-        <span class="pf-footer-interets">Centres d'intérêt // {footer.interets.join(' · ')}</span>
+        <span class="pf-footer-interets">Centres d'intérêt · {footer.interets.join(' · ')}</span>
       )}
       <span class="pf-footer-links"><a href={site.routes.portail}>↗ Vue immersive</a> · <a href="#profil">↑ Haut</a></span>
     </footer>
@@ -393,7 +395,7 @@ const coords = site.showPhoneOnSite
     align-items: center;
     gap: 10px;
   }
-  /* Declencheur du menu : reprend le « // Menu » du Portail, meme grammaire mono.
+  /* Declencheur du menu : reprend le bouton Menu du Portail, meme grammaire mono.
      Inutile tant que la barre d'ancres tient dans la largeur. */
   .pf-nav-menu-btn {
     display: none;
@@ -505,6 +507,14 @@ const coords = site.showPhoneOnSite
   }
   .pf-menu-arrow {
     color: var(--c-turquoise-edge);
+    opacity: 0;
+    transition: opacity 0.18s var(--ease-reveal);
+  }
+  .pf-menu-item:hover .pf-menu-arrow,
+  .pf-menu-item:focus-visible .pf-menu-arrow,
+  .pf-menu-out:hover .pf-menu-arrow,
+  .pf-menu-out:focus-visible .pf-menu-arrow {
+    opacity: 1;
   }
   .pf-menu-out {
     border-bottom: 0;
@@ -684,9 +694,10 @@ const coords = site.showPhoneOnSite
     font-family: var(--font-mono);
     font-size: 11px;
     line-height: 1.6;
-  }
-  .pf-releve div + div {
-    margin-top: 8px;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 14px;
+    row-gap: 8px;
   }
   .pf-releve-k {
     color: var(--c-cyanotype);
