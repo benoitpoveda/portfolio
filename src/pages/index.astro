@@ -109,7 +109,7 @@ const portfolioHref = site.routes.portfolio;
           Commentaire Astro : il ne part pas dans le HTML livre. */}
       <nav class="po-menu-card" aria-label="Sections du portfolio" data-menu-card>
         <div class="po-menu-head">
-          <span class="po-menu-title">// SECTIONS</span>
+          <span class="po-menu-title">PLANCHES</span>
           <button class="po-menu-x" type="button" data-menu-close aria-label="Fermer le menu">✕</button>
         </div>
         <div class="po-menu-list">
@@ -148,10 +148,12 @@ const portfolioHref = site.routes.portfolio;
 
         <div class="po-modal-main">
           <div class="po-modal-head">
-            <div>
-              <div class="po-modal-section">SECTION <span data-modal-num></span> / 05</div>
-              <h2 class="po-modal-title" data-modal-title></h2>
-              <div class="po-modal-desc" data-modal-desc></div>
+            <div class="po-modal-headline">
+              <span class="po-modal-num" aria-hidden="true" data-modal-num></span>
+              <div>
+                <h2 class="po-modal-title" data-modal-title></h2>
+                <div class="po-modal-desc" data-modal-desc></div>
+              </div>
             </div>
             <button class="po-modal-x" type="button" data-modal-close aria-label="Fermer">✕</button>
           </div>
@@ -907,11 +909,25 @@ const portfolioHref = site.routes.portfolio;
     justify-content: space-between;
     gap: 16px;
   }
-  .po-modal-section {
+  .po-modal-headline {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    min-width: 0;
+  }
+  /* Meme cartouche que la vue lecture, a l'echelle de la modale. */
+  .po-modal-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    min-width: 32px;
+    padding: 4px 5px 3px;
+    border: 1.5px solid var(--c-cyanotype);
     font-family: var(--font-mono);
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.22em;
+    line-height: 1;
+    letter-spacing: 0.06em;
     color: var(--c-cyanotype);
   }
   .po-modal-title {
