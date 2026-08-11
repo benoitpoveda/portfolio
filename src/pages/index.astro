@@ -209,18 +209,25 @@ const portfolioHref = site.routes.portfolio;
                     <h3 class="po-card-title">{card.title}</h3>
                     <p class="po-card-desc">{card.desc}</p>
                     <div class="po-card-meta">
-                      <div><span class="po-card-k">STACK //</span> {card.stack}</div>
-                      <div><span class="po-card-k">PREUVE //</span> {card.preuve}</div>
+                      <span class="po-card-k">STACK</span>
+                      <span>{card.stack}</span>
+                      <span class="po-card-k">PREUVE</span>
+                      <span>{card.preuve}</span>
                       {card.nodes && (
-                        <div><span class="po-card-k">NODES //</span> {card.nodes}</div>
+                        <>
+                          <span class="po-card-k">RELEVÉ</span>
+                          <span>{card.nodes}</span>
+                        </>
                       )}
                       {card.doc && (
-                        <div>
-                          <span class="po-card-k">DOC //</span>{' '}
-                          <a class="po-card-link" href={card.doc.href} target="_blank" rel="noopener">
-                            {card.doc.label} →
-                          </a>
-                        </div>
+                        <>
+                          <span class="po-card-k">DOC</span>
+                          <span>
+                            <a class="po-card-link" href={card.doc.href} target="_blank" rel="noopener">
+                              {card.doc.label} →
+                            </a>
+                          </span>
+                        </>
                       )}
                     </div>
                   </div>
@@ -1152,9 +1159,13 @@ const portfolioHref = site.routes.portfolio;
     margin-bottom: 14px;
   }
   .po-card-meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 12px;
+    row-gap: 4px;
     font-family: var(--font-mono);
     font-size: 10.5px;
-    line-height: 1.9;
+    line-height: 1.6;
     color: var(--c-text-2);
     letter-spacing: 0.03em;
   }

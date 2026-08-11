@@ -223,16 +223,23 @@ const coords = site.showPhoneOnSite
                 <h3 class="pf-card-title">{card.title}</h3>
                 <p class="pf-card-desc">{card.desc}</p>
                 <div class="pf-card-meta">
-                  <div><span class="pf-k">STACK&nbsp;//</span> <span class="pf-v">{card.stack}</span></div>
-                  <div><span class="pf-k">PREUVE //</span> <span class="pf-v">{card.preuve}</span></div>
+                  <span class="pf-k">STACK</span>
+                  <span class="pf-v">{card.stack}</span>
+                  <span class="pf-k">PREUVE</span>
+                  <span class="pf-v">{card.preuve}</span>
                   {card.nodes && (
-                    <div><span class="pf-k">NODES //</span> <span class="pf-v" set:html={mark(card.nodes, '~12 VM & conteneurs')}></span></div>
+                    <>
+                      <span class="pf-k">RELEVÉ</span>
+                      <span class="pf-v" set:html={mark(card.nodes, '~12 VM & conteneurs')}></span>
+                    </>
                   )}
                   {card.doc && (
-                    <div>
-                      <span class="pf-k">DOC&nbsp;&nbsp; //</span>{' '}
-                      <a class="pf-card-link" href={card.doc.href} target="_blank" rel="noopener">{card.doc.label} →</a>
-                    </div>
+                    <>
+                      <span class="pf-k">DOC</span>
+                      <span class="pf-v">
+                        <a class="pf-card-link" href={card.doc.href} target="_blank" rel="noopener">{card.doc.label} →</a>
+                      </span>
+                    </>
                   )}
                 </div>
               </div>
@@ -263,7 +270,7 @@ const coords = site.showPhoneOnSite
           <span class="pf-encours-v">{stack.enCours.items.join(', ')}</span>
         </div>
         <div class="pf-formation" data-reveal>
-          <span class="pf-formation-k">FORMATION //</span> {parcours.formation}
+          <span class="pf-formation-k">FORMATION</span> {parcours.formation}
         </div>
       </div>
     </section>
@@ -921,11 +928,14 @@ const coords = site.showPhoneOnSite
     line-height: 1.6;
     color: var(--c-text);
   }
+  /* Legende de plan : deux colonnes alignees typographiquement. L'ancienne
+     version calait les cles a la main avec des &nbsp;. */
   .pf-card-meta {
     margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 14px;
+    row-gap: 6px;
     font-family: var(--font-mono);
     font-size: 11px;
     line-height: 1.5;
