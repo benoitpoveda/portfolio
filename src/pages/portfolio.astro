@@ -142,7 +142,7 @@ const coords = site.showPhoneOnSite
     <section id="profil" class="pf-section">
       <div class="container">
         <div class="pf-shead" data-reveal>
-          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-num" aria-hidden="true">{section.profil.num}</span>
           <span class="pf-shead-label">{section.profil.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
@@ -177,7 +177,7 @@ const coords = site.showPhoneOnSite
     <section id="parcours" class="pf-section pf-section--alt">
       <div class="container">
         <div class="pf-shead" data-reveal>
-          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-num" aria-hidden="true">{section.parcours.num}</span>
           <span class="pf-shead-label">{section.parcours.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
@@ -207,7 +207,7 @@ const coords = site.showPhoneOnSite
     <section id="labo" class="pf-section">
       <div class="container">
         <div class="pf-shead" data-reveal>
-          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-num" aria-hidden="true">{section.labo.num}</span>
           <span class="pf-shead-label">{section.labo.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
@@ -246,7 +246,7 @@ const coords = site.showPhoneOnSite
     <section id="stack" class="pf-section pf-section--alt">
       <div class="container">
         <div class="pf-shead" data-reveal>
-          <span class="pf-shead-sq" aria-hidden="true"></span>
+          <span class="pf-shead-num" aria-hidden="true">{section.stack.num}</span>
           <span class="pf-shead-label">{section.stack.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
@@ -271,7 +271,10 @@ const coords = site.showPhoneOnSite
     <!-- ============ CONTACT ============ -->
     <section id="contact" class="pf-contact">
       <div class="container pf-contact-inner">
-        <div class="pf-contact-eyebrow" data-reveal>{section.contact.label}</div>
+        <div class="pf-contact-eyebrow" data-reveal>
+          <span class="pf-contact-num" aria-hidden="true">{section.contact.num}</span>
+          <span>{section.contact.label}</span>
+        </div>
         <h2 class="pf-contact-title" data-reveal>Travaillons<br />ensemble</h2>
         <p class="pf-contact-accroche" data-reveal>{contact.accroche}</p>
         <div class="pf-contact-cta" data-reveal>
@@ -698,11 +701,21 @@ const coords = site.showPhoneOnSite
     gap: 11px;
     margin-bottom: 30px;
   }
-  .pf-shead-sq {
-    width: 9px;
-    height: 9px;
-    background: var(--c-cyanotype);
+  /* Cartouche de planche : le numero cadre d'un filet, comme sur un plan.
+     Remplace le carre plein — meme encre, meme gabarit vertical. */
+  .pf-shead-num {
     flex: none;
+    display: grid;
+    place-items: center;
+    min-width: 30px;
+    padding: 3px 5px 2px;
+    border: 1.5px solid var(--c-cyanotype);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: var(--c-cyanotype);
   }
   .pf-shead-label {
     font-family: var(--font-mono);
@@ -1027,6 +1040,20 @@ const coords = site.showPhoneOnSite
     text-transform: uppercase;
     color: var(--c-turquoise);
     margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .pf-contact-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    min-width: 30px;
+    padding: 3px 5px 2px;
+    border: 1.5px solid var(--c-turquoise);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.06em;
   }
   .pf-contact-title {
     font-weight: 900;
