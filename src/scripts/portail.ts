@@ -12,6 +12,7 @@
  */
 import { CONTINENTS } from './continents';
 import { createRockets } from './rockets';
+import { sections } from '../data/content';
 
 /* ===== Constantes geometriques (VERBATIM prototype) ===== */
 const RAD = Math.PI / 180;
@@ -114,14 +115,11 @@ export function initPortail(): void {
   const menuToggles = Array.from(document.querySelectorAll<HTMLElement>('[data-menu-toggle]'));
   const hintEl = document.querySelector<HTMLElement>('[data-hint]');
 
-  /** Numero + intitule + sous-titre par section (VERBATIM prototype : META). */
-  const META: Record<string, { num: string; label: string; title: string; desc: string }> = {
-    profil: { num: '01', label: '// PROFIL', title: 'PROFIL', desc: 'PORTRAIT & DÉMARCHE' },
-    parcours: { num: '02', label: '// PARCOURS', title: 'PARCOURS', desc: 'TRAJECTOIRE PROFESSIONNELLE' },
-    labo: { num: '03', label: '// LABO', title: 'LABORATOIRE', desc: 'HOMELAB & INFRASTRUCTURE' },
-    stack: { num: '04', label: '// STACK', title: 'STACK TECHNIQUE', desc: 'COMPÉTENCES & OUTILS' },
-    contact: { num: '05', label: '// CONTACT', title: 'CONTACT', desc: 'COORDONNÉES & LIENS' },
-  };
+  /** Numero + intitule + sous-titre par section — derive de la source unique. */
+  const META: Record<string, { num: string; label: string; title: string; desc: string }> =
+    Object.fromEntries(
+      sections.map((s) => [s.id, { num: s.num, label: s.label, title: s.title, desc: s.desc }]),
+    );
 
   /* =========================================================
      Interactions satellites
@@ -154,9 +152,7 @@ export function initPortail(): void {
     modal.hidden = !isOpen;
     if (!isOpen) return;
     const m = (open && META[open]) || { num: '', label: '', title: '', desc: '' };
-    // `m.label` porte le prefixe decoratif « // » : lu tel quel, un lecteur
-    // d'ecran annonce « slash slash profil ». On ne garde que l'intitule.
-    if (modalLabel) modalLabel.setAttribute('aria-label', m.label.replace(/^\/\/\s*/, ''));
+    if (modalLabel) modalLabel.setAttribute('aria-label', m.label);
     curNumEls.forEach((el) => {
       el.textContent = m.num;
     });

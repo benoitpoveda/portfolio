@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
-import { sections, hero, profil, parcours, labo, stack, contact, footer } from '../data/content';
+import { sections, section, hero, profil, parcours, labo, stack, contact, footer } from '../data/content';
 
 /** Enveloppe une sous-chaine dans le surlignage signature turquoise. */
 function mark(text: string, phrase: string): string {
@@ -88,7 +88,7 @@ const coords = site.showPhoneOnSite
             <a class="pf-menu-item" href={`#${s.id}`} data-pfmenu-link>
               <span class="pf-menu-num">{String(i + 1).padStart(2, '0')}</span>
               <span class="pf-menu-sq" aria-hidden="true"></span>
-              <span class="pf-menu-label">{s.mono}</span>
+              <span class="pf-menu-label">{s.label}</span>
               <span class="pf-menu-arrow" aria-hidden="true">→</span>
             </a>
           ))}
@@ -143,7 +143,7 @@ const coords = site.showPhoneOnSite
       <div class="container">
         <div class="pf-shead" data-reveal>
           <span class="pf-shead-sq" aria-hidden="true"></span>
-          <span class="pf-shead-label">{profil.mono}</span>
+          <span class="pf-shead-label">{section.profil.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
         <div class="pf-profil">
@@ -178,7 +178,7 @@ const coords = site.showPhoneOnSite
       <div class="container">
         <div class="pf-shead" data-reveal>
           <span class="pf-shead-sq" aria-hidden="true"></span>
-          <span class="pf-shead-label">{parcours.mono}</span>
+          <span class="pf-shead-label">{section.parcours.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
         {parcours.jobs.map((job, i) => (
@@ -208,7 +208,7 @@ const coords = site.showPhoneOnSite
       <div class="container">
         <div class="pf-shead" data-reveal>
           <span class="pf-shead-sq" aria-hidden="true"></span>
-          <span class="pf-shead-label">{labo.mono}</span>
+          <span class="pf-shead-label">{section.labo.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
         <p class="pf-labo-intro" data-reveal>{labo.intro}</p>
@@ -247,7 +247,7 @@ const coords = site.showPhoneOnSite
       <div class="container">
         <div class="pf-shead" data-reveal>
           <span class="pf-shead-sq" aria-hidden="true"></span>
-          <span class="pf-shead-label">{stack.mono}</span>
+          <span class="pf-shead-label">{section.stack.label}</span>
           <span class="pf-shead-rule" aria-hidden="true"></span>
         </div>
         <div class="pf-stack-grid" data-reveal>
@@ -271,7 +271,7 @@ const coords = site.showPhoneOnSite
     <!-- ============ CONTACT ============ -->
     <section id="contact" class="pf-contact">
       <div class="container pf-contact-inner">
-        <div class="pf-contact-eyebrow" data-reveal>{contact.mono}</div>
+        <div class="pf-contact-eyebrow" data-reveal>{section.contact.label}</div>
         <h2 class="pf-contact-title" data-reveal>Travaillons<br />ensemble</h2>
         <p class="pf-contact-accroche" data-reveal>{contact.accroche}</p>
         <div class="pf-contact-cta" data-reveal>

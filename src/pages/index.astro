@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
-import { profil, parcours, labo, stack, contact } from '../data/content';
+import { sections, profil, parcours, labo, stack, contact } from '../data/content';
 
 /** Enveloppe une sous-chaine dans le surlignage signature turquoise (UN seul par ecran). */
 function mark(text: string, phrase: string): string {
@@ -13,15 +13,6 @@ function mark(text: string, phrase: string): string {
 function strong(text: string, phrase: string): string {
   return text.includes(phrase) ? text.replace(phrase, `<strong>${phrase}</strong>`) : text;
 }
-
-/* Numero + intitule (cohelper avec META cote script) — utilises pour les satellites & le menu. */
-const SAT_META = [
-  { id: 'profil', num: '01', label: '// PROFIL' },
-  { id: 'parcours', num: '02', label: '// PARCOURS' },
-  { id: 'labo', num: '03', label: '// LABO' },
-  { id: 'stack', num: '04', label: '// STACK' },
-  { id: 'contact', num: '05', label: '// CONTACT' },
-];
 
 const cvHref = site.routes.cv;
 const cvPdfHref = site.routes.cvPdf;
@@ -44,12 +35,12 @@ const portfolioHref = site.routes.portfolio;
     <div class="po-stage" data-portal-stage>
       <canvas class="po-canvas" aria-hidden="true" data-portal-canvas></canvas>
 
-      {SAT_META.map((s) => (
+      {sections.map((s) => (
         <button
           class="po-sat"
           type="button"
           data-sat={s.id}
-          aria-label={`Ouvrir la section ${s.label.replace('// ', '')}`}
+          aria-label={`Ouvrir la section ${s.label}`}
         >
           <span class="po-sat-glyph">
             <svg viewBox="0 0 72 72" aria-hidden="true">
@@ -65,7 +56,7 @@ const portfolioHref = site.routes.portfolio;
           </span>
           <span class="po-sat-leader" data-sat-leader aria-hidden="true"></span>
           <span class="po-sat-node" data-sat-node aria-hidden="true"></span>
-          <span class="po-sat-label" data-sat-label>{s.label}</span>
+          <span class="po-sat-label" data-sat-label>{s.short}</span>
         </button>
       ))}
     </div>
@@ -122,7 +113,7 @@ const portfolioHref = site.routes.portfolio;
           <button class="po-menu-x" type="button" data-menu-close aria-label="Fermer le menu">✕</button>
         </div>
         <div class="po-menu-list">
-          {SAT_META.map((s) => (
+          {sections.map((s) => (
             <button class="po-menu-item" type="button" data-menu-item={s.id}>
               <span class="po-menu-num">{s.num}</span>
               <span class="po-menu-sq"></span>

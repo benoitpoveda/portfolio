@@ -5,14 +5,33 @@
  * Garde-fous : posture junior assumee, zero survente, aucune competence inventee.
  */
 
-/* ---- Sections (ordre + labels mono ; = 5 satellites du Portail) ---- */
+/* ---- Sections — SOURCE UNIQUE ----------------------------------------
+   Le Portail (satellites, menu, modale), la vue lecture (en-tetes, menu)
+   et portail.ts lisaient chacun leur propre copie de ces metadonnees ;
+   elles avaient deja diverge (« LABO & PROJETS » ici, « LABO » ailleurs).
+   Tout part desormais d'ici.
+     num   : numero de planche, affiche dans le cartouche
+     label : intitule long — en-tetes de section, menus, modale
+     short : intitule court — satellite du Portail, ou la place manque
+     title : titre de la tete de modale du Portail
+     desc  : sous-titre de la tete de modale du Portail
+   ---------------------------------------------------------------------- */
 export const sections = [
-  { id: 'profil', nav: 'Profil', mono: '// PROFIL' },
-  { id: 'parcours', nav: 'Parcours', mono: '// PARCOURS' },
-  { id: 'labo', nav: 'Labo', mono: '// LABO & PROJETS' },
-  { id: 'stack', nav: 'Stack', mono: '// STACK' },
-  { id: 'contact', nav: 'Contact', mono: '// CONTACT' },
+  { id: 'profil',   nav: 'Profil',   num: '01', label: 'PROFIL',         short: 'PROFIL',   title: 'PROFIL',          desc: 'PORTRAIT & DÉMARCHE' },
+  { id: 'parcours', nav: 'Parcours', num: '02', label: 'PARCOURS',       short: 'PARCOURS', title: 'PARCOURS',        desc: 'TRAJECTOIRE PROFESSIONNELLE' },
+  { id: 'labo',     nav: 'Labo',     num: '03', label: 'LABO & PROJETS', short: 'LABO',     title: 'LABORATOIRE',     desc: 'HOMELAB & INFRASTRUCTURE' },
+  { id: 'stack',    nav: 'Stack',    num: '04', label: 'STACK',          short: 'STACK',    title: 'STACK TECHNIQUE', desc: 'COMPÉTENCES & OUTILS' },
+  { id: 'contact',  nav: 'Contact',  num: '05', label: 'CONTACT',        short: 'CONTACT',  title: 'CONTACT',         desc: 'COORDONNÉES & LIENS' },
 ] as const;
+
+/** Acces par identifiant — evite un `.find()` dans chaque page. */
+export const section = {
+  profil: sections[0],
+  parcours: sections[1],
+  labo: sections[2],
+  stack: sections[3],
+  contact: sections[4],
+} as const;
 
 /* ---- HERO (variante A « Builder » — recommandee dans le brief) ---- */
 export const hero = {
@@ -31,9 +50,8 @@ export const hero = {
   ],
 } as const;
 
-/* ---- PROFIL (// PROFIL) — coller tel quel ---- */
+/* ---- PROFIL — coller tel quel ---- */
 export const profil = {
-  mono: '// PROFIL',
   title: 'À propos',
   paragraphs: [
     `Technicien systèmes & réseaux chez un éditeur de logiciels de caisse, je gère au quotidien le support N2/N3.`,
@@ -51,9 +69,8 @@ export const profil = {
   ],
 } as const;
 
-/* ---- PARCOURS (// PARCOURS) ---- */
+/* ---- PARCOURS ---- */
 export const parcours = {
-  mono: '// PARCOURS',
   title: 'Parcours',
   jobs: [
     {
@@ -98,14 +115,13 @@ export const parcours = {
     "Titre pro niv. 5 — Tech. Sup. Systèmes & Réseaux · ENI École Informatique (2024) · BTS Opticien-lunetier — GRETA Côte d'Azur (2010)",
 } as const;
 
-/* ---- LABO & PROJETS (// LABO & PROJETS) — SECTION REINE ---- */
+/* ---- LABO & PROJETS — SECTION REINE ---- */
 export const labo = {
-  mono: '// LABO & PROJETS',
   title: 'Labo & Projets',
   intro: `Ce que je construis et exploite moi-même : des applications en production chez mon employeur, un homelab Proxmox complet — documenté sur GitHub — et un VPS Linux public.`,
   cards: [
     {
-      cat: '// EN ENTREPRISE · EN PRODUCTION',
+      cat: 'EN ENTREPRISE · EN PRODUCTION',
       title: `QUALITY GATE — refonte du centre d'aide assistée par IA`,
       desc: `L'outil que j'ai conçu, développé et déployé chez mon employeur : un dashboard qui récupère les articles du centre d'aide via l'API Zendesk, les reformate avec l'IA et les republie. Auto-hébergé en conteneurs Docker derrière un reverse proxy TLS, avec authentification et bannissement automatique des IP. Reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles). En production et adoptée par l'équipe.`,
       stack: `React / Vite · FastAPI · Docker Compose · Caddy + Let's Encrypt · API Zendesk · Claude Code · code privé (contexte employeur)`,
@@ -114,7 +130,7 @@ export const labo = {
       doc: null,
     },
     {
-      cat: '// EN ENTREPRISE · EN PRODUCTION',
+      cat: 'EN ENTREPRISE · EN PRODUCTION',
       title: `CLYO LABELS — impression d'étiquettes & serveur de licence`,
       desc: `Une application Windows que j'ai développée pour remplacer ZebraDesigner chez les clients de mon employeur : étiquettes thermiques et planches gondole A4 imprimées directement depuis la base de la caisse, avec éditeur visuel et aperçu hors-ligne. Licence activée en ligne contre un serveur FastAPI que j'ai développé et que j'exploite. Installée chez un premier client.`,
       stack: `C# / WPF / .NET · MySQL · ZPL · Python / FastAPI · code privé (contexte employeur)`,
@@ -123,7 +139,7 @@ export const labo = {
       doc: null,
     },
     {
-      cat: '// EN ENTREPRISE · AUTOMATISATION',
+      cat: 'EN ENTREPRISE · AUTOMATISATION',
       title: `CLYO DEPLOY TOOL — déploiement des machines en atelier`,
       desc: `L'application graphique qui unifie la préparation des caisses, bornes et écrans cuisine avant livraison client : activation Windows automatique, installation des logiciels, configuration système, journal en direct. Utilisée quotidiennement à l'atelier ; je la maintiens et la fais évoluer.`,
       stack: `PowerShell · WPF · ps2exe · code privé (contexte employeur)`,
@@ -132,7 +148,7 @@ export const labo = {
       doc: null,
     },
     {
-      cat: '// VIRTUALISATION',
+      cat: 'VIRTUALISATION',
       title: 'HOME SERVER — Infrastructure auto-hébergée',
       desc: `Un serveur Proxmox que j'administre de bout en bout : une douzaine de VM et conteneurs LXC qui font tourner tous mes services (stockage, sauvegarde, cloud privé, VPN, supervision, reverse proxy, IA locale). Conçu, déployé et maintenu seul.`,
       stack: 'Proxmox VE · Debian · KVM/LXC · Ryzen 7 5800X / 64 Go',
@@ -141,7 +157,7 @@ export const labo = {
       doc: { href: 'https://github.com/benoitpoveda/homelab-proxmox', label: 'github.com/benoitpoveda/homelab-proxmox' },
     },
     {
-      cat: '// DONNÉES',
+      cat: 'DONNÉES',
       title: 'Sauvegardes & stockage — ZFS + Proxmox Backup Server',
       desc: `Un stockage TrueNAS en miroir ZFS (qui survit à la perte d'un disque), exposé en NFS à l'hyperviseur, et des sauvegardes automatiques quotidiennes de toutes les VM via Proxmox Backup Server. La procédure de restauration est documentée.`,
       stack: 'TrueNAS · ZFS · NFS · Proxmox Backup Server',
@@ -153,7 +169,7 @@ export const labo = {
       },
     },
     {
-      cat: '// RÉSEAU & SÉCURITÉ',
+      cat: 'RÉSEAU & SÉCURITÉ',
       title: 'Accès distant sécurisé — VPN & services exposés',
       desc: `Un accès chiffré à toute mon infra via un VPN WireGuard (plusieurs postes appairés : desktop, portable Linux, PC pro), un reverse proxy qui publie mes services en HTTPS avec certificats TLS, et un filtrage DNS via Pi-hole. Un pare-feu pfSense isole un sous-réseau dédié.`,
       stack: 'WireGuard · Nginx Proxy Manager · TLS / Let’s Encrypt · Pi-hole · pfSense',
@@ -165,7 +181,7 @@ export const labo = {
       },
     },
     {
-      cat: '// OBSERVABILITÉ',
+      cat: 'OBSERVABILITÉ',
       title: 'Supervision & alerting — métriques et Hermes Agent',
       desc: `Une stack de supervision (Prometheus, InfluxDB, Grafana) qui collecte les métriques de l'infra dans des tableaux de bord, doublée d'Hermes Agent, un agent maison propulsé par Claude Code qui surveille l'état du lab (disques, ZFS, sauvegardes, services) et m'alerte sur Telegram. Observabilité + alerte proactive.`,
       stack: 'Prometheus · InfluxDB · Grafana · Telegram · Hermes Agent (Claude Code)',
@@ -179,9 +195,8 @@ export const labo = {
   ],
 } as const;
 
-/* ---- STACK (// STACK) — par familles ; « En cours » distingue ---- */
+/* ---- STACK — par familles ; « En cours » distingue ---- */
 export const stack = {
-  mono: '// STACK',
   title: 'Stack',
   groups: [
     { name: 'Linux & conteneurs', items: ['Linux (Debian)', 'Docker (multi-conteneurs, reverse proxy, TLS)'] },
@@ -196,9 +211,8 @@ export const stack = {
   enCours: { name: 'En cours', items: ['Fedora', 'Prometheus / Grafana', 'réseau (Cisco, pfSense, VLAN)'] },
 } as const;
 
-/* ---- CONTACT (// CONTACT) ---- */
+/* ---- CONTACT ---- */
 export const contact = {
-  mono: '// CONTACT',
   title: 'TRAVAILLONS ENSEMBLE',
   accroche: `Un poste, une mission, une question technique ? Écrivez-moi, je réponds à tous les messages.`,
 } as const;

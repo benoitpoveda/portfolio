@@ -110,7 +110,7 @@ h4 {
   border: 0;
 }
 
-/* --- Label monospace technique : // PROFIL , STACK // --- */
+/* --- Label monospace technique : PROFIL, STACK --- */
 .mono {
   font-family: var(--font-mono);
 }
