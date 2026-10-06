@@ -2,6 +2,9 @@
  * Contenu du site — SOURCE UNIQUE (Portail, Portfolio, CV partagent ces donnees).
  * Copie "prete a coller" du brief, revue le 2026-08-06 pour retirer la posture
  * d'expert : accroches factuelles, pas de superlatif, pas de competence supposee.
+ * Cartes Clyo Labels / Clyo Deploy Tool alignees le 2026-10-06 sur le recap
+ * _handoff/RECAP_PORTFOLIO_Clyo_Labels_et_Deploy_Tool.md (source de verite,
+ * chiffres repris tels quels, depots prives donc aucun lien vers le code).
  * Garde-fous : posture junior assumee, zero survente, aucune competence inventee.
  */
 
@@ -80,7 +83,7 @@ export const parcours = {
       meta: 'Éditeur de logiciels de caisse · Nice',
       bullets: [
         `Conception, développement et déploiement d'une application web interne, assistée par IA, qui automatise la production et la mise en forme des articles du centre d'aide : reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles) — en production, adoptée par l'équipe.`,
-        `Déploiement du matériel et des applications métier ; outils internes (script atelier, générateur d'étiquettes) et automatisation (PowerShell, Bash).`,
+        `Conception et développement de deux outils en production : Clyo Labels (application Windows C#/WPF qui imprime les étiquettes depuis la base de la caisse, avec serveur de licences et mises à jour automatiques FastAPI — plus de 10 clients livrés) et Clyo Deploy Tool (préparation automatisée des machines en atelier, PowerShell/WPF, 3 scripts batch remplacés). Déploiement du matériel et des applications métier.`,
         `Diagnostic et résolution d'incidents en production — support N2/N3 (caisse, terminaux Sunmi/PAX, TPE) via Zendesk.`,
       ],
     },
@@ -131,20 +134,20 @@ export const labo = {
     },
     {
       cat: 'EN ENTREPRISE · EN PRODUCTION',
-      title: `CLYO LABELS — impression d'étiquettes & serveur de licence`,
-      desc: `Une application Windows que j'ai développée pour remplacer ZebraDesigner chez les clients de mon employeur : étiquettes thermiques et planches gondole A4 imprimées directement depuis la base de la caisse, avec éditeur visuel et aperçu hors-ligne. Licence activée en ligne contre un serveur FastAPI que j'ai développé et que j'exploite. Installée chez un premier client.`,
-      stack: `C# / WPF / .NET · MySQL · ZPL · Python / FastAPI · code privé (contexte employeur)`,
-      preuve: `Produit complet client + serveur · du besoin terrain à la production · licence & installeur`,
-      nodes: '2 dépôts · en production client',
+      title: `CLYO LABELS — impression d'étiquettes & serveur de licences`,
+      desc: `Une application Windows que j'ai conçue et développée pour remplacer le duo ExportProducts + ZebraDesigner chez les clients de mon employeur : elle lit les articles directement dans la base de la caisse et imprime des étiquettes thermiques (Zebra, SAGA), des planches gondole A4 ou des étiquettes sur l'imprimante ticket, sans réglage côté client. Pour y arriver, j'ai réimplémenté le protocole réseau d'un MySQL de 2006 qu'aucun pilote moderne n'accepte plus, décodé le format propriétaire des modèles de la caisse et écrit un aperçu fidèle au point près, hors ligne. Autour : un serveur de licences et de mises à jour (FastAPI sur VPS) que j'exploite, et une release en une commande. Plus de dix clients livrés ; depuis, chaque version leur parvient automatiquement, sans déplacement.`,
+      stack: `C# / WPF / .NET 4.8 · ZPL · ESC/POS · MySQL · Python / FastAPI · SQLite · Caddy · Linux (VPS) · Inno Setup · PowerShell · Claude Code · code privé (contexte employeur)`,
+      preuve: `Produit complet client + serveur · rétro-ingénierie (protocole MySQL, format des modèles) · licence, installeur & mises à jour automatiques · hotfix terrain publié le jour même`,
+      nodes: '10+ clients livrés · ~30 versions en 4 mois · 466 autotests',
       doc: null,
     },
     {
       cat: 'EN ENTREPRISE · AUTOMATISATION',
-      title: `CLYO DEPLOY TOOL — déploiement des machines en atelier`,
-      desc: `L'application graphique qui unifie la préparation des caisses, bornes et écrans cuisine avant livraison client : activation Windows automatique, installation des logiciels, configuration système, journal en direct. Utilisée quotidiennement à l'atelier ; je la maintiens et la fais évoluer.`,
-      stack: `PowerShell · WPF · ps2exe · code privé (contexte employeur)`,
-      preuve: `Automatisation d'un process métier · industrialisation · maintenance dans la durée`,
-      nodes: null,
+      title: `CLYO DEPLOY TOOL — préparation des machines en atelier`,
+      desc: `L'application graphique qui remplace trois scripts batch pour préparer caisses, bornes de commande et écrans cuisine avant livraison. Le technicien choisit le type de machine, coche les modules, et l'outil enchaîne jusqu'à 15 étapes avec journal en direct : activation Windows en cascade (clé du firmware, réserve de clés, saisie manuelle en dernier recours), localisation française limitée à ce qui diffère, installation silencieuse des logiciels et de l'application métier, réglages Windows, redémarrage. Il s'arrête net si une étape critique échoue et n'affiche jamais un statut vert sur une machine incomplète. Utilisée tous les jours à l'atelier sur les caisses à livrer ; chaque version corrige un problème remonté par les techniciens ou reproduit au banc, jusqu'à la cause racine.`,
+      stack: `PowerShell 5.1 · WPF / XAML · WMI · DISM · robocopy · ps2exe · Git · Claude Code · code privé (contexte employeur)`,
+      preuve: `Trois scripts batch remplacés par un seul outil · débogage jusqu'à la cause racine (fenêtre gelée, installeur interbloqué, activation multi-clés) · refus de corriger à l'aveugle sans traces terrain`,
+      nodes: '3 profils · 15 étapes · 5 niveaux d\'activation · v5.0 → v5.10',
       doc: null,
     },
     {
