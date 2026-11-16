@@ -83,7 +83,7 @@ export const parcours = {
       meta: 'Éditeur de logiciels de caisse · Nice',
       bullets: [
         `Conception, développement et déploiement d'une application web interne, assistée par IA, qui automatise la production et la mise en forme des articles du centre d'aide : reformatage ~20× plus rapide, ~150 h économisées sur la refonte (230 articles) — en production, adoptée par l'équipe.`,
-        `Conception et développement de deux outils en production : Clyo Labels (application Windows C#/WPF qui imprime les étiquettes depuis la base de la caisse, avec serveur de licences et mises à jour automatiques FastAPI — plus de 10 clients livrés) et Clyo Deploy Tool (préparation automatisée des machines en atelier, PowerShell/WPF, 3 scripts batch remplacés). Déploiement du matériel et des applications métier.`,
+        `Conception et développement de deux outils en production : Clyo Labels (application Windows C#/WPF qui imprime les étiquettes depuis la base de la caisse, avec serveur de licences et mises à jour automatiques FastAPI — 15 licences déployées) et Clyo Deploy Tool (préparation automatisée des machines en atelier, PowerShell/WPF, 3 scripts batch remplacés). Déploiement du matériel et des applications métier.`,
         `Diagnostic et résolution d'incidents en production — support N2/N3 (caisse, terminaux Sunmi/PAX, TPE) via Zendesk.`,
       ],
     },
@@ -121,7 +121,7 @@ export const parcours = {
 /* ---- LABO & PROJETS — SECTION REINE ---- */
 export const labo = {
   title: 'Labo & Projets',
-  intro: `Ce que je construis et exploite moi-même : des applications en production chez mon employeur, un homelab Proxmox complet — documenté sur GitHub — et un VPS Linux public.`,
+  intro: `Ce que je construis et exploite moi-même : des applications en production chez mon employeur et un homelab Proxmox complet, documenté sur GitHub.`,
   cards: [
     {
       cat: 'EN ENTREPRISE · EN PRODUCTION',
@@ -135,10 +135,10 @@ export const labo = {
     {
       cat: 'EN ENTREPRISE · EN PRODUCTION',
       title: `CLYO LABELS — impression d'étiquettes & serveur de licences`,
-      desc: `Une application Windows que j'ai conçue et développée pour remplacer le duo ExportProducts + ZebraDesigner chez les clients de mon employeur : elle lit les articles directement dans la base de la caisse et imprime des étiquettes thermiques (Zebra, SAGA), des planches gondole A4 ou des étiquettes sur l'imprimante ticket, sans réglage côté client. Pour y arriver, j'ai réimplémenté le protocole réseau d'un MySQL de 2006 qu'aucun pilote moderne n'accepte plus, décodé le format propriétaire des modèles de la caisse et écrit un aperçu fidèle au point près, hors ligne. Autour : un serveur de licences et de mises à jour (FastAPI sur VPS) que j'exploite, et une release en une commande. Plus de dix clients livrés ; depuis, chaque version leur parvient automatiquement, sans déplacement.`,
+      desc: `Une application Windows que j'ai conçue et développée pour remplacer le duo ExportProducts + ZebraDesigner chez les clients de mon employeur : elle lit les articles directement dans la base de la caisse et imprime des étiquettes thermiques (Zebra, SAGA), des planches gondole A4 ou des étiquettes sur l'imprimante ticket, sans réglage côté client. Pour y arriver, j'ai réimplémenté le protocole réseau d'un MySQL de 2006 qu'aucun pilote moderne n'accepte plus, décodé le format propriétaire des modèles de la caisse et écrit un aperçu fidèle au point près, hors ligne. Autour : un serveur de licences et de mises à jour (FastAPI sur VPS) que j'exploite, et une release en une commande. 15 licences déployées ; depuis, chaque version arrive automatiquement sur les postes, sans déplacement.`,
       stack: `C# / WPF / .NET 4.8 · ZPL · ESC/POS · MySQL · Python / FastAPI · SQLite · Caddy · Linux (VPS) · Inno Setup · PowerShell · Claude Code · code privé (contexte employeur)`,
       preuve: `Produit complet client + serveur · rétro-ingénierie (protocole MySQL, format des modèles) · licence, installeur & mises à jour automatiques · hotfix terrain publié le jour même`,
-      nodes: '10+ clients livrés · ~30 versions en 4 mois · 466 autotests',
+      nodes: '15 licences déployées · ~30 versions en 4 mois · 466 autotests',
       doc: null,
     },
     {
@@ -153,7 +153,7 @@ export const labo = {
     {
       cat: 'VIRTUALISATION',
       title: 'HOME SERVER — Infrastructure auto-hébergée',
-      desc: `Un serveur Proxmox que j'administre de bout en bout : une douzaine de VM et conteneurs LXC qui font tourner tous mes services (stockage, sauvegarde, cloud privé, VPN, supervision, reverse proxy, IA locale). Conçu, déployé et maintenu seul.`,
+      desc: `Un serveur Proxmox que j'administre de bout en bout : une douzaine de VM et conteneurs LXC qui font tourner tous mes services (stockage, sauvegarde, cloud privé, VPN, supervision, reverse proxy). Conçu, déployé et maintenu seul.`,
       stack: 'Proxmox VE · Debian · KVM/LXC · Ryzen 7 5800X / 64 Go',
       preuve: `Virtualisation · architecture d'infrastructure · autonomie d'exploitation`,
       nodes: '~12 VM & conteneurs sur 1 hyperviseur',
@@ -184,10 +184,10 @@ export const labo = {
       },
     },
     {
-      cat: 'OBSERVABILITÉ',
+      cat: 'OBSERVABILITÉ · EN COURS',
       title: 'Supervision & alerting — métriques et Hermes Agent',
-      desc: `Une stack de supervision (Prometheus, InfluxDB, Grafana) qui collecte les métriques de l'infra dans des tableaux de bord, doublée d'Hermes Agent, un agent maison propulsé par Claude Code qui surveille l'état du lab (disques, ZFS, sauvegardes, services) et m'alerte sur Telegram. Observabilité + alerte proactive.`,
-      stack: 'Prometheus · InfluxDB · Grafana · Telegram · Hermes Agent (Claude Code)',
+      desc: `Une stack de supervision en cours de mise en place (Prometheus, InfluxDB, Grafana) pour collecter les métriques de l'infra dans des tableaux de bord. En parallèle, un agent basé sur Hermes Agent (Nous Research), que j'ai configuré et outillé, surveille l'état du lab (disques, ZFS, sauvegardes, services) et m'alerte sur Telegram.`,
+      stack: 'Prometheus · InfluxDB · Grafana · Telegram · Hermes Agent (Nous Research)',
       preuve: `Observabilité · métriques & dashboards · automatisation des opérations`,
       nodes: null,
       doc: {
